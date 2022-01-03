@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+const (
+	mrStateMerged = "merged"
+)
+
 type MergeRequests []MergeRequest
 
 func (m MergeRequests) CountByMonth() []ItemCount {
@@ -34,4 +38,34 @@ func (m MergeRequests) CountByMonth() []ItemCount {
 
 	return list
 
+}
+
+func (m MergeRequests) GroupByRepositories() []*Repo {
+	group := map[int]*Repo{}
+
+	for i := 0; i < len(m); i++ {
+		mr := m[i]
+		if mr.State != mrStateMerged {
+			continue
+		}
+
+		repo, ok := group[mr.ProjectID]
+		if !ok {
+			mrs := []MergeRequest{}
+			mrs = append(mrs, mr)
+			group[mr.ProjectID] = &Repo{
+				ID:  mr.ProjectID,
+				MRs: mrs,
+			}
+		} else {
+			repo.MRs = append(repo.MRs, mr)
+		}
+	}
+
+	repos := []*Repo{}
+	for _, r := range group {
+		repos = append(repos, r)
+	}
+
+	return repos
 }

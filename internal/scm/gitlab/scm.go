@@ -161,6 +161,43 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 	return mergerequests, nil
 }
 
+func (s *SCM) GetMergeRequestChanges(projectID int, mergeRequestID int) (mergerequest models.MergeRequest, err error) {
+
+	opts := &gitlab.GetMergeRequestChangesOptions{
+		AccessRawDiffs: gitlab.Bool(true),
+	}
+
+	mr, _, err := s.client.MergeRequests.GetMergeRequestChanges(projectID, mergeRequestID, opts)
+	if err != nil {
+		return mergerequest, err
+	}
+
+	assignees := s.convertBasicUsersToUsers(mr.Assignees)
+	reviewers := s.convertBasicUsersToUsers(mr.Reviewers)
+	changes := s.convertMergeRequestChanges(mr)
+	mergerequest = models.MergeRequest{
+		ID:           mr.ID,
+		IID:          mr.IID,
+		TargetBranch: mr.TargetBranch,
+		SourceBranch: mr.SourceBranch,
+		ProjectID:    mr.ProjectID,
+		Title:        mr.Title,
+		State:        mr.State,
+		CreatedAt:    *mr.CreatedAt,
+		UpdatedAt:    *mr.UpdatedAt,
+		Assignee:     s.convertBasicUserToUser(mr.Assignee),
+		Assignees:    assignees,
+		Reviewers:    reviewers,
+		MergedBy:     s.convertBasicUserToUser(mr.MergedBy),
+		MergedAt:     mr.MergedAt,
+		ClosedBy:     s.convertBasicUserToUser(mr.ClosedBy),
+		ClosedAt:     mr.ClosedAt,
+		Changes:      changes,
+	}
+
+	return mergerequest, nil
+}
+
 func (s *SCM) convertBasicUsersToUsers(basicusers []*gitlab.BasicUser) []*models.User {
 	users := []*models.User{}
 	for i := 0; i < len(basicusers); i++ {
@@ -186,6 +223,25 @@ func (s *SCM) convertBasicUserToUser(basicuser *gitlab.BasicUser) *models.User {
 		Name:     basicuser.Name,
 		State:    basicuser.State,
 	}
+}
+
+func (s *SCM) convertMergeRequestChanges(mergerequest *gitlab.MergeRequest) []*models.MergeRequestChanges {
+	changes := []*models.MergeRequestChanges{}
+	for i := 0; i < len(mergerequest.Changes); i++ {
+		c := mergerequest.Changes[i]
+		changes = append(changes, &models.MergeRequestChanges{
+			OldPath:     c.OldPath,
+			NewPath:     c.NewPath,
+			AMode:       c.AMode,
+			BMode:       c.BMode,
+			Diff:        c.Diff,
+			NewFile:     c.NewFile,
+			RenamedFile: c.RenamedFile,
+			DeletedFile: c.DeletedFile,
+		})
+	}
+
+	return changes
 }
 
 func (s *SCM) setToken(token string) error {

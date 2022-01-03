@@ -1,4 +1,4 @@
-package mergerequestrates
+package mergerequestrate
 
 import (
 	"sort"

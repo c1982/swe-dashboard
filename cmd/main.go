@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"swe-dashboard/internal/metrics/mergerequestrates"
+	"swe-dashboard/internal/metrics/mergerequestsize"
 	"swe-dashboard/internal/scm/gitlab"
 )
 
@@ -16,14 +16,13 @@ func main() {
 		panic(err)
 	}
 
-	mrrates := mergerequestrates.NewMergeRequestRateService(gitlab)
-	rates, err := mrrates.MergeRequestRates("merged", "all", 10)
+	mrsizes := mergerequestsize.NewMergeRequestSizeService(gitlab)
+	sizes, err := mrsizes.MergeRequestSizes("merged", "all", 10)
 	if err != nil {
 		panic(err)
 	}
 
-	for i := 0; i < len(rates); i++ {
-		fmt.Printf("%s\t%f\r\n", rates[i].Date, rates[i].Count)
+	for i := 0; i < len(sizes); i++ {
+		fmt.Printf("%s\t%f\r\n", sizes[i].Date, sizes[i].Count)
 	}
-
 }
