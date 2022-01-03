@@ -15,6 +15,7 @@ type MergeRequest struct {
 	Assignee     *User                  `json:"assignee"`
 	Assignees    []*User                `json:"assignees"`
 	Reviewers    []*User                `json:"reviewers"`
+	Author       *User                  `json:"author"`
 	MergedBy     *User                  `json:"merged_by"`
 	MergedAt     *time.Time             `json:"merged_at"`
 	ClosedBy     *User                  `json:"closed_by"`

@@ -148,6 +148,7 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 				ClosedAt:     mr.ClosedAt,
 				Assignees:    asignees,
 				Reviewers:    reviewers,
+				Author:       s.convertBasicUserToUser(mr.Author),
 			})
 		}
 

@@ -1,0 +1,1 @@
+# Self-merging PRs/MRs
