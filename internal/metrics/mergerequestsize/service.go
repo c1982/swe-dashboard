@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 	"swe-dashboard/internal/models"
+	"time"
 )
 
 type SCM interface {
@@ -44,27 +45,8 @@ func (m *mergeRequestSizes) MergeRequestSizes(state, scope string, createdafterd
 				return sizes, err
 			}
 
-			newline := 0
-			deletedline := 0
-			for c := 0; c < len(singlemr.Changes); c++ {
-				change := singlemr.Changes[c]
-				lines := strings.Split(change.Diff, "\n")
-				for l := 0; l < len(lines); l++ {
-					line := strings.TrimPrefix(lines[l], "\"")
-					if strings.HasPrefix(line, "+") {
-						newline = newline + 1
-					}
-
-					if strings.HasPrefix(line, "-") {
-						deletedline = deletedline + 1
-					}
-				}
-			}
-
-			sizes = append(sizes, models.ItemCount{
-				Date:  mr.CreatedAt,
-				Count: float64(newline + deletedline),
-			})
+			size := m.calculateChanges(mr.CreatedAt, singlemr.Changes)
+			sizes = append(sizes, size)
 		}
 	}
 
@@ -73,4 +55,28 @@ func (m *mergeRequestSizes) MergeRequestSizes(state, scope string, createdafterd
 	})
 
 	return sizes, err
+}
+
+func (m *mergeRequestSizes) calculateChanges(createdat time.Time, changes []*models.MergeRequestChanges) models.ItemCount {
+	newline := 0
+	deletedline := 0
+	for c := 0; c < len(changes); c++ {
+		change := changes[c]
+		lines := strings.Split(change.Diff, "\n")
+		for l := 0; l < len(lines); l++ {
+			line := strings.TrimPrefix(lines[l], "\"")
+			if strings.HasPrefix(line, "+") {
+				newline = newline + 1
+			}
+
+			if strings.HasPrefix(line, "-") {
+				deletedline = deletedline + 1
+			}
+		}
+	}
+
+	return models.ItemCount{
+		Date:  createdat,
+		Count: float64(newline + deletedline),
+	}
 }
