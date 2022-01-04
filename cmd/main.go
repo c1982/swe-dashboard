@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"swe-dashboard/internal/metrics/turnoverrate"
+	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/scm/gitlab"
 )
 
@@ -16,13 +16,13 @@ func main() {
 		panic(err)
 	}
 
-	tor := turnoverrate.NewTurnOverRate(gitlab)
-	rates, err := tor.TurnOverRate()
+	service := mergerequestparticipants.NewMergeRequestParticipantsService(gitlab)
+	leaderboard, err := service.MergeRequestParticipantsLeaderBoard("merged", "all", 10)
 	if err != nil {
 		panic(err)
 	}
 
-	for i := 0; i < len(rates); i++ {
-		fmt.Printf("%s\t%f\r\n", rates[i].Date, rates[i].Count)
+	for i := 0; i < len(leaderboard); i++ {
+		fmt.Printf("%s\t%f\r\n", leaderboard[i].Username, leaderboard[i].Count)
 	}
 }

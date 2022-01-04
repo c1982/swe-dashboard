@@ -245,6 +245,16 @@ func (s *SCM) convertMergeRequestChanges(mergerequest *gitlab.MergeRequest) []*m
 	return changes
 }
 
+func (s *SCM) GetMergeRequestParticipants(projectID int, mergeRequestID int) (users []*models.User, err error) {
+	basicusers, _, err := s.client.MergeRequests.GetMergeRequestParticipants(projectID, mergeRequestID)
+	if err != nil {
+		return users, err
+	}
+
+	users = s.convertBasicUsersToUsers(basicusers)
+	return users, nil
+}
+
 func (s *SCM) setToken(token string) error {
 	s.token = token
 	return nil
