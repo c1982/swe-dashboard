@@ -15,7 +15,7 @@ type SCM interface {
 }
 
 type MergeRequestParticipantsService interface {
-	MergeRequestParticipantsLeaderBoard(state, scope string, createdafterday int) (users []models.UserCount, err error)
+	ParticipantsLeaderBoard(state, scope string, createdafterday int) (users []models.UserCount, err error)
 }
 
 func NewMergeRequestParticipantsService(scm SCM) MergeRequestParticipantsService {
@@ -28,7 +28,7 @@ type mergeRequestParticipants struct {
 	scm SCM
 }
 
-func (mrp *mergeRequestParticipants) MergeRequestParticipantsLeaderBoard(state, scope string, createdafterday int) (users []models.UserCount, err error) {
+func (mrp *mergeRequestParticipants) ParticipantsLeaderBoard(state, scope string, createdafterday int) (users []models.UserCount, err error) {
 	mergerequests, err := mrp.scm.ListMergeRequest(state, scope, createdafterday)
 	if err != nil {
 		return users, err

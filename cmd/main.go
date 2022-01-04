@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"swe-dashboard/internal/metrics/mergerequestparticipants"
+	"swe-dashboard/internal/metrics/mergerequestcomments"
 	"swe-dashboard/internal/scm/gitlab"
 )
 
@@ -16,12 +16,11 @@ func main() {
 		panic(err)
 	}
 
-	service := mergerequestparticipants.NewMergeRequestParticipantsService(gitlab)
-	leaderboard, err := service.MergeRequestParticipantsLeaderBoard("merged", "all", 10)
+	service := mergerequestcomments.NewMergeRequestCommentsService(gitlab)
+	leaderboard, err := service.CommentsLeaderBoard("merged", "all", 10)
 	if err != nil {
 		panic(err)
 	}
-
 	for i := 0; i < len(leaderboard); i++ {
 		fmt.Printf("%s\t%f\r\n", leaderboard[i].Username, leaderboard[i].Count)
 	}

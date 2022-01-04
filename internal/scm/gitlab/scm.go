@@ -255,6 +255,54 @@ func (s *SCM) GetMergeRequestParticipants(projectID int, mergeRequestID int) (us
 	return users, nil
 }
 
+func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments []*models.Comment, err error) {
+
+	comments = []*models.Comment{}
+	opt := &gitlab.ListMergeRequestNotesOptions{}
+	for {
+		notes, rsp, err := s.client.Notes.ListMergeRequestNotes(projectID, mergeRequestID, opt)
+		if err != nil {
+			return comments, err
+		}
+
+		for i := 0; i < len(notes); i++ {
+			n := notes[i]
+			comments = append(comments, &models.Comment{
+				ID:         n.ID,
+				Body:       n.Body,
+				Title:      n.Title,
+				System:     n.System,
+				Resolvable: n.Resolvable,
+				Resolved:   n.Resolved,
+				ExpiresAt:  n.ExpiresAt,
+				UpdatedAt:  n.UpdatedAt,
+				CreatedAt:  n.CreatedAt,
+				Author: models.User{
+					ID:       n.Author.ID,
+					Username: n.Author.Name,
+					Name:     n.Author.Name,
+					State:    n.Author.State,
+				},
+				ResolvedBy: models.User{
+					ID:       n.ResolvedBy.ID,
+					Username: n.ResolvedBy.Name,
+					Name:     n.ResolvedBy.Name,
+					State:    n.ResolvedBy.State,
+				},
+			})
+
+		}
+
+		if rsp.NextPage == 0 {
+			break
+		}
+
+		opt.Page = rsp.NextPage
+	}
+
+	return comments, nil
+}
+
 func (s *SCM) setToken(token string) error {
 	s.token = token
 	return nil
