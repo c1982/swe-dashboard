@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"swe-dashboard/internal/metrics/selfmerging"
+	"swe-dashboard/internal/metrics/turnoverrate"
 	"swe-dashboard/internal/scm/gitlab"
 )
 
@@ -16,12 +16,13 @@ func main() {
 		panic(err)
 	}
 
-	self := selfmerging.NewSelfMergingService(gitlab)
-	selfmrs, err := self.GetSelfMergingUsers("merged", "all", 10)
+	tor := turnoverrate.NewTurnOverRate(gitlab)
+	rates, err := tor.TurnOverRate()
 	if err != nil {
 		panic(err)
 	}
-	for i := 0; i < len(selfmrs); i++ {
-		fmt.Printf("%s\t%f\r\n", selfmrs[i].Username, selfmrs[i].Count)
+
+	for i := 0; i < len(rates); i++ {
+		fmt.Printf("%s\t%f\r\n", rates[i].Date, rates[i].Count)
 	}
 }
