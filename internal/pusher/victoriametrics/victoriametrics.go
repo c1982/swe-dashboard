@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 //curl -d 'foo{bar="baz"} 123' -X POST 'http://localhost:8428/api/v1/import/prometheus'
@@ -37,8 +38,23 @@ func NewPusher(options ...VictoriaMetricOption) (pusher *Pusher, err error) {
 }
 
 func (p *Pusher) Push(payload string) error {
+	return p.httpPost(p.host, payload)
+}
+
+func (p *Pusher) PushWithTime(payload string, date time.Time) error {
+	timestamp := date.Unix()
+	postURL := fmt.Sprintf("%s?timestamp=%d", p.host, timestamp)
+	return p.httpPost(postURL, payload)
+}
+
+func (s *Pusher) setHost(pushURL string) error {
+	s.host = pushURL
+	return nil
+}
+
+func (s *Pusher) httpPost(postURL, payload string) error {
 	responseBody := bytes.NewBuffer([]byte(payload))
-	resp, err := http.Post(p.host, "application/x-www-form-urlencoded", responseBody)
+	resp, err := http.Post(postURL, "application/x-www-form-urlencoded", responseBody)
 	if err != nil {
 		return err
 	}
@@ -53,10 +69,5 @@ func (p *Pusher) Push(payload string) error {
 		return fmt.Errorf("status code: %d, msg: %s", resp.StatusCode, string(body))
 	}
 
-	return nil
-}
-
-func (s *Pusher) setHost(pushURL string) error {
-	s.host = pushURL
 	return nil
 }
