@@ -2,4 +2,10 @@ module swe-dashboard
 
 go 1.16
 
-require github.com/xanzy/go-gitlab v0.52.2
+require (
+	github.com/golang/protobuf v1.4.3 // indirect
+	github.com/xanzy/go-gitlab v0.52.2
+	golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421 // indirect
+	google.golang.org/protobuf v1.26.0-rc.1 // indirect
+	gopkg.in/yaml.v2 v2.3.0 // indirect
+)

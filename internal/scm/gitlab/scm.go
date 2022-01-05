@@ -12,20 +12,6 @@ const (
 	perPageItemCount = 25
 )
 
-type GitlabOption func(*SCM) error
-
-func GitlabToken(token string) GitlabOption {
-	return func(s *SCM) error {
-		return s.setToken(token)
-	}
-}
-
-func GitlabBaseURL(baseuri string) GitlabOption {
-	return func(s *SCM) error {
-		return s.setBaseURL(baseuri)
-	}
-}
-
 type SCM struct {
 	client  *gitlab.Client
 	token   string
@@ -50,10 +36,6 @@ func NewSCM(options ...GitlabOption) (scm *SCM, err error) {
 	scm.client = c
 
 	return scm, nil
-}
-
-func (s *SCM) ListRepositories() {
-
 }
 
 func (s *SCM) ListUsers() (users models.Users, err error) {
@@ -205,8 +187,8 @@ func (s *SCM) convertBasicUsersToUsers(basicusers []*gitlab.BasicUser) []*models
 		u := basicusers[i]
 		users = append(users, &models.User{
 			ID:       u.ID,
-			Username: u.Username,
 			Name:     u.Name,
+			Username: u.Username,
 			State:    u.State,
 		})
 	}
@@ -220,8 +202,8 @@ func (s *SCM) convertBasicUserToUser(basicuser *gitlab.BasicUser) *models.User {
 
 	return &models.User{
 		ID:       basicuser.ID,
-		Username: basicuser.Username,
 		Name:     basicuser.Name,
+		Username: basicuser.Username,
 		State:    basicuser.State,
 	}
 }
@@ -279,14 +261,14 @@ func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments
 				CreatedAt:  n.CreatedAt,
 				Author: models.User{
 					ID:       n.Author.ID,
-					Username: n.Author.Name,
 					Name:     n.Author.Name,
+					Username: n.Author.Username,
 					State:    n.Author.State,
 				},
 				ResolvedBy: models.User{
 					ID:       n.ResolvedBy.ID,
-					Username: n.ResolvedBy.Name,
 					Name:     n.ResolvedBy.Name,
+					Username: n.ResolvedBy.Username,
 					State:    n.ResolvedBy.State,
 				},
 			})

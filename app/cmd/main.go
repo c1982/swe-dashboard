@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"swe-dashboard/internal/metrics/mergerequestcomments"
+	"swe-dashboard/internal/pusher/victoriametrics"
 	"swe-dashboard/internal/scm/gitlab"
 )
 
@@ -21,7 +22,22 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	pusher, err := victoriametrics.NewPusher(victoriametrics.SetPushURL("http://localhost:8428/api/v1/import/prometheus"))
+	if err != nil {
+		panic(err)
+	}
+
 	for i := 0; i < len(leaderboard); i++ {
-		fmt.Printf("%s\t%f\r\n", leaderboard[i].Username, leaderboard[i].Count)
+		payload := fmt.Sprintf(`comments_leaderboard{id="%d",user="%s", name="%s"} %f`,
+			leaderboard[i].ID,
+			leaderboard[i].Username,
+			leaderboard[i].Name,
+			leaderboard[i].Count)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
 	}
 }
