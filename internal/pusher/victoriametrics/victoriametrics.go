@@ -53,8 +53,8 @@ func (s *Pusher) setHost(pushURL string) error {
 }
 
 func (s *Pusher) httpPost(postURL, payload string) error {
-	responseBody := bytes.NewBuffer([]byte(payload))
-	resp, err := http.Post(postURL, "application/x-www-form-urlencoded", responseBody)
+	reqbody := bytes.NewBuffer([]byte(payload))
+	resp, err := http.Post(postURL, "application/x-www-form-urlencoded", reqbody)
 	if err != nil {
 		return err
 	}

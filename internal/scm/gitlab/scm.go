@@ -181,6 +181,67 @@ func (s *SCM) GetMergeRequestChanges(projectID int, mergeRequestID int) (mergere
 	return mergerequest, nil
 }
 
+func (s *SCM) ListAllProjectMembers(projectID int) (members []models.User, err error) {
+	opt := &gitlab.ListProjectMembersOptions{
+		ListOptions: gitlab.ListOptions{
+			Page:    1,
+			PerPage: perPageItemCount,
+		},
+	}
+
+	members = []models.User{}
+	for {
+		list, rsp, err := s.client.ProjectMembers.ListAllProjectMembers(projectID, opt)
+		if err != nil {
+			return members, err
+		}
+
+		for i := 0; i < len(list); i++ {
+			member := list[i]
+			user := models.User{
+				ID:        member.ID,
+				Username:  member.Username,
+				Name:      member.Name,
+				Email:     member.Email,
+				State:     member.State,
+				CreatedAt: *member.CreatedAt,
+			}
+			members = append(members, user)
+		}
+
+		if rsp.NextPage == 0 {
+			break
+		}
+
+		opt.Page = rsp.NextPage
+	}
+
+	return members, nil
+}
+
+func (s *SCM) GetRepository(projectID int) (repository models.Repo, err error) {
+	opt := &gitlab.GetProjectOptions{
+		Statistics:           gitlab.Bool(false),
+		License:              gitlab.Bool(false),
+		WithCustomAttributes: gitlab.Bool(false),
+	}
+
+	repo, _, err := s.client.Projects.GetProject(projectID, opt)
+	if err != nil {
+		return repository, err
+	}
+
+	repository = models.Repo{
+		ID:             projectID,
+		Name:           repo.Name,
+		Description:    repo.Description,
+		CreatorID:      repo.CreatorID,
+		LastActivityAt: repo.LastActivityAt,
+	}
+
+	return repository, nil
+}
+
 func (s *SCM) convertBasicUsersToUsers(basicusers []*gitlab.BasicUser) []*models.User {
 	users := []*models.User{}
 	for i := 0; i < len(basicusers); i++ {

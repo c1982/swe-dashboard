@@ -1,19 +1,19 @@
 package mergerequestsize
 
 import (
-	"sort"
 	"strings"
 	"swe-dashboard/internal/models"
 	"time"
 )
 
 type SCM interface {
+	GetRepository(projectID int) (repository models.Repo, err error)
 	GetMergeRequestChanges(projectID int, mergeRequestID int) (mergerequest models.MergeRequest, err error)
 	ListMergeRequest(state, scope string, createdafterday int) (mergerequests models.MergeRequests, err error)
 }
 
 type MergeRequestSizeService interface {
-	MergeRequestSizes(state, scope string, createdafterday int) (sizes []models.ItemCount, err error)
+	MergeRequestSizes() (sizes []models.ItemCount, err error)
 }
 
 func NewMergeRequestSizeService(scm SCM) MergeRequestSizeService {
@@ -28,16 +28,21 @@ type mergeRequestSizes struct {
 	mergerequests models.MergeRequests
 }
 
-func (m *mergeRequestSizes) MergeRequestSizes(state, scope string, createdafterday int) (sizes []models.ItemCount, err error) {
-	m.mergerequests, err = m.scm.ListMergeRequest(state, scope, createdafterday)
+func (m *mergeRequestSizes) MergeRequestSizes() (sizes []models.ItemCount, err error) {
+	m.mergerequests, err = m.scm.ListMergeRequest("merged", "all", time.Now().Day())
 	if err != nil {
 		return sizes, err
 	}
 
 	sizes = []models.ItemCount{}
-	repositorygroups := m.mergerequests.GroupByRepositories()
-	for i := 0; i < len(repositorygroups); i++ {
-		repo := repositorygroups[i]
+	repositories := m.mergerequests.GroupByRepositories()
+	for i := 0; i < len(repositories); i++ {
+		repo, err := m.scm.GetRepository(repositories[i].ID)
+		if err != nil {
+			return sizes, err
+		}
+		repo.MRs = repositories[i].MRs
+
 		for n := 0; n < len(repo.MRs); n++ {
 			mr := repo.MRs[n]
 			singlemr, err := m.scm.GetMergeRequestChanges(repo.ID, mr.IID)
@@ -45,21 +50,19 @@ func (m *mergeRequestSizes) MergeRequestSizes(state, scope string, createdafterd
 				return sizes, err
 			}
 
-			size := m.calculateChanges(mr.CreatedAt, singlemr.Changes)
-			sizes = append(sizes, size)
+			newline, deletedline := m.calculateChanges(singlemr.Changes)
+			sizes = append(sizes, models.ItemCount{
+				Name:  repo.Name,
+				Name1: singlemr.Title,
+				Count: newline + deletedline,
+			})
 		}
 	}
-
-	sort.Slice(sizes, func(i, j int) bool {
-		return sizes[i].Date.Before(sizes[j].Date)
-	})
 
 	return sizes, err
 }
 
-func (m *mergeRequestSizes) calculateChanges(createdat time.Time, changes []*models.MergeRequestChanges) models.ItemCount {
-	newline := 0
-	deletedline := 0
+func (m *mergeRequestSizes) calculateChanges(changes []*models.MergeRequestChanges) (newline, deletedline float64) {
 	for c := 0; c < len(changes); c++ {
 		change := changes[c]
 		lines := strings.Split(change.Diff, "\n")
@@ -75,8 +78,5 @@ func (m *mergeRequestSizes) calculateChanges(createdat time.Time, changes []*mod
 		}
 	}
 
-	return models.ItemCount{
-		Date:  createdat,
-		Count: float64(newline + deletedline),
-	}
+	return newline, deletedline
 }

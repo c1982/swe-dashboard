@@ -7,24 +7,20 @@ import (
 )
 
 type SCM interface {
+	GetRepository(projectID int) (repository models.Repo, err error)
+	ListAllProjectMembers(projectID int) (members []models.User, err error)
 	ListMergeRequest(state, scope string, createdafterday int) (mergerequests models.MergeRequests, err error)
-	ListUsers() (users models.Users, err error)
 }
 
 //MergeRequestRateService Return Pull/Merge Request rates service
 type MergeRequestRateService interface {
-	/*MergeRequestRates calculate merge request rates
-	state: opened, closed, locked, merged.
-	scope: created_by_me, assigned_to_me, all
-	createdafterday: Return merge requests created on or after the given day.*/
-	MergeRequestRates(state, scope string, createdafterday int) ([]models.ItemCount, error)
+	MergeRequestRatesThisMonth() (rates []models.ItemCount, err error)
 }
 
 func NewMergeRequestRateService(scm SCM) MergeRequestRateService {
 	m := &mergeRequestRates{
 		scm: scm,
 	}
-
 	return m
 }
 
@@ -34,41 +30,34 @@ type mergeRequestRates struct {
 	mergerequests models.MergeRequests
 }
 
-func (m *mergeRequestRates) MergeRequestRates(state, scope string, createdafterday int) (rates []models.ItemCount, err error) {
-	m.members, err = m.scm.ListUsers()
+func (m *mergeRequestRates) MergeRequestRatesThisMonth() (rates []models.ItemCount, err error) {
+	m.mergerequests, err = m.scm.ListMergeRequest("merged", "all", time.Now().Day())
 	if err != nil {
 		return rates, err
 	}
 
-	m.mergerequests, err = m.scm.ListMergeRequest(state, scope, createdafterday)
-	if err != nil {
-		return rates, err
-	}
-
-	team := m.groupMemberByTime()
-	mrcountspermonth := m.mergerequests.CountByMonth()
 	rates = []models.ItemCount{}
-
-	for i := 0; i < len(mrcountspermonth); i++ {
-		mr := mrcountspermonth[i]
-		members, ok := team[mr.Date]
-		if !ok {
-			members = models.ItemCount{
-				Date:  mr.Date,
-				Count: float64(len(team)),
-			}
+	repositories := m.mergerequests.GroupByRepositories()
+	for i := 0; i < len(repositories); i++ {
+		repo, err := m.scm.GetRepository(repositories[i].ID)
+		if err != nil {
+			return rates, err
 		}
 
-		mrrate := 0.0
-		if mr.Count > 0 && members.Count > 0 {
-			mrrate = float64(mr.Count) / float64(members.Count)
+		repo.MRs = repositories[i].MRs
+		members, err := m.scm.ListAllProjectMembers(repo.ID)
+		if err != nil {
+			return rates, err
 		}
+
+		rate := float64(len(repo.MRs)) / float64(len(members))
 		rates = append(rates, models.ItemCount{
-			Date:  mr.Date,
-			Count: mrrate})
+			Name:  repo.Name,
+			Count: rate,
+		})
 	}
 
-	return
+	return rates, nil
 }
 
 func (m *mergeRequestRates) groupMembersByActivitionTime() (membercount []models.ItemCount) {

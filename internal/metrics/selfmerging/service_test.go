@@ -35,7 +35,7 @@ func TestSelfMergingUsers(t *testing.T) {
 	}
 
 	selfmruserscout := 3
-	list, err := service.GetSelfMergingUsers("", "", 0)
+	list, err := service.GetSelfMergingUsers()
 	if err != nil {
 		t.Error(err)
 	}

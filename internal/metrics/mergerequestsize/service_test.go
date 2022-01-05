@@ -3,11 +3,11 @@ package mergerequestsize
 import (
 	"swe-dashboard/internal/models"
 	"testing"
-	"time"
 )
 
 func TestCalculateChanges(t *testing.T) {
-	diffline := 6.0
+	wantnewline := 5.0
+	wantdeletedline := 1.0
 	changes := []*models.MergeRequestChanges{
 		{Diff: "@@ -172,6 +172,16 @@ class Announcement\n      */\n     private $is_promoted;\n \n+"},
 		{Diff: "@@ -0,0 +1,27 @@\n+<?php\n+\n+namespace ConfigBundle\\Enum;"},
@@ -16,9 +16,13 @@ func TestCalculateChanges(t *testing.T) {
 	}
 
 	mrsize := mergeRequestSizes{}
-	count := mrsize.calculateChanges(time.Now(), changes)
+	newline, deletedline := mrsize.calculateChanges(changes)
 
-	if count.Count != diffline {
-		t.Fatalf("wrong calculation count value. vgot: %f, want: %f", count.Count, diffline)
+	if newline != wantnewline {
+		t.Fatalf("wrong newline count value. got: %f, want: %f", newline, wantnewline)
+	}
+
+	if deletedline != wantdeletedline {
+		t.Fatalf("wrong deletedline count value. got: %f, want: %f", deletedline, wantdeletedline)
 	}
 }

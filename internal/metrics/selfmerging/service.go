@@ -3,6 +3,7 @@ package selfmerging
 import (
 	"sort"
 	"swe-dashboard/internal/models"
+	"time"
 )
 
 const (
@@ -14,7 +15,7 @@ type SCM interface {
 }
 
 type SelfMergingService interface {
-	GetSelfMergingUsers(state, scope string, createdafterday int) (users []models.UserCount, err error)
+	GetSelfMergingUsers() (users []models.UserCount, err error)
 }
 
 type selfMerging struct {
@@ -25,11 +26,11 @@ func NewSelfMergingService(scm SCM) SelfMergingService {
 	return &selfMerging{scm: scm}
 }
 
-func (s *selfMerging) GetSelfMergingUsers(state, scope string, createdafterday int) (users []models.UserCount, err error) {
+func (s *selfMerging) GetSelfMergingUsers() (users []models.UserCount, err error) {
 	tmpusers := map[int]models.UserCount{}
 	users = []models.UserCount{}
 
-	mrs, err := s.scm.ListMergeRequest(state, scope, createdafterday)
+	mrs, err := s.scm.ListMergeRequest("merged", "all", time.Now().Day())
 	if err != nil {
 		return users, err
 	}
