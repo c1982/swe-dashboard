@@ -144,6 +144,28 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 	return mergerequests, nil
 }
 
+func (s *SCM) GetMergeRequestCommits(projectID, mergeRequestID int) (commits []*models.Commit, err error) {
+	opt := &gitlab.GetMergeRequestCommitsOptions{}
+	commits = []*models.Commit{}
+
+	for {
+		list, rsp, err := s.client.MergeRequests.GetMergeRequestCommits(projectID, mergeRequestID, opt)
+		if err != nil {
+			return commits, err
+		}
+
+		commits = append(commits, s.convertCommits(list)...)
+
+		if rsp.NextPage == 0 {
+			break
+		}
+
+		opt.Page = rsp.NextPage
+	}
+
+	return commits, err
+}
+
 func (s *SCM) GetMergeRequestChanges(projectID int, mergeRequestID int) (mergerequest models.MergeRequest, err error) {
 
 	opts := &gitlab.GetMergeRequestChangesOptions{
@@ -286,6 +308,27 @@ func (s *SCM) convertMergeRequestChanges(mergerequest *gitlab.MergeRequest) []*m
 	}
 
 	return changes
+}
+
+func (s *SCM) convertCommits(commits []*gitlab.Commit) []*models.Commit {
+	list := []*models.Commit{}
+	for i := 0; i < len(commits); i++ {
+		c := commits[i]
+		list = append(list, &models.Commit{
+			ID:             c.ID,
+			ShortID:        c.ShortID,
+			Title:          c.Title,
+			AuthorName:     c.AuthorName,
+			CommitterName:  c.CommitterName,
+			CommitterEmail: c.CommitterEmail,
+			CommittedDate:  *c.CommittedDate,
+			CreatedAt:      *c.CreatedAt,
+			Message:        c.Message,
+			ProjectID:      c.ProjectID,
+		})
+	}
+
+	return list
 }
 
 func (s *SCM) GetMergeRequestParticipants(projectID int, mergeRequestID int) (users []*models.User, err error) {

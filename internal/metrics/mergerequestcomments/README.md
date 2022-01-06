@@ -1,6 +1,5 @@
 # Merge Request Comments Leaderboard
 
-
 ## Big Comments
 
 ## Fast Comments
