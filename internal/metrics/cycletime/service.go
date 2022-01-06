@@ -2,6 +2,7 @@ package cycletime
 
 import (
 	"sort"
+	"strings"
 	"swe-dashboard/internal/models"
 	"time"
 )
@@ -13,10 +14,18 @@ type SCM interface {
 }
 
 type CycleTimeService interface {
-	TimeToOpen() error
+	TimeToOpen() ([]models.ItemCount, error)
 	TimeToReview()
 	TimeToApprove()
 	TimeToMerge()
+}
+
+func NewCycleTimeService(scm SCM) CycleTimeService {
+	c := &cycleTime{
+		scm: scm,
+	}
+
+	return c
 }
 
 type cycleTime struct {
@@ -46,12 +55,12 @@ func (c *cycleTime) TimeToOpen() (opentimes []models.ItemCount, err error) {
 				return opentimes, err
 			}
 
-			mergerequestopentime := mr.CreatedAt
+			mergerequestopentime := mr.CreatedAt.Unix()
 			mergerequestfirstcommit := c.mergeRequestFirstCommit(commits)
-			opentime := mergerequestopentime.Sub(mergerequestfirstcommit.CreatedAt)
+			opentime := mergerequestopentime - mergerequestfirstcommit.CreatedAt.Unix()
 			opentimes = append(opentimes, models.ItemCount{
 				Name:  repo.Name,
-				Name1: mr.Title,
+				Name1: c.cleanTitle(mr.Title),
 				Count: float64(opentime),
 			})
 		}
@@ -77,7 +86,18 @@ func (c *cycleTime) TimeToMerge() {
 
 func (c *cycleTime) mergeRequestFirstCommit(commits []*models.Commit) *models.Commit {
 	sort.Slice(commits, func(i, j int) bool {
-		return commits[i].CreatedAt.After(commits[j].CreatedAt)
+		return commits[i].CreatedAt.Before(commits[j].CreatedAt)
 	})
 	return commits[0]
+}
+
+func (c *cycleTime) cleanTitle(title string) string {
+	return strings.TrimFunc(title, func(r rune) bool {
+		switch r {
+		case '}', '"', '{':
+			return true
+		}
+
+		return false
+	})
 }

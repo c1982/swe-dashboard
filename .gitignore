@@ -9,3 +9,4 @@ vendor/
 .env
 .vscode/
 tmp/
+app/cmd/cmd

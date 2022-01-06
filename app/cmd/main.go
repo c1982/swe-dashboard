@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"swe-dashboard/internal/metrics/cycletime"
 	"swe-dashboard/internal/metrics/mergerequestcomments"
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/metrics/mergerequestrate"
@@ -30,7 +31,8 @@ func main() {
 	//importMergeRequestParticipants(gitlab, pusher)
 	//importMergeRequestrate(gitlab, pusher)
 	//importMergeRequestSize(gitlab, pusher)
-	importSelfMergingUsers(gitlab, pusher)
+	//importSelfMergingUsers(gitlab, pusher)
+	importTimeToOpen(gitlab, pusher)
 }
 
 func importMRCommentsLeaderBoard(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
@@ -120,6 +122,24 @@ func importSelfMergingUsers(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) 
 
 	for i := 0; i < len(users); i++ {
 		payload := fmt.Sprintf(`self_merging{name="%s", username="%s"} %f`, users[i].Name, users[i].Username, users[i].Count)
+		fmt.Println(payload)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+	}
+}
+
+func importTimeToOpen(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
+	service := cycletime.NewCycleTimeService(gitlab)
+	counts, err := service.TimeToOpen()
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < len(counts); i++ {
+		payload := fmt.Sprintf(`time_to_open{repository="%s", title="%s"} %f`, counts[i].Name, counts[i].Name1, counts[i].Count)
 		fmt.Println(payload)
 		err := pusher.Push(payload)
 		if err != nil {
