@@ -89,13 +89,13 @@ func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 				Count: float64(timetoreview),
 			})
 
-			c.timetoapprove = append(c.timetoreviews, models.ItemCount{
+			c.timetoapprove = append(c.timetoapprove, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(timetoapprove),
 			})
 
-			c.timetomerge = append(c.timetoreviews, models.ItemCount{
+			c.timetomerge = append(c.timetomerge, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(mergetime),
