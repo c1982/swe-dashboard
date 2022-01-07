@@ -61,7 +61,7 @@ func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 				return cycletimes, err
 			}
 
-			comments, err := c.scm.ListMergeRequestNotes(49, 2629)
+			comments, err := c.scm.ListMergeRequestNotes(mr.ProjectID, mr.IID)
 			if err != nil {
 				return cycletimes, err
 			}
