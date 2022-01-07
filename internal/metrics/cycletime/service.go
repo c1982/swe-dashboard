@@ -1,6 +1,7 @@
 package cycletime
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 	"swe-dashboard/internal/models"
@@ -74,7 +75,7 @@ func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 			opentime := mergerequestopentime - mergerequestfirstcommit.CreatedAt.Unix()
 			timetoreview := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestopentime
 			timetoapprove := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
-			mergetime := mergerequestapprovalcomment.CreatedAt.Unix() - mr.MergedAt.Unix()
+			mergetime := mr.MergedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
 			cycletime := mr.MergedAt.Unix() - mergerequestfirstcommit.CreatedAt.Unix()
 
 			c.timetoopens = append(c.timetoopens, models.ItemCount{
