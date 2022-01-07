@@ -1,6 +1,7 @@
 package gitlab
 
 import (
+	"strings"
 	"swe-dashboard/internal/models"
 	"time"
 
@@ -342,7 +343,6 @@ func (s *SCM) GetMergeRequestParticipants(projectID int, mergeRequestID int) (us
 }
 
 func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments []*models.Comment, err error) {
-
 	comments = []*models.Comment{}
 	opt := &gitlab.ListMergeRequestNotesOptions{}
 	for {
@@ -353,16 +353,22 @@ func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments
 
 		for i := 0; i < len(notes); i++ {
 			n := notes[i]
+			approved := false
+			if n.System {
+				approved = strings.Contains(n.Body, "approved")
+			}
+
 			comments = append(comments, &models.Comment{
-				ID:         n.ID,
-				Body:       n.Body,
-				Title:      n.Title,
-				System:     n.System,
-				Resolvable: n.Resolvable,
-				Resolved:   n.Resolved,
-				ExpiresAt:  n.ExpiresAt,
-				UpdatedAt:  n.UpdatedAt,
-				CreatedAt:  n.CreatedAt,
+				ID:           n.ID,
+				Body:         n.Body,
+				Title:        n.Title,
+				System:       n.System,
+				Resolvable:   n.Resolvable,
+				Resolved:     n.Resolved,
+				UpdatedAt:    *n.UpdatedAt,
+				CreatedAt:    *n.CreatedAt,
+				NoteableType: n.NoteableType,
+				ApprovedNote: approved,
 				Author: models.User{
 					ID:       n.Author.ID,
 					Name:     n.Author.Name,
@@ -376,7 +382,6 @@ func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments
 					State:    n.ResolvedBy.State,
 				},
 			})
-
 		}
 
 		if rsp.NextPage == 0 {

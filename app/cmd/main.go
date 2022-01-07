@@ -32,7 +32,7 @@ func main() {
 	//importMergeRequestrate(gitlab, pusher)
 	//importMergeRequestSize(gitlab, pusher)
 	//importSelfMergingUsers(gitlab, pusher)
-	importTimeToOpen(gitlab, pusher)
+	imporCycleTime(gitlab, pusher)
 }
 
 func importMRCommentsLeaderBoard(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
@@ -131,15 +131,15 @@ func importSelfMergingUsers(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) 
 	}
 }
 
-func importTimeToOpen(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
+func imporCycleTime(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
 	service := cycletime.NewCycleTimeService(gitlab)
-	counts, err := service.TimeToOpen()
+	counts, err := service.CycleTime()
 	if err != nil {
 		panic(err)
 	}
 
 	for i := 0; i < len(counts); i++ {
-		payload := fmt.Sprintf(`time_to_open{repository="%s", title="%s"} %f`, counts[i].Name, counts[i].Name1, counts[i].Count)
+		payload := fmt.Sprintf(`cycle_time{repository="%s", title="%s"} %f`, counts[i].Name, counts[i].Name1, counts[i].Count)
 		fmt.Println(payload)
 		err := pusher.Push(payload)
 		if err != nil {
@@ -147,4 +147,49 @@ func importTimeToOpen(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
 			break
 		}
 	}
+
+	timetoopens := service.TimeToOpen()
+	for i := 0; i < len(timetoopens); i++ {
+		payload := fmt.Sprintf(`time_to_open{repository="%s", title="%s"} %f`, timetoopens[i].Name, timetoopens[i].Name1, timetoopens[i].Count)
+		fmt.Println(payload)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+	}
+
+	timetoreview := service.TimeToReview()
+	for i := 0; i < len(timetoopens); i++ {
+		payload := fmt.Sprintf(`time_to_review{repository="%s", title="%s"} %f`, timetoreview[i].Name, timetoreview[i].Name1, timetoreview[i].Count)
+		fmt.Println(payload)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+	}
+
+	timetoapprove := service.TimeToApprove()
+	for i := 0; i < len(timetoopens); i++ {
+		payload := fmt.Sprintf(`time_to_approve{repository="%s", title="%s"} %f`, timetoapprove[i].Name, timetoapprove[i].Name1, timetoapprove[i].Count)
+		fmt.Println(payload)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+	}
+
+	timetomerge := service.TimeToMerge()
+	for i := 0; i < len(timetoopens); i++ {
+		payload := fmt.Sprintf(`time_to_merge{repository="%s", title="%s"} %f`, timetomerge[i].Name, timetomerge[i].Name1, timetomerge[i].Count)
+		fmt.Println(payload)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+	}
+
 }

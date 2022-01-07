@@ -49,6 +49,10 @@ func (mrc *mergeRequestComments) CommentsLeaderBoard(state, scope string, create
 
 		for u := 0; u < len(comments); u++ {
 			comment := comments[u]
+			if comment.System {
+				continue
+			}
+
 			v, ok := stats[comment.Author.ID]
 			if !ok {
 				stats[comment.Author.ID] = models.UserCount{

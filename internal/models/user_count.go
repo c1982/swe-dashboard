@@ -9,8 +9,3 @@ type UserCount struct {
 	Count    float64
 	Date     time.Time
 }
-
-//TODO: may be?
-func (u UserCount) ToPrometheusMetric(name string) string {
-	return ""
-}
