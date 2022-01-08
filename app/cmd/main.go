@@ -30,9 +30,9 @@ func main() {
 	//importMRCommentsLeaderBoard(gitlab, pusher)
 	//importMergeRequestParticipants(gitlab, pusher)
 	//importMergeRequestrate(gitlab, pusher)
-	//importMergeRequestSize(gitlab, pusher)
+	importMergeRequestSize(gitlab, pusher)
 	//importSelfMergingUsers(gitlab, pusher)
-	imporCycleTime(gitlab, pusher)
+	//imporCycleTime(gitlab, pusher)
 }
 
 func importMRCommentsLeaderBoard(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {

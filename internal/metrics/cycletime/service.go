@@ -1,7 +1,6 @@
 package cycletime
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 	"swe-dashboard/internal/models"
@@ -39,7 +38,6 @@ type cycleTime struct {
 	timetomerge   []models.ItemCount
 }
 
-//TimeToOpen Time to open (from the first commit to open)
 func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 	cycletimes = []models.ItemCount{}
 	mergerequests, err := c.scm.ListMergeRequest("merged", "all", time.Now().Day())
@@ -113,6 +111,7 @@ func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 	return cycletimes, nil
 }
 
+//TimeToOpen Time to open (from the first commit to open)
 func (c *cycleTime) TimeToOpen() []models.ItemCount {
 	return c.timetoopens
 }

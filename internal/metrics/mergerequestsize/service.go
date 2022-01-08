@@ -53,7 +53,7 @@ func (m *mergeRequestSizes) MergeRequestSizes() (sizes []models.ItemCount, err e
 			newline, deletedline := m.calculateChanges(singlemr.Changes)
 			sizes = append(sizes, models.ItemCount{
 				Name:  repo.Name,
-				Name1: singlemr.Title,
+				Name1: m.cleanTitle(singlemr.Title),
 				Count: newline + deletedline,
 			})
 		}
@@ -79,4 +79,12 @@ func (m *mergeRequestSizes) calculateChanges(changes []*models.MergeRequestChang
 	}
 
 	return newline, deletedline
+}
+
+func (m *mergeRequestSizes) cleanTitle(title string) string {
+	title = strings.ReplaceAll(title, "\"", "")
+	title = strings.ReplaceAll(title, "/", "-")
+	title = strings.ReplaceAll(title, "{", "")
+	title = strings.ReplaceAll(title, "}", "")
+	return title
 }
