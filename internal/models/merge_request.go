@@ -21,6 +21,7 @@ type MergeRequest struct {
 	ClosedBy     *User                  `json:"closed_by"`
 	ClosedAt     *time.Time             `json:"closed_at"`
 	Changes      []*MergeRequestChanges `json:"changes"`
+	Draft        bool                   `json:"draft"`
 }
 
 type MergeRequestChanges struct {
