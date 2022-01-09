@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"swe-dashboard/internal/metrics/cycletime"
+	"swe-dashboard/internal/metrics/longrunningmergerequests"
 	"swe-dashboard/internal/metrics/mergerequestcomments"
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/metrics/mergerequestrate"
@@ -30,9 +31,10 @@ func main() {
 	//importMRCommentsLeaderBoard(gitlab, pusher)
 	//importMergeRequestParticipants(gitlab, pusher)
 	//importMergeRequestrate(gitlab, pusher)
-	importMergeRequestSize(gitlab, pusher)
+	//importMergeRequestSize(gitlab, pusher)
 	//importSelfMergingUsers(gitlab, pusher)
 	//imporCycleTime(gitlab, pusher)
+	longRunningMergeRequests(gitlab, pusher)
 }
 
 func importMRCommentsLeaderBoard(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
@@ -192,4 +194,23 @@ func imporCycleTime(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
 		}
 	}
 
+}
+
+func longRunningMergeRequests(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
+	service := longrunningmergerequests.NewLongRunningMergerequestsService(gitlab)
+	counts, err := service.List()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for i := 0; i < len(counts); i++ {
+		payload := fmt.Sprintf(`long_running_merge_request{repository="%s", title="%s"} %f`, counts[i].Name, counts[i].Name1, counts[i].Count)
+		fmt.Println(payload)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+	}
 }

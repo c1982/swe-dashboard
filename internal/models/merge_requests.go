@@ -42,13 +42,8 @@ func (m MergeRequests) CountByMonth() []ItemCount {
 
 func (m MergeRequests) GroupByRepositories() []*Repo {
 	group := map[int]*Repo{}
-
 	for i := 0; i < len(m); i++ {
 		mr := m[i]
-		if mr.State != mrStateMerged {
-			continue
-		}
-
 		repo, ok := group[mr.ProjectID]
 		if !ok {
 			mrs := []MergeRequest{}
