@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	tenDaysSeconds = 864000
+	tenDays    = 864000
+	ninetydays = 90
 )
 
 type SCM interface {
@@ -33,7 +34,7 @@ func NewLongRunningMergerequestsService(scm SCM) LongRunningMergerequestsService
 }
 
 func (l *longRunningMergerequests) List() (longrunnings []models.ItemCount, err error) {
-	mergerequests, err := l.scm.ListMergeRequest("opened", "all", 90)
+	mergerequests, err := l.scm.ListMergeRequest("opened", "all", ninetydays)
 	if err != nil {
 		return longrunnings, err
 	}
@@ -64,7 +65,7 @@ func (l *longRunningMergerequests) List() (longrunnings []models.ItemCount, err 
 			}
 
 			worktime := time.Now().Unix() - lastactivitycomment.CreatedAt.Unix()
-			if worktime < tenDaysSeconds {
+			if worktime < tenDays {
 				continue
 			}
 
@@ -91,6 +92,7 @@ func (l *longRunningMergerequests) mergeRequestLastActivity(comments []*models.C
 	sort.Slice(comments, func(i, j int) bool {
 		return comments[i].CreatedAt.After(comments[j].CreatedAt)
 	})
+
 	return comments[0]
 }
 
