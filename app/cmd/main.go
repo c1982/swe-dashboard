@@ -29,13 +29,13 @@ func main() {
 		panic(err)
 	}
 
-	// importMRCommentsLeaderBoard(gitlab, pusher)
-	// importMergeRequestParticipants(gitlab, pusher)
-	// importMergeRequestrate(gitlab, pusher)
-	// importMergeRequestSize(gitlab, pusher)
-	// importSelfMergingUsers(gitlab, pusher)
-	// imporCycleTime(gitlab, pusher)
-	// longRunningMergeRequests(gitlab, pusher)
+	importMRCommentsLeaderBoard(gitlab, pusher)
+	importMergeRequestParticipants(gitlab, pusher)
+	importMergeRequestrate(gitlab, pusher)
+	importMergeRequestSize(gitlab, pusher)
+	importSelfMergingUsers(gitlab, pusher)
+	imporCycleTime(gitlab, pusher)
+	longRunningMergeRequests(gitlab, pusher)
 	unreviewedMergeRequests(gitlab, pusher)
 }
 

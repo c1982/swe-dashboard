@@ -73,7 +73,7 @@ func (u *unreviewedMergeRequests) unreviewedCount(mergerequests []models.MergeRe
 	return count, nil
 }
 
-func (l *unreviewedMergeRequests) isUnreviewed(comments []*models.Comment) bool {
+func (u *unreviewedMergeRequests) isUnreviewed(comments []*models.Comment) bool {
 	for i := 0; i < len(comments); i++ {
 		c := comments[i]
 		if c.System {
@@ -82,6 +82,5 @@ func (l *unreviewedMergeRequests) isUnreviewed(comments []*models.Comment) bool 
 			}
 		}
 	}
-
 	return true
 }
