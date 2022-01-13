@@ -1,0 +1,13 @@
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+.env
+.vscode/
+tmp/
+app/cmd/cmd
+app/swed/swed
