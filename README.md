@@ -11,3 +11,14 @@ For Giblab base URL:
 
 For Gitlab Token:
 >SWE_DASHBOARD_GITLAB_TOKEN
+
+
+## Docker
+
+### build
+
+> docker build -t swed .
+
+### run
+
+> docker run --rm swed
