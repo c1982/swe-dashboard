@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"swe-dashboard/internal/metrics/cycletime"
+	"swe-dashboard/internal/metrics/fridaymergerequests"
 	"swe-dashboard/internal/metrics/longrunningmergerequests"
 	"swe-dashboard/internal/metrics/mergerequestcomments"
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
@@ -29,14 +30,15 @@ func main() {
 		panic(err)
 	}
 
-	importMRCommentsLeaderBoard(gitlab, pusher)
-	importMergeRequestParticipants(gitlab, pusher)
-	importMergeRequestrate(gitlab, pusher)
-	importMergeRequestSize(gitlab, pusher)
-	importSelfMergingUsers(gitlab, pusher)
-	imporCycleTime(gitlab, pusher)
-	longRunningMergeRequests(gitlab, pusher)
-	unreviewedMergeRequests(gitlab, pusher)
+	// importMRCommentsLeaderBoard(gitlab, pusher)
+	// importMergeRequestParticipants(gitlab, pusher)
+	// importMergeRequestrate(gitlab, pusher)
+	// importMergeRequestSize(gitlab, pusher)
+	// importSelfMergingUsers(gitlab, pusher)
+	// imporCycleTime(gitlab, pusher)
+	// longRunningMergeRequests(gitlab, pusher)
+	// unreviewedMergeRequests(gitlab, pusher)
+	importFridaymergerequests(gitlab, pusher)
 }
 
 func importMRCommentsLeaderBoard(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
@@ -227,6 +229,25 @@ func unreviewedMergeRequests(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher)
 
 	for i := 0; i < len(counts); i++ {
 		payload := fmt.Sprintf(`unreviewed_merge_request{repository="%s"} %f`, counts[i].Name, counts[i].Count)
+		fmt.Println(payload)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+	}
+}
+
+func importFridaymergerequests(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
+	service := fridaymergerequests.NewFridayMergeRequests(gitlab)
+	counts, err := service.List()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for i := 0; i < len(counts); i++ {
+		payload := fmt.Sprintf(`friday_merge_request{repository="%s"} %f`, counts[i].Name, counts[i].Count)
 		fmt.Println(payload)
 		err := pusher.Push(payload)
 		if err != nil {
