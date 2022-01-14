@@ -39,6 +39,7 @@ func (tor *turnOverRate) TurnOverRate() (rates []models.ItemCount, err error) {
 			break
 		}
 
+		//TODO: this metric cannot fit time series. Refactor it.
 		B := float64(monthlymembers[i].Count)
 		E := float64(monthlymembers[i+1].Count)
 		L := B - E
