@@ -1,24 +1,45 @@
 # swe-dashboard
-
 Software Engineer Metrics
 
 ## Configuration
 
-Environment variables
-
-For Giblab base URL:
->SWE_DASHBOARD_GITLAB_BASEURL
-
-For Gitlab Token:
->SWE_DASHBOARD_GITLAB_TOKEN
-
+* scm-gitlab-baseurl
+* scm-gitlab-token
+* victoriametrics-importurl
+* check-interval
 
 ## Docker
 
-### build
+### Build
 
 > docker build -t swed .
 
-### run
+### Run
 
 > docker run --rm swed
+
+## Metrics
+
+* Cycletime
+* TimeToOpen
+* TimeToReview
+* TimeToApprove
+* TimeToMerge
+* Friday MR/PR
+* Long-Running MR/PR
+* MR/PR Comments LeaderBoard
+* MR/PR Participants LeaderBoard
+* MR/PR Rates
+* MR/PR Sizes
+* MR/PR Throughput
+* Self-Merging MR/PR
+* Developer Turnover Rate
+* Unreviewed MR/PR
+
+## Supported SCM
+
+* Gitlab
+
+## Supported TimeSeries DB
+
+* Victoriametrics
