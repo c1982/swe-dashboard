@@ -44,7 +44,6 @@ Software Engineer Metrics
 
 * Victoriametrics
 
-
 ## Running
 
 > swed --scm-gitlab-baseurl=https://your-domain-name/api/v4 --scm-gitlab-token=TOKEN --victoriametrics-importurl=http://localhost:8428/api/v1/import/prometheus --check-interval=1h

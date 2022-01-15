@@ -19,7 +19,7 @@ services:
       - '--httpListenAddr=:8428'
       - '--influxListenAddr=:8089'
     networks:
-      - vm_net
+      - swed_net
     restart: always
   grafana:
     container_name: grafana
@@ -36,10 +36,19 @@ services:
       - ./tmp/plugins:/etc/grafana/provisioning/plugins
       - ./tmp/notifiers:/etc/grafana/provisioning/notifiers
     networks:
-      - vm_net
+      - swed_net
     restart: always
+  swed:
+    container_name: swed
+    image: c1982/swed
+    networks:
+      - swed_net
+    command: --scm-gitlab-baseurl=${SWED_GITLAB_BASEURL}
+      --scm-gitlab-token=${SWED_GITLAB_TOKEN}
+      --victoriametrics-importurl=http://victoriametrics:8428/api/v1/import/prometheus
+      --check-interval=1m
 volumes:
   vmdata: {}
   grafanadata: {}
 networks:
-  vm_net: null
+  swed_net: null

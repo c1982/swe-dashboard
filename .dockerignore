@@ -11,3 +11,5 @@ vendor/
 tmp/
 app/cmd/cmd
 app/swed/swed
+docker/
+grafana/

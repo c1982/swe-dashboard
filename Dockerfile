@@ -5,10 +5,8 @@ WORKDIR /go/src/swe-dashboard
 RUN go mod verify && \
     go mod vendor
 
-RUN go build -ldflags="-s -w" -trimpath -o swed ./app/swed
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o swed ./app/swed
 
 FROM alpine
-
-USER nobody
 COPY --from=builder /go/src/swe-dashboard/swed /swed
 ENTRYPOINT [ "/swed" ]
