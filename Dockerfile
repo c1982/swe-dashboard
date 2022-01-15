@@ -11,4 +11,4 @@ FROM alpine
 
 USER nobody
 COPY --from=builder /go/src/swe-dashboard/swed /swed
-CMD ["/swed"]
+ENTRYPOINT [ "/swed" ]

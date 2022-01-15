@@ -94,7 +94,6 @@ func (p *Pusher) ImporFridayMergeRequests(service fridaymergerequests.FridayMerg
 
 	for i := 0; i < len(counts); i++ {
 		payload := fmt.Sprintf(fridayMergeRequestMetricName, counts[i].Name, counts[i].Count)
-		fmt.Println(payload)
 		err := p.Push(payload)
 		if err != nil {
 			return err
