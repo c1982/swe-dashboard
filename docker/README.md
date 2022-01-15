@@ -1,13 +1,9 @@
 # SWE Dashboard
 
-### run docker
-docker-compose up
+### Run docker
+> docker-compose --env-file ./config.env up
 
-### usage
-
-Victoriametrics URL:
-
-> http://127.0.0.1:8428/
+### Dashboard
 
 Grafana URL:
 
@@ -17,3 +13,9 @@ Grafana URL:
 user: admin
 pass: admin
 ```
+
+### Database
+
+Victoriametrics URL:
+
+> http://127.0.0.1:8428/
