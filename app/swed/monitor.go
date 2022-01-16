@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/rs/zerolog/log"
 	"swe-dashboard/internal/metrics/cycletime"
 	"swe-dashboard/internal/metrics/fridaymergerequests"
 	"swe-dashboard/internal/metrics/longrunningmergerequests"
@@ -9,12 +8,15 @@ import (
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/metrics/mergerequestrate"
 	"swe-dashboard/internal/metrics/mergerequestsize"
+	"swe-dashboard/internal/metrics/mergerequestthroughput"
 	"swe-dashboard/internal/metrics/selfmerging"
 	"swe-dashboard/internal/metrics/unreviewedmergerequests"
 	"swe-dashboard/internal/pusher/victoriametrics"
 	"swe-dashboard/internal/scm/gitlab"
 	"sync"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -46,6 +48,9 @@ func setMetricsFunctions(mux *sync.RWMutex, gitlab *gitlab.SCM, pusher *victoria
 		"selfmerging": func() error { return pusher.ImportSelfMerging(selfmerging.NewSelfMergingService(gitlab)) },
 		"unreviewedmergerequests": func() error {
 			return pusher.ImportUnreviewedMergeRequests(unreviewedmergerequests.NewUnreviewedMergerequests(gitlab))
+		},
+		"mergerequestthroughput": func() error {
+			return pusher.ImportMergeRequestThroughput(mergerequestthroughput.NewMergeRequestThroughputService(gitlab))
 		},
 	}
 	mux.Unlock()
