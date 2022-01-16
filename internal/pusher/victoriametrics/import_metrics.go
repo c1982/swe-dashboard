@@ -13,6 +13,7 @@ import (
 	"swe-dashboard/internal/metrics/selfmerging"
 	"swe-dashboard/internal/metrics/turnoverrate"
 	"swe-dashboard/internal/metrics/unreviewedmergerequests"
+	"time"
 )
 
 const (
@@ -121,7 +122,7 @@ func (p *Pusher) ImportLongTunningMergeRequests(service longrunningmergerequests
 }
 
 func (p *Pusher) ImportMergeRequestComments(service mergerequestcomments.MergeRequestCommentsService) (err error) {
-	leaderboard, err := service.CommentsLeaderBoard("merged", "all", 1)
+	leaderboard, err := service.CommentsLeaderBoard("merged", "all", time.Now().Day())
 	if err != nil {
 		return err
 	}
@@ -141,7 +142,7 @@ func (p *Pusher) ImportMergeRequestComments(service mergerequestcomments.MergeRe
 }
 
 func (p *Pusher) ImportMergeRequestParticipants(service mergerequestparticipants.MergeRequestParticipantsService) (err error) {
-	leaderboard, err := service.ParticipantsLeaderBoard("merged", "all", 1)
+	leaderboard, err := service.ParticipantsLeaderBoard("merged", "all", time.Now().Day())
 	if err != nil {
 		return err
 	}
