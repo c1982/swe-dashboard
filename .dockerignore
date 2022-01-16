@@ -9,7 +9,8 @@ vendor/
 .env
 .vscode/
 tmp/
-app/cmd/cmd
+app/cmd_test/cmd
+app/cmd_test/cmd_test
 app/swed/swed
 docker/
 grafana/
