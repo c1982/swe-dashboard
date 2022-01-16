@@ -14,3 +14,5 @@ app/cmd_test/cmd_test
 app/swed/swed
 docker/
 grafana/
+swed_darwin_amd64
+swed_linux_amd64

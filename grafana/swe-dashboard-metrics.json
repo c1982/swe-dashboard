@@ -18,87 +18,66 @@
             }
         ]
     },
-    "description": "",
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 2,
+    "id": 6,
+    "iteration": 1642369071937,
     "links": [],
     "liveNow": false,
     "panels": [
         {
-            "description": "",
             "fieldConfig": {
                 "defaults": {
                     "color": {
-                        "mode": "palette-classic"
-                    },
-                    "custom": {
-                        "axisLabel": "",
-                        "axisPlacement": "auto",
-                        "barAlignment": 0,
-                        "drawStyle": "line",
-                        "fillOpacity": 0,
-                        "gradientMode": "none",
-                        "hideFrom": {
-                            "legend": false,
-                            "tooltip": false,
-                            "viz": false
-                        },
-                        "lineInterpolation": "linear",
-                        "lineWidth": 1,
-                        "pointSize": 5,
-                        "scaleDistribution": {
-                            "type": "linear"
-                        },
-                        "showPoints": "auto",
-                        "spanNulls": false,
-                        "stacking": {
-                            "group": "A",
-                            "mode": "none"
-                        },
-                        "thresholdsStyle": {
-                            "mode": "off"
-                        }
+                        "mode": "thresholds"
                     },
                     "mappings": [],
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "light-red",
+                                "color": "green",
                                 "value": null
                             },
                             {
                                 "color": "semi-dark-green",
-                                "value": 5
+                                "value": 36000
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 86400
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 259000
                             }
                         ]
-                    }
+                    },
+                    "unit": "s"
                 },
                 "overrides": []
             },
             "gridPos": {
-                "h": 12,
+                "h": 11,
                 "w": 12,
                 "x": 0,
                 "y": 0
             },
-            "id": 17,
+            "id": 10,
             "options": {
-                "legend": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
                     "calcs": [
                         "lastNotNull"
                     ],
-                    "displayMode": "table",
-                    "placement": "right",
-                    "sortBy": "Last *",
-                    "sortDesc": true
+                    "fields": "",
+                    "values": false
                 },
-                "tooltip": {
-                    "mode": "single"
-                }
+                "showUnfilled": false
             },
+            "pluginVersion": "8.3.3",
             "targets": [
                 {
                     "datasource": {
@@ -106,14 +85,305 @@
                         "uid": "Vy8z2s07z"
                     },
                     "exemplar": true,
-                    "expr": "merge_request_throughput{}",
+                    "expr": "time_to_open{repository=\"$repository\",title=\"$branch\"}",
+                    "instant": false,
                     "interval": "",
-                    "legendFormat": "{{repository}}",
+                    "legendFormat": "Time to Open",
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "time_to_review{repository=\"headball2\",title=\"$branch\"}",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Time to Review",
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "time_to_approve{repository=\"$repository\",title=\"$branch\"}",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Time to Approve",
+                    "refId": "C"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "time_to_merge{repository=\"$repository\",title=\"$branch\"}",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Time to Merge",
+                    "refId": "D"
+                }
+            ],
+            "title": "$repository - $branch",
+            "type": "bargauge"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 172800
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 12,
+                "y": 0
+            },
+            "id": 14,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "Open Speed",
                     "refId": "A"
                 }
             ],
-            "title": "WIP: MRs/PRs Throughput ",
-            "type": "timeseries"
+            "title": "Open Speed",
+            "type": "stat"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 28800
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 15,
+                "y": 0
+            },
+            "id": 15,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_review{repository=\"$repository\"}) / count by (repository) (time_to_review{repository=\"$repository\"})",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "Review Speed",
+                    "refId": "A"
+                }
+            ],
+            "title": "Review Speed",
+            "type": "stat"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 14400
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 18,
+                "y": 0
+            },
+            "id": 16,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "Approved Speed",
+                    "refId": "A"
+                }
+            ],
+            "title": "Approved Speed",
+            "type": "stat"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 172800
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 21,
+                "y": 0
+            },
+            "id": 17,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_merge{repository=\"$repository\"}) / count by (repository) (time_to_merge{repository=\"$repository\"})",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "Merge Speed",
+                    "refId": "A"
+                }
+            ],
+            "title": "Merge Speed",
+            "type": "stat"
         },
         {
             "description": "",
@@ -163,30 +433,123 @@
                                 "value": 80
                             }
                         ]
-                    }
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 12,
+                "x": 12,
+                "y": 5
+            },
+            "id": 12,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "hidden",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Open Speed",
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_review{repository=\"$repository\"}) / count by (repository) (time_to_review{repository=\"$repository\"})",
+                    "interval": "",
+                    "legendFormat": "Review Speed",
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Approved Speed",
+                    "refId": "C"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_merge{repository=\"$repository\"}) / count by (repository) (time_to_merge{repository=\"$repository\"})",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Merge Speed",
+                    "refId": "D"
+                }
+            ],
+            "title": "MRs/PRs Speeds ($repository)",
+            "type": "timeseries"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "s"
                 },
                 "overrides": []
             },
             "gridPos": {
                 "h": 12,
                 "w": 12,
-                "x": 12,
-                "y": 0
+                "x": 0,
+                "y": 11
             },
-            "id": 5,
+            "id": 8,
             "options": {
-                "legend": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
                     "calcs": [
                         "lastNotNull"
                     ],
-                    "displayMode": "table",
-                    "placement": "right",
-                    "sortBy": "Last *",
-                    "sortDesc": true
+                    "fields": "",
+                    "values": false
                 },
-                "tooltip": {
-                    "mode": "single"
-                }
+                "showUnfilled": true
             },
             "pluginVersion": "8.3.3",
             "targets": [
@@ -196,153 +559,13 @@
                         "uid": "Vy8z2s07z"
                     },
                     "exemplar": true,
-                    "expr": "merge_request_rate{}",
-                    "instant": false,
+                    "expr": "sort_desc(cycle_time{repository=\"$repository\"})",
                     "interval": "",
-                    "legendFormat": "{{repository}}",
+                    "legendFormat": "{{title}}",
                     "refId": "A"
                 }
             ],
-            "title": "MRs/PRs Rates",
-            "type": "timeseries"
-        },
-        {
-            "description": "",
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "mappings": [],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            },
-                            {
-                                "color": "semi-dark-yellow",
-                                "value": 10
-                            },
-                            {
-                                "color": "semi-dark-orange",
-                                "value": 15
-                            },
-                            {
-                                "color": "semi-dark-red",
-                                "value": 20
-                            }
-                        ]
-                    },
-                    "unit": "short"
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 11,
-                "w": 12,
-                "x": 0,
-                "y": 12
-            },
-            "id": 14,
-            "options": {
-                "displayMode": "basic",
-                "orientation": "horizontal",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "showUnfilled": true
-            },
-            "pluginVersion": "8.3.3",
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": false,
-                    "expr": "sort_desc(sum by (repository) (friday_merge_request{}))",
-                    "interval": "",
-                    "legendFormat": "{{repository}}",
-                    "refId": "A"
-                }
-            ],
-            "title": "Friday MRs/PRs",
-            "transformations": [],
-            "type": "bargauge"
-        },
-        {
-            "description": "",
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "mappings": [],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            },
-                            {
-                                "color": "semi-dark-yellow",
-                                "value": 1
-                            },
-                            {
-                                "color": "semi-dark-orange",
-                                "value": 4
-                            },
-                            {
-                                "color": "semi-dark-red",
-                                "value": 8
-                            }
-                        ]
-                    },
-                    "unit": "percent"
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 11,
-                "w": 12,
-                "x": 12,
-                "y": 12
-            },
-            "id": 15,
-            "options": {
-                "displayMode": "basic",
-                "orientation": "horizontal",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "showUnfilled": true
-            },
-            "pluginVersion": "8.3.3",
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": false,
-                    "expr": "sort_desc(sum by (repository) (unreviewed_merge_request{}))",
-                    "interval": "",
-                    "legendFormat": "{{repository}}",
-                    "refId": "A"
-                }
-            ],
-            "title": "Unreviewed MRs/PRs",
+            "title": "Cycle Time by MRs/PRs ($repository)",
             "transformations": [],
             "type": "bargauge"
         },
@@ -350,7 +573,35 @@
             "fieldConfig": {
                 "defaults": {
                     "color": {
-                        "mode": "continuous-GrYlRd"
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
                     },
                     "mappings": [],
                     "thresholds": {
@@ -379,23 +630,21 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 14,
+                "h": 12,
                 "w": 12,
-                "x": 0,
-                "y": 23
+                "x": 12,
+                "y": 11
             },
-            "id": 10,
+            "id": 19,
             "options": {
-                "displayMode": "basic",
-                "orientation": "horizontal",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom"
                 },
-                "showUnfilled": true
+                "tooltip": {
+                    "mode": "single"
+                }
             },
             "pluginVersion": "8.3.3",
             "targets": [
@@ -404,17 +653,17 @@
                         "type": "prometheus",
                         "uid": "Vy8z2s07z"
                     },
-                    "exemplar": false,
-                    "expr": "sort_desc( (sum by (repository) (time_to_open{})[1h] / count by (repository) (time_to_open{})[1h]) )",
-                    "instant": true,
+                    "exemplar": true,
+                    "expr": "(sum by (repository) (cycle_time{repository=\"$repository\"})[10m] / count by (repository) (cycle_time{repository=\"$repository\"})[10m])",
+                    "instant": false,
                     "interval": "",
                     "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
-            "title": "Time To Open",
+            "title": "Cycle Time",
             "transformations": [],
-            "type": "bargauge"
+            "type": "timeseries"
         },
         {
             "description": "",
@@ -427,166 +676,31 @@
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
-                            {
-                                "color": "semi-dark-red",
-                                "value": null
-                            },
-                            {
-                                "color": "semi-dark-yellow",
-                                "value": 10
-                            },
-                            {
-                                "color": "light-green",
-                                "value": 20
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 14,
-                "w": 12,
-                "x": 12,
-                "y": 23
-            },
-            "id": 3,
-            "options": {
-                "displayMode": "basic",
-                "orientation": "horizontal",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "showUnfilled": true,
-                "text": {}
-            },
-            "pluginVersion": "8.3.3",
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": true,
-                    "expr": "sort_desc(participants_leaderboard{})",
-                    "format": "time_series",
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "{{name}}",
-                    "refId": "A"
-                }
-            ],
-            "title": "MRs/PRs Participants",
-            "transformations": [],
-            "type": "bargauge"
-        },
-        {
-            "description": "",
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "mappings": [],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "semi-dark-red",
-                                "value": null
-                            },
                             {
                                 "color": "green",
-                                "value": 5
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 13,
-                "w": 12,
-                "x": 0,
-                "y": 37
-            },
-            "id": 2,
-            "options": {
-                "displayMode": "basic",
-                "orientation": "horizontal",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "showUnfilled": true,
-                "text": {}
-            },
-            "pluginVersion": "8.3.3",
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": true,
-                    "expr": "sort_desc(comments_leaderboard{})",
-                    "format": "time_series",
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "{{name}}",
-                    "refId": "A"
-                }
-            ],
-            "title": "MRs/PRs Comments",
-            "transformations": [],
-            "type": "bargauge"
-        },
-        {
-            "description": "",
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "mappings": [],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "light-green",
                                 "value": null
                             },
                             {
-                                "color": "semi-dark-yellow",
-                                "value": 2
-                            },
-                            {
-                                "color": "semi-dark-orange",
-                                "value": 8
+                                "color": "#EAB839",
+                                "value": 604800
                             },
                             {
                                 "color": "semi-dark-red",
-                                "value": 10
+                                "value": 1209600
                             }
                         ]
-                    }
+                    },
+                    "unit": "s"
                 },
                 "overrides": []
             },
             "gridPos": {
-                "h": 13,
+                "h": 11,
                 "w": 12,
-                "x": 12,
-                "y": 37
+                "x": 0,
+                "y": 23
             },
-            "id": 8,
+            "id": 4,
             "options": {
                 "displayMode": "gradient",
                 "orientation": "horizontal",
@@ -608,15 +722,146 @@
                         "uid": "Vy8z2s07z"
                     },
                     "exemplar": true,
-                    "expr": "sort_desc(self_merging{})",
-                    "format": "time_series",
+                    "expr": "sort_desc(long_running_merge_request{repository=\"$repository\"})",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{name}}",
+                    "legendFormat": "{{title}}",
                     "refId": "A"
                 }
             ],
-            "title": "Self-Merging Users",
+            "title": "Long Running MRs/PRs ($repository)",
+            "type": "bargauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [
+                        {
+                            "options": {
+                                "from": 0,
+                                "result": {
+                                    "index": 0,
+                                    "text": "XS"
+                                },
+                                "to": 9
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 10,
+                                "result": {
+                                    "index": 1,
+                                    "text": "S"
+                                },
+                                "to": 29
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 30,
+                                "result": {
+                                    "index": 2,
+                                    "text": "M"
+                                },
+                                "to": 99
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 100,
+                                "result": {
+                                    "index": 3,
+                                    "text": "L"
+                                },
+                                "to": 499
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 500,
+                                "result": {
+                                    "index": 4,
+                                    "text": "XL"
+                                },
+                                "to": 999
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 1000,
+                                "result": {
+                                    "index": 5,
+                                    "text": "XXL"
+                                },
+                                "to": 10000
+                            },
+                            "type": "range"
+                        }
+                    ],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "semi-dark-yellow",
+                                "value": 150
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 600
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 12,
+                "x": 12,
+                "y": 23
+            },
+            "id": 6,
+            "options": {
+                "displayMode": "gradient",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(sum(merge_request_size{repository=\"$repository\"}) by (title))",
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "MRs/PRs Sizes ($repository)",
             "transformations": [],
             "type": "bargauge"
         }
@@ -626,16 +871,64 @@
     "style": "dark",
     "tags": [],
     "templating": {
-        "list": []
+        "list": [
+            {
+                "current": {
+                    "selected": false,
+                    "text": "headball2",
+                    "value": "headball2"
+                },
+                "definition": "merge_request_throughput{}",
+                "description": "",
+                "hide": 0,
+                "includeAll": false,
+                "label": "Repository",
+                "multi": false,
+                "name": "repository",
+                "options": [],
+                "query": {
+                    "query": "merge_request_throughput{}",
+                    "refId": "StandardVariableQuery"
+                },
+                "refresh": 1,
+                "regex": "merge_request_throughput{repository=\"(.+)\"}",
+                "skipUrlSync": false,
+                "sort": 1,
+                "type": "query"
+            },
+            {
+                "current": {
+                    "selected": false,
+                    "text": "feature-navigations-HB2-6451-CharacterEvent-Navigation",
+                    "value": "feature-navigations-HB2-6451-CharacterEvent-Navigation"
+                },
+                "definition": "time_to_open{repository=\"$repository\"}",
+                "hide": 0,
+                "includeAll": false,
+                "label": "Branch",
+                "multi": false,
+                "name": "branch",
+                "options": [],
+                "query": {
+                    "query": "time_to_open{repository=\"$repository\"}",
+                    "refId": "StandardVariableQuery"
+                },
+                "refresh": 1,
+                "regex": "time_to_open{repository=\"$repository\",title=\"(.+)\"}",
+                "skipUrlSync": false,
+                "sort": 0,
+                "type": "query"
+            }
+        ]
     },
     "time": {
-        "from": "now-12h",
+        "from": "now-6h",
         "to": "now"
     },
     "timepicker": {},
     "timezone": "",
-    "title": "SWE Dashboard - Metrics",
-    "uid": "0CMC2yA7z",
-    "version": 58,
+    "title": "SWE Dashboard - Repository",
+    "uid": "wAnLNBJ7z",
+    "version": 39,
     "weekStart": ""
 }
