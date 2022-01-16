@@ -8,33 +8,47 @@ Software Engineer Metrics
 * victoriametrics-importurl
 * check-interval
 
-## Docker
+## Runing
 
-### Build
+Download binary from releases
 
-> docker build -t swed .
+> ./swed --scm-gitlab-baseurl=https://your-domain-name/api/v4 --scm-gitlab-token=TOKEN --victoriametrics-importurl=http://localhost:8428/api/v1/import/prometheus --check-interval=1h
 
-### Run
+#### docker
 
-> docker run --rm swed
+```bash
+docker run --rm --name=swed c1982/swed \
+--scm-gitlab-baseurl=https://your-domain-name/api/v4 \
+--scm-gitlab-token=TOKEN \
+--victoriametrics-importurl=http://localhost:8428/api/v1/import/prometheus \
+--check-interval=1h
+```
+
+#### docker-compose 
+
+```bash
+git clone https://github.com/c1982/swe-dashboard.git
+cd swe-dashboard/docker
+docker-compose --env-file ./config.env up
+```
 
 ## Metrics
 
 * Cycletime
-* TimeToOpen
-* TimeToReview
-* TimeToApprove
-* TimeToMerge
-* Friday MR/PR
-* Long-Running MR/PR
-* MR/PR Comments LeaderBoard
-* MR/PR Participants LeaderBoard
-* MR/PR Rates
-* MR/PR Sizes
-* MR/PR Throughput
-* Self-Merging MR/PR
+* Time to Open
+* Time to Review
+* Time to Approve
+* Time to Merge
+* Friday MRs/PRs
+* Long-Running MRs/PRs
+* MRs/PRs Comments LeaderBoard
+* MRs/PRs Participants LeaderBoard
+* MRs/PRs Rates
+* MRs/PRs Sizes
+* MRs/PRs Throughput
+* Self-Merging MRs/PRs
 * Developer Turnover Rate
-* Unreviewed MR/PR
+* Unreviewed MRs/PRs
 
 ## Supported SCM
 
@@ -46,4 +60,3 @@ Software Engineer Metrics
 
 ## Running
 
-> swed --scm-gitlab-baseurl=https://your-domain-name/api/v4 --scm-gitlab-token=TOKEN --victoriametrics-importurl=http://localhost:8428/api/v1/import/prometheus --check-interval=1h
