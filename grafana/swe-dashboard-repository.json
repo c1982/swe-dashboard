@@ -1,0 +1,461 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": "-- Grafana --",
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 6,
+    "iteration": 1642342960326,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 8,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(cycle_time{repository=\"$repository\"})",
+                    "interval": "",
+                    "legendFormat": "{{title}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Cycle Time ($repository)",
+            "transformations": [],
+            "type": "bargauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [
+                        {
+                            "options": {
+                                "from": 0,
+                                "result": {
+                                    "index": 0,
+                                    "text": "XS"
+                                },
+                                "to": 9
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 10,
+                                "result": {
+                                    "index": 1,
+                                    "text": "S"
+                                },
+                                "to": 29
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 30,
+                                "result": {
+                                    "index": 2,
+                                    "text": "M"
+                                },
+                                "to": 99
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 100,
+                                "result": {
+                                    "index": 3,
+                                    "text": "L"
+                                },
+                                "to": 499
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 500,
+                                "result": {
+                                    "index": 4,
+                                    "text": "XL"
+                                },
+                                "to": 999
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 1000,
+                                "result": {
+                                    "index": 5,
+                                    "text": "XXL"
+                                },
+                                "to": 10000
+                            },
+                            "type": "range"
+                        }
+                    ],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "semi-dark-yellow",
+                                "value": 150
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 600
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 12,
+                "w": 12,
+                "x": 12,
+                "y": 0
+            },
+            "id": 6,
+            "options": {
+                "displayMode": "gradient",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(sum(merge_request_size{repository=\"$repository\"}) by (title))",
+                    "format": "time_series",
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "MRs/PRs Sizes ($repository)",
+            "transformations": [],
+            "type": "bargauge"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "semi-dark-green",
+                                "value": 36000
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 86400
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 259000
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 11,
+                "w": 12,
+                "x": 0,
+                "y": 12
+            },
+            "id": 10,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": false
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "time_to_open{repository=\"$repository\",title=\"$branch\"}",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "Time to Open",
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "time_to_review{repository=\"headball2\",title=\"$branch\"}",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Time to Review",
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "time_to_approve{repository=\"$repository\",title=\"$branch\"}",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Time to Approve",
+                    "refId": "C"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "time_to_merge{repository=\"$repository\",title=\"$branch\"}",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Time to Merge",
+                    "refId": "D"
+                }
+            ],
+            "title": "$repository - $branch",
+            "type": "bargauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 604800
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 1209600
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 11,
+                "w": 12,
+                "x": 12,
+                "y": 12
+            },
+            "id": 4,
+            "options": {
+                "displayMode": "gradient",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true,
+                "text": {}
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(long_running_merge_request{repository=\"$repository\"})",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{title}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Long Running MRs/PRs ($repository)",
+            "type": "bargauge"
+        }
+    ],
+    "refresh": "",
+    "schemaVersion": 34,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+        "list": [
+            {
+                "current": {
+                    "selected": false,
+                    "text": "headball2",
+                    "value": "headball2"
+                },
+                "definition": "merge_request_throughput{}",
+                "description": "",
+                "hide": 0,
+                "includeAll": false,
+                "label": "Repository",
+                "multi": false,
+                "name": "repository",
+                "options": [],
+                "query": {
+                    "query": "merge_request_throughput{}",
+                    "refId": "StandardVariableQuery"
+                },
+                "refresh": 1,
+                "regex": "merge_request_throughput{repository=\"(.+)\"}",
+                "skipUrlSync": false,
+                "sort": 1,
+                "type": "query"
+            },
+            {
+                "current": {
+                    "selected": false,
+                    "text": "feature-navigations-HB2-6451-CharacterEvent-Navigation",
+                    "value": "feature-navigations-HB2-6451-CharacterEvent-Navigation"
+                },
+                "definition": "time_to_open{repository=\"$repository\"}",
+                "hide": 0,
+                "includeAll": false,
+                "label": "Branch",
+                "multi": false,
+                "name": "branch",
+                "options": [],
+                "query": {
+                    "query": "time_to_open{repository=\"$repository\"}",
+                    "refId": "StandardVariableQuery"
+                },
+                "refresh": 1,
+                "regex": "time_to_open{repository=\"$repository\",title=\"(.+)\"}",
+                "skipUrlSync": false,
+                "sort": 0,
+                "type": "query"
+            }
+        ]
+    },
+    "time": {
+        "from": "now-6h",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "SWE Dashboard - Repository",
+    "uid": "wAnLNBJ7z",
+    "version": 19,
+    "weekStart": ""
+}
