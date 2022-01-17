@@ -58,5 +58,21 @@ docker-compose --env-file ./config.env up
 
 * Victoriametrics
 
-## Running
 
+### MRs/PRs Cycle Times
+
+![](docs/images/merge-request-cycle-times.png)
+
+### MRs/PRs Times
+![](docs/images/merge-request-times.png)
+
+### Single Cycle Times
+![](docs/images/merge-request-single-times.png)
+
+### Long-Running MRs/PRs
+
+![](docs/images/long-running-merge-requests.png)
+
+### MRs/PRs Size Counts
+
+![](docs/images/merge-request-size-counts.png)
