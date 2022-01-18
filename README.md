@@ -76,3 +76,48 @@ docker-compose --env-file ./config.env up
 ### MRs/PRs Size Counts
 
 ![](docs/images/merge-request-size-counts.png)
+
+### Friday MRs/PRs
+
+![](docs/images/friday-merge-requests.png)
+
+### Unreviewed MRs/PRs
+
+![](docs/images/unreviewed-merge-requests.png)
+
+### MRs/PRs Comments
+
+![](docs/images/user-merge-request-comments.png)
+
+### MRs/PRs Rates
+
+![](docs/images/merge-request-rates.png)
+
+### MRs/PRs Participants
+
+![](docs/images/merge-request-participants.png)
+
+### Self-Merging Users
+
+![](docs/images/self-merging-users.png)
+
+### Repositories Cycle Time
+
+![](docs/images/repo-cycle-time.png)
+
+### Repositories Time to Open
+
+![](docs/images/repo-time-to-open.png)
+
+### Repositories Time to Review
+
+![](docs/images/repo-time-to-review.png)
+
+### Repositories Time to Approve
+
+![](docs/images/repo-time-to-approve.png)
+
+### Repositories Time to Merge
+
+![](docs/images/repo-time-to-merge.png)
+
