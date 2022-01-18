@@ -69,11 +69,6 @@ func (s *SCM) listOrganizations() (orgs []*github.Organization, err error) {
 	return organizations, nil
 }
 
-func (s *SCM) ListRepositories() bool {
-
-	return true
-}
-
 func (s *SCM) OrganizationRepositoriesList(orgName string) (repos []*github.Repository, err error) {
 	opt := &github.RepositoryListByOrgOptions{
 		ListOptions: github.ListOptions{
