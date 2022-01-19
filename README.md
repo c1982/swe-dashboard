@@ -51,7 +51,8 @@ docker-compose --env-file ./config.env up
 * Self-Merging MRs/PRs
 * Developer Turnover Rate
 * Unreviewed MRs/PRs
-
+* Review Coverage
+* Defect Rate
 ## Supported SCM
 
 * Gitlab
