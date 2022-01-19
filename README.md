@@ -14,7 +14,7 @@ Download binary from releases
 
 > ./swed --scm-gitlab-baseurl=https://your-domain-name/api/v4 --scm-gitlab-token=TOKEN --victoriametrics-importurl=http://localhost:8428/api/v1/import/prometheus --check-interval=1h
 
-#### docker
+#### Docker
 
 ```bash
 docker run --rm --name=swed c1982/swed \
@@ -24,7 +24,9 @@ docker run --rm --name=swed c1982/swed \
 --check-interval=1h
 ```
 
-#### docker-compose 
+#### Easy Setup
+
+Note: Firstly enter your gitlab variables in config.env file
 
 ```bash
 git clone https://github.com/c1982/swe-dashboard.git
@@ -53,6 +55,7 @@ docker-compose --env-file ./config.env up
 ## Supported SCM
 
 * Gitlab
+* GitHub (not implemented yet)
 
 ## Supported TimeSeries DB
 
