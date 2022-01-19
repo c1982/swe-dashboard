@@ -417,7 +417,7 @@ func (s *SCM) convertGithubPullRequestToMergeRequest(pr *github.PullRequest) mod
 		ProjectID:    int(pr.GetHead().GetRepo().GetID()),
 		Title:        pr.GetTitle(),
 		State:        state,
-		CreatedAt:    pr.GetClosedAt(),
+		CreatedAt:    pr.GetCreatedAt(),
 		UpdatedAt:    pr.GetUpdatedAt(),
 		Assignee:     s.convertGithubUserToUser(pr.Assignee),
 		MergedBy:     s.convertGithubUserToUser(pr.MergedBy),
