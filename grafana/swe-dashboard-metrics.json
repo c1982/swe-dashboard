@@ -694,7 +694,35 @@
             "fieldConfig": {
                 "defaults": {
                     "color": {
-                        "mode": "continuous-GrYlRd"
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
                     },
                     "mappings": [],
                     "thresholds": {
@@ -703,18 +731,6 @@
                             {
                                 "color": "green",
                                 "value": null
-                            },
-                            {
-                                "color": "green",
-                                "value": 604800
-                            },
-                            {
-                                "color": "#EAB839",
-                                "value": 1209600
-                            },
-                            {
-                                "color": "semi-dark-red",
-                                "value": 1728000
                             }
                         ]
                     },
@@ -728,18 +744,20 @@
                 "x": 12,
                 "y": 53
             },
-            "id": 20,
+            "id": 22,
             "options": {
-                "displayMode": "basic",
-                "orientation": "horizontal",
-                "reduceOptions": {
+                "legend": {
                     "calcs": [
                         "lastNotNull"
                     ],
-                    "fields": "",
-                    "values": false
+                    "displayMode": "table",
+                    "placement": "right",
+                    "sortBy": "Last *",
+                    "sortDesc": true
                 },
-                "showUnfilled": true
+                "tooltip": {
+                    "mode": "single"
+                }
             },
             "pluginVersion": "8.3.3",
             "targets": [
@@ -748,17 +766,17 @@
                         "type": "prometheus",
                         "uid": "Vy8z2s07z"
                     },
-                    "exemplar": false,
-                    "expr": "sort_desc( (sum by (repository) (time_to_approve{})[1h] / count by (repository) (time_to_approve{})[1h]) )",
-                    "instant": true,
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_open{})[1h] / count by (repository) (time_to_open{})[1h]",
+                    "instant": false,
                     "interval": "",
                     "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
-            "title": "Time to Approve",
+            "title": "Time To Open Trend",
             "transformations": [],
-            "type": "bargauge"
+            "type": "timeseries"
         },
         {
             "fieldConfig": {
@@ -834,7 +852,35 @@
             "fieldConfig": {
                 "defaults": {
                     "color": {
-                        "mode": "continuous-GrYlRd"
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
                     },
                     "mappings": [],
                     "thresholds": {
@@ -868,6 +914,248 @@
                 "x": 12,
                 "y": 60
             },
+            "id": 23,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right",
+                    "sortBy": "Last *",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "(sum by (repository) (time_to_review{})[1h] / count by (repository) (time_to_review{})[1h]) ",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Time to Review Trend",
+            "transformations": [],
+            "type": "timeseries"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 604800
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 1209600
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 1728000
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 7,
+                "w": 12,
+                "x": 0,
+                "y": 67
+            },
+            "id": 20,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": false,
+                    "expr": "sort_desc( (sum by (repository) (time_to_approve{})[1h] / count by (repository) (time_to_approve{})[1h]) )",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Time to Approve",
+            "transformations": [],
+            "type": "bargauge"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 604800
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 1209600
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 1728000
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 7,
+                "w": 12,
+                "x": 12,
+                "y": 67
+            },
+            "id": 24,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right",
+                    "sortBy": "Last *",
+                    "sortDesc": false
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "(sum by (repository) (time_to_approve{})[1h] / count by (repository) (time_to_approve{})[1h]) ",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Time to Approve Trend",
+            "transformations": [],
+            "type": "timeseries"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 604800
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 1209600
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 1728000
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 7,
+                "w": 12,
+                "x": 0,
+                "y": 74
+            },
             "id": 21,
             "options": {
                 "displayMode": "basic",
@@ -899,6 +1187,94 @@
             "title": "Time to Merge",
             "transformations": [],
             "type": "bargauge"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 7,
+                "w": 12,
+                "x": 12,
+                "y": 74
+            },
+            "id": 25,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right",
+                    "sortBy": "Last *",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "Vy8z2s07z"
+                    },
+                    "exemplar": true,
+                    "expr": "sum by (repository) (time_to_merge{})[1h] / count by (repository) (time_to_merge{})[1h]",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Time to Merge Trend",
+            "transformations": [],
+            "type": "timeseries"
         }
     ],
     "refresh": "",
@@ -916,6 +1292,6 @@
     "timezone": "",
     "title": "SWE Dashboard - Metrics",
     "uid": "0CMC2yA7z",
-    "version": 65,
+    "version": 71,
     "weekStart": ""
 }
