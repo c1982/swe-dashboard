@@ -3,6 +3,7 @@ package github
 import (
 	"context"
 	"swe-dashboard/internal/models"
+	"time"
 
 	"github.com/google/go-github/v42/github"
 	"golang.org/x/oauth2"
@@ -119,7 +120,7 @@ func (s *SCM) GetRepository(projectID int) (repository models.Repo, err error) {
 
 func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (mergerequests models.MergeRequests, err error) {
 	mergerequests = []models.MergeRequest{}
-	//TODO: add createdafterday for filtering date.
+	filterdate := time.Now().AddDate(0, 0, -createdafterday)
 	opt := &github.PullRequestListOptions{
 		State:     state,
 		Sort:      "created",
@@ -150,13 +151,22 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 					break
 				}
 
-				mergerequests = append(mergerequests, s.convertGithubPullRequestsToMergeRequests(list)...)
+				mergerequestlist := []models.MergeRequest{}
+
+				for _, v := range list {
+					if v.GetCreatedAt().Unix() < filterdate.Unix() {
+						break
+					}
+					mergerequestlist = append(mergerequestlist, s.convertGithubPullRequestToMergeRequest(v))
+				}
+
+				mergerequests = append(mergerequests, mergerequestlist...)
 
 				if rsp.NextPage == 0 {
 					break
 				}
 
-				opt.ListOptions.Page = rsp.NextPage
+				opt.Page = rsp.NextPage
 			}
 		}
 
@@ -195,8 +205,157 @@ func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments
 	return comments, nil
 }
 
-func (s *SCM) ListUsers() {
+func (s *SCM) ListUsers() (users models.Users, err error) {
+	users = models.Users{}
 
+	opt := &github.ListMembersOptions{
+		ListOptions: github.ListOptions{
+			PerPage: perPageItemCount,
+		},
+	}
+
+	organizations, err := s.listOrganizations()
+
+	if err != nil {
+		return users, err
+	}
+
+	for _, v := range organizations {
+		for {
+			data, rsp, err := s.client.Organizations.ListMembers(s.ctx, v.GetLogin(), opt)
+
+			if err != nil {
+				return users, err
+			}
+
+			for _, v := range s.convertGithubUsersToUsers(data) {
+				users[v.ID] = *v
+			}
+
+			if rsp.NextPage == 0 {
+				break
+			}
+
+			opt.Page = rsp.NextPage
+		}
+	}
+
+	return users, nil
+}
+
+func (s *SCM) GetMergeRequestChanges(projectID int, mergeRequestID int) (mergerequest models.MergeRequest, err error) {
+	mergerequest = models.MergeRequest{}
+
+	repo, _, err := s.client.Repositories.GetByID(s.ctx, int64(projectID))
+
+	if err != nil {
+		return mergerequest, err
+	}
+
+	pullRequest, _, err := s.client.PullRequests.Get(s.ctx, repo.Owner.GetLogin(), repo.GetName(), mergeRequestID)
+
+	if err != nil {
+		return mergerequest, err
+	}
+
+	mergerequest = s.convertGithubPullRequestToMergeRequest(pullRequest)
+
+	opt := &github.ListOptions{
+		Page:    1,
+		PerPage: perPageItemCount,
+	}
+
+	changes := []*models.MergeRequestChanges{}
+
+	for {
+		data, rsp, err := s.client.PullRequests.ListFiles(s.ctx, repo.Owner.GetLogin(), repo.GetName(), mergeRequestID, opt)
+
+		if err != nil {
+			return mergerequest, err
+		}
+
+		changes = append(changes, s.convertGithubPullRequestChangesToMergeRequestChanges(data)...)
+
+		if rsp.NextPage == 0 {
+			break
+		}
+
+		opt.Page = rsp.NextPage
+	}
+
+	mergerequest.Changes = changes
+
+	return mergerequest, nil
+}
+
+func (s *SCM) ListAllProjectMembers(projectID int) (members []*models.User, err error) {
+	members = []*models.User{}
+
+	opt := &github.ListCollaboratorsOptions{
+		ListOptions: github.ListOptions{
+			Page:    1,
+			PerPage: perPageItemCount,
+		},
+	}
+
+	repo, _, err := s.client.Repositories.GetByID(s.ctx, int64(projectID))
+
+	if err != nil {
+		return members, err
+	}
+
+	for {
+		data, rsp, err := s.client.Repositories.ListCollaborators(s.ctx, repo.Owner.GetLogin(), repo.GetName(), opt)
+
+		if err != nil {
+			return members, err
+		}
+
+		members = append(members, s.convertGithubUsersToUsers(data)...)
+
+		if rsp.NextPage == 0 {
+			break
+		}
+
+		opt.Page = rsp.NextPage
+	}
+
+	return members, nil
+}
+
+func (s *SCM) GetMergeRequestParticipants(projectID int, mergeRequestID int) (users []*models.User, err error) {
+	users = []*models.User{}
+
+	opt := &github.ListOptions{
+		Page:    1,
+		PerPage: perPageItemCount,
+	}
+
+	repo, _, err := s.client.Repositories.GetByID(s.ctx, int64(projectID))
+
+	if err != nil {
+		return users, err
+	}
+
+	for {
+		reviews, rsp, err := s.client.PullRequests.ListReviews(s.ctx, repo.Owner.GetLogin(), repo.GetName(), mergeRequestID, opt)
+
+		if err != nil {
+			return users, err
+		}
+
+		for _, v := range reviews {
+			users = append(users, s.convertGithubUserToUser(v.GetUser()))
+		}
+
+		if rsp.NextPage == 0 {
+			break
+		}
+
+		opt.Page = rsp.NextPage
+	}
+
+	return users, nil
 }
 
 func (s *SCM) convertGithubPullRequestsCommentsToComments(comments []*github.PullRequestComment) []*models.Comment {
@@ -229,10 +388,16 @@ func (s *SCM) convertGithubUsersToUsers(users []*github.User) []*models.User {
 
 func (s *SCM) convertGithubUserToUser(user *github.User) *models.User {
 	return &models.User{
-		ID:       int(user.GetID()),
-		Name:     user.GetName(),
-		Username: user.GetLogin(),
-		State:    "",
+		ID:             int(user.GetID()),
+		Name:           user.GetName(),
+		Username:       user.GetLogin(),
+		Email:          user.GetEmail(),
+		IsAdmin:        user.GetSiteAdmin(),
+		AvatarURL:      user.GetAvatarURL(),
+		CreatedAt:      user.GetCreatedAt().Time,
+		LastSignInAt:   user.GetUpdatedAt().Time,
+		LastActivityOn: user.GetUpdatedAt().Time,
+		State:          "",
 	}
 }
 
@@ -275,6 +440,29 @@ func (s *SCM) convertGithubPullRequestsToMergeRequests(prs []*github.PullRequest
 	}
 
 	return mergeRequests
+}
+
+func (s *SCM) convertGithubPullRequestChangesToMergeRequestChanges(changes []*github.CommitFile) []*models.MergeRequestChanges {
+	mergeRequestChanges := []*models.MergeRequestChanges{}
+
+	for _, change := range changes {
+		isFileNameChanged := false
+
+		//TODO: need to check this i am not sure about this is correct way to do it.
+		if change.GetFilename() != change.GetPreviousFilename() {
+			isFileNameChanged = true
+		}
+
+		mergeRequestChanges = append(mergeRequestChanges, &models.MergeRequestChanges{
+			Diff:        change.GetPatch(),
+			NewPath:     change.GetFilename(),
+			OldPath:     change.GetPreviousFilename(),
+			RenamedFile: isFileNameChanged,
+			//TODO: maybe we can check status for detect if file is added, deleted or something.
+		})
+	}
+
+	return mergeRequestChanges
 }
 
 func (s *SCM) setToken(token string) error {
