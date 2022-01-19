@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"swe-dashboard/internal/metrics/mergerequestthroughput"
+	"swe-dashboard/internal/metrics/reviewcoverage"
 	"swe-dashboard/internal/pusher/victoriametrics"
 	"swe-dashboard/internal/scm/gitlab"
 )
@@ -22,7 +23,20 @@ func main() {
 		panic(err)
 	}
 
-	importMergeRequestThroughput(gitlab, pusher)
+	importReviewcoverage(gitlab, pusher)
+}
+
+func importReviewcoverage(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
+	service := reviewcoverage.NewReviewCoverageService(gitlab)
+	counts, err := service.List()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for i := 0; i < len(counts); i++ {
+		fmt.Println("repo:", counts[i].Name, "title:", counts[i].Name1, "Count:", counts[i].Count)
+	}
 }
 
 func importMergeRequestThroughput(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
