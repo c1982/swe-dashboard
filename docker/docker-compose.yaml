@@ -5,19 +5,11 @@ services:
     image: victoriametrics/victoria-metrics
     ports:
       - 8428:8428
-      - 8089:8089
-      - 8089:8089/udp
-      - 2003:2003
-      - 2003:2003/udp
-      - 4242:4242
     volumes:
       - vmdata:/storage
     command:
       - '--storageDataPath=/storage'
-      - '--graphiteListenAddr=:2003'
-      - '--opentsdbListenAddr=:4242'
       - '--httpListenAddr=:8428'
-      - '--influxListenAddr=:8089'
     networks:
       - swed_net
     restart: always
@@ -30,11 +22,10 @@ services:
       - 3000:3000
     volumes:
       - grafanadata:/var/lib/grafana
-      - ./tmp/:/etc/grafana/provisioning
-      - ./tmp/dashboards:/etc/grafana/provisioning/dashboards
-      - ./tmp/datasources:/etc/grafana/provisioning/datasources
-      - ./tmp/plugins:/etc/grafana/provisioning/plugins
-      - ./tmp/notifiers:/etc/grafana/provisioning/notifiers
+      - ./dashboards:/etc/grafana/provisioning/dashboards
+      - ./datasources:/etc/grafana/provisioning/datasources
+      - ../../grafana/swe-dashboard-metrics.json:/var/lib/grafana/dashboards/swe-dashboard-metrics.json
+      - ../../grafana/swe-dashboard-repository.json:/var/lib/grafana/dashboards/swe-dashboard-repository.json
     networks:
       - swed_net
     restart: always
@@ -43,10 +34,7 @@ services:
     image: c1982/swed
     networks:
       - swed_net
-    command: --scm-gitlab-baseurl=${SWED_GITLAB_BASEURL}
-      --scm-gitlab-token=${SWED_GITLAB_TOKEN}
-      --victoriametrics-importurl=${SWED_VICTORIAMETRICS_BASEURL}
-      --check-interval=${SWED_CHECK_INTERVAL}
+    command: --scm-gitlab-baseurl=${SWED_GITLAB_BASEURL} --scm-gitlab-token=${SWED_GITLAB_TOKEN} --victoriametrics-importurl=${SWED_VICTORIAMETRICS_BASEURL} --check-interval=${SWED_CHECK_INTERVAL}
 
 volumes:
   vmdata: {}
