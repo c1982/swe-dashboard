@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/mergerequestthroughput"
 	"swe-dashboard/internal/metrics/reviewcoverage"
 	"swe-dashboard/internal/pusher/victoriametrics"
@@ -23,7 +24,20 @@ func main() {
 		panic(err)
 	}
 
-	importReviewcoverage(gitlab, pusher)
+	importDefectRate(gitlab, pusher)
+}
+
+func importDefectRate(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
+	service := defectrate.NewDefectRateService(gitlab)
+	counts, err := service.List()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for i := 0; i < len(counts); i++ {
+		fmt.Println("repo:", counts[i].Name, "title:", counts[i].Name1, "Count:", counts[i].Count)
+	}
 }
 
 func importReviewcoverage(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"swe-dashboard/internal/metrics/cycletime"
+	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/fridaymergerequests"
 	"swe-dashboard/internal/metrics/longrunningmergerequests"
 	"swe-dashboard/internal/metrics/mergerequestcomments"
@@ -51,6 +52,9 @@ func setMetricsFunctions(mux *sync.RWMutex, gitlab *gitlab.SCM, pusher *victoria
 		},
 		"mergerequestthroughput": func() error {
 			return pusher.ImportMergeRequestThroughput(mergerequestthroughput.NewMergeRequestThroughputService(gitlab))
+		},
+		"defectrate": func() error {
+			return pusher.ImportDefectRate(defectrate.NewDefectRateService(gitlab))
 		},
 	}
 	mux.Unlock()

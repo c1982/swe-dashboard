@@ -3,6 +3,11 @@ package defectrate
 import (
 	"strings"
 	"swe-dashboard/internal/models"
+	"time"
+)
+
+var (
+	defectPrefixes = []string{"fix", "revert", "bug", "bugfix", "repair", "refactor"}
 )
 
 type SCM interface {
@@ -11,6 +16,7 @@ type SCM interface {
 }
 
 type DefectRateService interface {
+	List() (defects []models.ItemCount, err error)
 }
 
 type defectrate struct {
@@ -18,13 +24,13 @@ type defectrate struct {
 	labels []string
 }
 
-func (d *defectrate) NewDefectRateService(scm SCM) DefectRateService {
+func NewDefectRateService(scm SCM) DefectRateService {
 	return &defectrate{scm: scm,
-		labels: []string{"fix", "revert", "bug", "bugfix", "repair", "refactor"}}
+		labels: defectPrefixes}
 }
 
 func (d *defectrate) List() (defects []models.ItemCount, err error) {
-	mergerequests, err := d.scm.ListMergeRequest("merged", "all", 1)
+	mergerequests, err := d.scm.ListMergeRequest("merged", "all", time.Now().Day())
 	if err != nil {
 		return defects, err
 	}
@@ -48,9 +54,10 @@ func (d *defectrate) List() (defects []models.ItemCount, err error) {
 			defectcount++
 		}
 
+		rate := defectcount * 100 / len(repositories[i].MRs)
 		defects = append(defects, models.ItemCount{
 			Name:  repo.Name,
-			Count: float64(defectcount),
+			Count: float64(rate),
 		})
 	}
 
@@ -58,9 +65,10 @@ func (d *defectrate) List() (defects []models.ItemCount, err error) {
 }
 
 func (d *defectrate) isDefectMergeRequest(title string) bool {
+	title = strings.ToLower(title)
 	for i := 0; i < len(d.labels); i++ {
 		suffix := d.labels[i]
-		if strings.HasSuffix(title, suffix) {
+		if strings.HasPrefix(title, suffix) {
 			return true
 		}
 	}
