@@ -10,10 +10,11 @@ import (
 )
 
 type SCM struct {
-	client  *github.Client
-	token   string
-	baseURL string
-	ctx     context.Context
+	client        *github.Client
+	token         string
+	baseURL       string
+	ctx           context.Context
+	organizations []string
 }
 
 const (
@@ -44,7 +45,7 @@ func NewSCM(options ...GithubOption) (scm *SCM, err error) {
 	return scm, nil
 }
 
-func (s *SCM) listOrganizations() (orgs []*github.Organization, err error) {
+func (s *SCM) GetSelfOrganizations() (orgs []*github.Organization, err error) {
 	opt := &github.ListOptions{
 		PerPage: perPageItemCount,
 	}
@@ -68,6 +69,24 @@ func (s *SCM) listOrganizations() (orgs []*github.Organization, err error) {
 	}
 
 	return organizations, nil
+}
+
+func (s *SCM) listOrganizations() (orgs []*github.Organization, err error) {
+	if len(s.organizations) > 0 {
+		organizations := []*github.Organization{}
+		for _, orgName := range s.organizations {
+			organization, _, err := s.client.Organizations.Get(s.ctx, orgName)
+
+			if err != nil {
+				return organizations, err
+			}
+
+			organizations = append(organizations, organization)
+		}
+
+		return organizations, nil
+	}
+	return s.GetSelfOrganizations()
 }
 
 func (s *SCM) OrganizationRepositoriesList(orgName string) (repos []*github.Repository, err error) {
@@ -151,16 +170,12 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 					break
 				}
 
-				mergerequestlist := []models.MergeRequest{}
-
 				for _, v := range list {
 					if v.GetCreatedAt().Unix() < filterdate.Unix() {
 						break
 					}
-					mergerequestlist = append(mergerequestlist, s.convertGithubPullRequestToMergeRequest(v))
+					mergerequests = append(mergerequests, s.convertGithubPullRequestToMergeRequest(v))
 				}
-
-				mergerequests = append(mergerequests, mergerequestlist...)
 
 				if rsp.NextPage == 0 {
 					break
@@ -178,20 +193,26 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments []*models.Comment, err error) {
 	comments = []*models.Comment{}
 
-	opt := &github.PullRequestListCommentsOptions{
-		ListOptions: github.ListOptions{
-			PerPage: perPageItemCount,
-		},
+	opt := &github.ListOptions{
+		PerPage: perPageItemCount,
 	}
 
 	repo, _, err := s.client.Repositories.GetByID(s.ctx, int64(projectID))
+	owner := repo.GetOwner().GetLogin()
+	if repo.GetFork() {
+		owner = repo.GetParent().GetOwner().GetLogin()
+	}
 
 	if err != nil {
-		return
+		return comments, err
 	}
 
 	for {
-		data, rsp, _ := s.client.PullRequests.ListComments(s.ctx, repo.Owner.GetLogin(), repo.GetName(), mergeRequestID, opt)
+		data, rsp, err := s.client.PullRequests.ListReviews(s.ctx, owner, repo.GetName(), int(mergeRequestID), opt)
+
+		if err != nil {
+			return comments, err
+		}
 
 		comments = append(comments, s.convertGithubPullRequestsCommentsToComments(data)...)
 
@@ -358,7 +379,7 @@ func (s *SCM) GetMergeRequestParticipants(projectID int, mergeRequestID int) (us
 	return users, nil
 }
 
-func (s *SCM) convertGithubPullRequestsCommentsToComments(comments []*github.PullRequestComment) []*models.Comment {
+func (s *SCM) convertGithubPullRequestsCommentsToComments(comments []*github.PullRequestReview) []*models.Comment {
 	var commentsList []*models.Comment
 
 	for _, comment := range comments {
@@ -368,8 +389,7 @@ func (s *SCM) convertGithubPullRequestsCommentsToComments(comments []*github.Pul
 			ID:        int(comment.GetID()),
 			Body:      comment.GetBody(),
 			Author:    *s.convertGithubUserToUser(comment.User),
-			CreatedAt: comment.GetCreatedAt(),
-			UpdatedAt: comment.GetUpdatedAt(),
+			CreatedAt: comment.GetSubmittedAt(),
 		})
 	}
 
@@ -472,5 +492,10 @@ func (s *SCM) setToken(token string) error {
 
 func (s *SCM) setBaseURL(baseuri string) error {
 	s.baseURL = baseuri
+	return nil
+}
+
+func (s *SCM) setOrganizations(organizations []string) error {
+	s.organizations = organizations
 	return nil
 }
