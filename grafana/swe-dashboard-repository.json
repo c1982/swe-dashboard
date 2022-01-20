@@ -22,7 +22,7 @@
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
     "id": 6,
-    "iteration": 1642674742250,
+    "iteration": 1642714203053,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -344,6 +344,7 @@
             "type": "stat"
         },
         {
+            "description": "",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -445,7 +446,7 @@
                     "refId": "D"
                 }
             ],
-            "title": "$repository - $branch",
+            "title": "MRs/PRs Times $repository/$branch",
             "type": "bargauge"
         },
         {
@@ -758,7 +759,7 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 7,
+                "h": 8,
                 "w": 24,
                 "x": 0,
                 "y": 28
@@ -827,7 +828,7 @@
                 "h": 12,
                 "w": 12,
                 "x": 0,
-                "y": 35
+                "y": 36
             },
             "id": 20,
             "options": {
@@ -1031,7 +1032,7 @@
                 "h": 12,
                 "w": 12,
                 "x": 12,
-                "y": 35
+                "y": 36
             },
             "id": 6,
             "options": {
@@ -1064,9 +1065,67 @@
             "title": "MRs/PRs Sizes ($repository)",
             "transformations": [],
             "type": "bargauge"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "max": 100,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percent"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 0,
+                "y": 48
+            },
+            "id": 23,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "P4169E866C3094E38"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(sum by (username, name) (defect_rate_user{repository=\"$repository\"}))",
+                    "interval": "",
+                    "legendFormat": "{{username}} ({{name}})",
+                    "refId": "A"
+                }
+            ],
+            "title": "User Defect Rate ($repository)",
+            "type": "bargauge"
         }
     ],
-    "refresh": false,
+    "refresh": "",
     "schemaVersion": 34,
     "style": "dark",
     "tags": [],
@@ -1124,13 +1183,13 @@
         ]
     },
     "time": {
-        "from": "now-12h",
+        "from": "now-6h",
         "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "SWE Dashboard - Repository",
     "uid": "wAnLNBJ7z",
-    "version": 54,
+    "version": 58,
     "weekStart": ""
 }
