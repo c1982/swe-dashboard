@@ -34,6 +34,7 @@ const (
 	turnOverRateMetricName            = `turn_over_rate{} %f`
 	unreviewedMergeRequestMetricName  = `unreviewed_merge_request{repository="%s"} %f`
 	defectRateMetricName              = `defect_rate{repository="%s"} %f`
+	userDefectRateMetricName          = `defect_rate_user{repository="%s", username="%s", name="%s"} %f`
 )
 
 func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err error) {
@@ -274,6 +275,22 @@ func (p *Pusher) ImportDefectRate(service defectrate.DefectRateService) (err err
 
 	for i := 0; i < len(counts); i++ {
 		payload := fmt.Sprintf(defectRateMetricName, counts[i].Name, counts[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+func (p *Pusher) ImportUserDefectRate(service defectrate.DefectRateService) (err error) {
+	counts, err := service.Users()
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(counts); i++ {
+		payload := fmt.Sprintf(userDefectRateMetricName, counts[i].Name, counts[i].Name1, counts[i].Name2, counts[i].Count)
 		err := p.Push(payload)
 		if err != nil {
 			return err

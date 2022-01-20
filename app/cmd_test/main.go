@@ -43,6 +43,22 @@ func importDefectRate(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
 			break
 		}
 	}
+
+	counts, err = service.Users()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for i := 0; i < len(counts); i++ {
+		payload := fmt.Sprintf(`defect_rate_user{repository="%s", username="%s", name="%s"} %f`, counts[i].Name, counts[i].Name1, counts[i].Name2, counts[i].Count)
+		fmt.Println(payload)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+	}
 }
 
 func importMergeRequestThroughput(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {

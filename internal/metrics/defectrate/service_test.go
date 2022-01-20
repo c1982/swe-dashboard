@@ -18,6 +18,7 @@ func TestIsDefectMergeRequest(t *testing.T) {
 		{true, "repair-x"},
 		{true, "bug-x"},
 		{false, "merge-x"},
+		{true, "fixfix"},
 	}
 
 	s := &defectrate{labels: defectPrefixes}

@@ -17,6 +17,7 @@ type SCM interface {
 
 type DefectRateService interface {
 	List() (defects []models.ItemCount, err error)
+	Users() (defects []models.ItemCount, err error)
 }
 
 type defectrate struct {
@@ -57,6 +58,62 @@ func (d *defectrate) List() (defects []models.ItemCount, err error) {
 		rate := defectcount * 100 / len(repositories[i].MRs)
 		defects = append(defects, models.ItemCount{
 			Name:  repo.Name,
+			Count: float64(rate),
+		})
+	}
+
+	return defects, nil
+}
+
+func (d *defectrate) Users() (defects []models.ItemCount, err error) {
+	mergerequests, err := d.scm.ListMergeRequest("merged", "all", time.Now().Day())
+	if err != nil {
+		return defects, err
+	}
+
+	users := map[string]*models.ItemCount{}
+	defects = []models.ItemCount{}
+	repositories := mergerequests.GroupByRepositories()
+	for i := 0; i < len(repositories); i++ {
+		repo, err := d.scm.GetRepository(repositories[i].ID)
+		if err != nil {
+			return defects, err
+		}
+
+		repo.MRs = repositories[i].MRs
+		for n := 0; n < len(repo.MRs); n++ {
+			mr := repo.MRs[n]
+			v, ok := users[mr.Author.Username]
+			if !ok {
+				users[mr.Author.Username] = &models.ItemCount{
+					Name:   repo.Name,
+					Name1:  mr.Author.Username,
+					Name2:  mr.Author.Name,
+					Count:  0,
+					Count1: 1,
+				}
+			} else {
+				v.Count1 = v.Count1 + 1
+				users[mr.Author.Username] = v
+			}
+
+			isdefect := d.isDefectMergeRequest(mr.Title)
+			if !isdefect {
+				continue
+			}
+
+			v = users[mr.Author.Username]
+			v.Count = v.Count + 1
+			users[mr.Author.Username] = v
+		}
+	}
+
+	for _, v := range users {
+		rate := v.Count * 100 / v.Count1
+		defects = append(defects, models.ItemCount{
+			Name:  v.Name,
+			Name1: v.Name1,
+			Name2: v.Name2,
 			Count: float64(rate),
 		})
 	}

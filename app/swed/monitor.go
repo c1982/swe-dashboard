@@ -56,6 +56,9 @@ func setMetricsFunctions(mux *sync.RWMutex, gitlab *gitlab.SCM, pusher *victoria
 		"defectrate": func() error {
 			return pusher.ImportDefectRate(defectrate.NewDefectRateService(gitlab))
 		},
+		"userdefectrate": func() error {
+			return pusher.ImportUserDefectRate(defectrate.NewDefectRateService(gitlab))
+		},
 	}
 	mux.Unlock()
 
