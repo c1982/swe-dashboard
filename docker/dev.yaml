@@ -1,0 +1,36 @@
+version: "3.5"
+services:
+  victoriametrics:
+    container_name: victoriametrics
+    image: victoriametrics/victoria-metrics
+    ports:
+      - 8428:8428
+    volumes:
+      - vmdata:/storage
+    command:
+      - "--storageDataPath=/storage"
+      - "--httpListenAddr=:8428"
+    networks:
+      - swed_net
+    restart: always
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    depends_on:
+      - "victoriametrics"
+    ports:
+      - 3000:3000
+    volumes:
+      - grafanadata:/var/lib/grafana
+      - ./dashboards:/etc/grafana/provisioning/dashboards
+      - ./datasources:/etc/grafana/provisioning/datasources
+      - ../../grafana/swe-dashboard-metrics.json:/var/lib/grafana/dashboards/swe-dashboard-metrics.json
+      - ../../grafana/swe-dashboard-repository.json:/var/lib/grafana/dashboards/swe-dashboard-repository.json
+    networks:
+      - swed_net
+    restart: always
+volumes:
+  vmdata: {}
+  grafanadata: {}
+networks:
+  swed_net: null

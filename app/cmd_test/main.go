@@ -5,7 +5,6 @@ import (
 	"os"
 	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/mergerequestthroughput"
-	"swe-dashboard/internal/metrics/reviewcoverage"
 	"swe-dashboard/internal/pusher/victoriametrics"
 	"swe-dashboard/internal/scm/gitlab"
 )
@@ -36,20 +35,13 @@ func importDefectRate(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
 	}
 
 	for i := 0; i < len(counts); i++ {
-		fmt.Println("repo:", counts[i].Name, "title:", counts[i].Name1, "Count:", counts[i].Count)
-	}
-}
-
-func importReviewcoverage(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
-	service := reviewcoverage.NewReviewCoverageService(gitlab)
-	counts, err := service.List()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	for i := 0; i < len(counts); i++ {
-		fmt.Println("repo:", counts[i].Name, "title:", counts[i].Name1, "Count:", counts[i].Count)
+		payload := fmt.Sprintf(`defect_rate{repository="%s"} %f`, counts[i].Name, counts[i].Count)
+		fmt.Println(payload)
+		err := pusher.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
 	}
 }
 

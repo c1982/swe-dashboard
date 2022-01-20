@@ -125,3 +125,6 @@ docker-compose --env-file ./config.env up
 
 ![](docs/images/repo-time-to-merge.png)
 
+### Defect Rate
+
+![](docs/images/defect-rate.png)
