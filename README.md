@@ -53,6 +53,8 @@ docker-compose --env-file ./config.env up
 * Unreviewed MRs/PRs
 * Review Coverage
 * Defect Rate
+* MRs/PRs Success Rate
+
 ## Supported SCM
 
 * Gitlab
@@ -128,3 +130,11 @@ docker-compose --env-file ./config.env up
 ### Defect Rate
 
 ![](docs/images/defect-rate.png)
+
+### User Defect Rate
+
+TODO: image
+
+### MRs/PRs Success Rate
+
+TODO: image

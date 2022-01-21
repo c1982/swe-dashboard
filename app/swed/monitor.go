@@ -9,6 +9,7 @@ import (
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/metrics/mergerequestrate"
 	"swe-dashboard/internal/metrics/mergerequestsize"
+	"swe-dashboard/internal/metrics/mergerequestsuccessrate"
 	"swe-dashboard/internal/metrics/mergerequestthroughput"
 	"swe-dashboard/internal/metrics/selfmerging"
 	"swe-dashboard/internal/metrics/unreviewedmergerequests"
@@ -59,9 +60,11 @@ func setMetricsFunctions(mux *sync.RWMutex, gitlab *gitlab.SCM, pusher *victoria
 		"userdefectrate": func() error {
 			return pusher.ImportUserDefectRate(defectrate.NewDefectRateService(gitlab))
 		},
+		"mergerequestsuccessrate": func() error {
+			return pusher.ImportMergeRequestSuccessRate(mergerequestsuccessrate.NewMergeRequestSuccessRateService(gitlab))
+		},
 	}
 	mux.Unlock()
-
 	return metrics
 }
 
