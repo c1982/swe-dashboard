@@ -22,7 +22,7 @@
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
     "id": 6,
-    "iteration": 1642714203053,
+    "iteration": 1642802396761,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -341,6 +341,68 @@
                 }
             ],
             "title": "Merge Speed",
+            "type": "stat"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 15,
+                "y": 0
+            },
+            "id": 25,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "P4169E866C3094E38"
+                    },
+                    "exemplar": true,
+                    "expr": "merge_request_success_rate{repository=\"$repository\"}",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "title": "MRs/PRs Success Rate",
             "type": "stat"
         },
         {
@@ -734,6 +796,95 @@
             "fieldConfig": {
                 "defaults": {
                     "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "percent"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 28
+            },
+            "id": 26,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "P4169E866C3094E38"
+                    },
+                    "exemplar": true,
+                    "expr": "merge_request_success_rate{repository=\"$repository\"}",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "title": "MRs/PRs Success Rate ($repository)",
+            "type": "timeseries"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
                         "mode": "thresholds"
                     },
                     "mappings": [],
@@ -762,7 +913,7 @@
                 "h": 8,
                 "w": 24,
                 "x": 0,
-                "y": 28
+                "y": 38
             },
             "id": 4,
             "options": {
@@ -828,7 +979,7 @@
                 "h": 12,
                 "w": 12,
                 "x": 0,
-                "y": 36
+                "y": 46
             },
             "id": 20,
             "options": {
@@ -1032,7 +1183,7 @@
                 "h": 12,
                 "w": 12,
                 "x": 12,
-                "y": 36
+                "y": 46
             },
             "id": 6,
             "options": {
@@ -1092,7 +1243,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 48
+                "y": 58
             },
             "id": 23,
             "options": {
@@ -1190,6 +1341,6 @@
     "timezone": "",
     "title": "SWE Dashboard - Repository",
     "uid": "wAnLNBJ7z",
-    "version": 58,
+    "version": 63,
     "weekStart": ""
 }
