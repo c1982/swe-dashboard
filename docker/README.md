@@ -1,6 +1,7 @@
 # SWE Dashboard
 
 ### Run docker
+
 > docker-compose --env-file ./config.env up
 
 ### Dashboard

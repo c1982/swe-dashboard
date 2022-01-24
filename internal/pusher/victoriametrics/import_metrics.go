@@ -3,12 +3,14 @@ package victoriametrics
 import (
 	"fmt"
 	"swe-dashboard/internal/metrics/cycletime"
+	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/fridaymergerequests"
 	"swe-dashboard/internal/metrics/longrunningmergerequests"
 	"swe-dashboard/internal/metrics/mergerequestcomments"
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/metrics/mergerequestrate"
 	"swe-dashboard/internal/metrics/mergerequestsize"
+	"swe-dashboard/internal/metrics/mergerequestsuccessrate"
 	"swe-dashboard/internal/metrics/mergerequestthroughput"
 	"swe-dashboard/internal/metrics/selfmerging"
 	"swe-dashboard/internal/metrics/turnoverrate"
@@ -32,6 +34,9 @@ const (
 	selfMergingMetricName             = `self_merging{name="%s", username="%s"} %f`
 	turnOverRateMetricName            = `turn_over_rate{} %f`
 	unreviewedMergeRequestMetricName  = `unreviewed_merge_request{repository="%s"} %f`
+	defectRateMetricName              = `defect_rate{repository="%s"} %f`
+	userDefectRateMetricName          = `defect_rate_user{repository="%s", username="%s", name="%s"} %f`
+	mergeRequestSuccessRateMetricName = `merge_request_success_rate{repository="%s"} %f`
 )
 
 func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err error) {
@@ -255,6 +260,56 @@ func (p *Pusher) ImportUnreviewedMergeRequests(service unreviewedmergerequests.U
 
 	for i := 0; i < len(counts); i++ {
 		payload := fmt.Sprintf(unreviewedMergeRequestMetricName, counts[i].Name, counts[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (p *Pusher) ImportDefectRate(service defectrate.DefectRateService) (err error) {
+	counts, err := service.List()
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(counts); i++ {
+		payload := fmt.Sprintf(defectRateMetricName, counts[i].Name, counts[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+func (p *Pusher) ImportUserDefectRate(service defectrate.DefectRateService) (err error) {
+	counts, err := service.Users()
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(counts); i++ {
+		payload := fmt.Sprintf(userDefectRateMetricName, counts[i].Name, counts[i].Name1, counts[i].Name2, counts[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (p *Pusher) ImportMergeRequestSuccessRate(service mergerequestsuccessrate.MergeRequestSuccessRateService) (err error) {
+	counts, err := service.List()
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(counts); i++ {
+		payload := fmt.Sprintf(mergeRequestSuccessRateMetricName, counts[i].Name, counts[i].Count)
 		err := p.Push(payload)
 		if err != nil {
 			return err

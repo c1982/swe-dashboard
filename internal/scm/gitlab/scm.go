@@ -297,6 +297,7 @@ func (s *SCM) convertMergeRequestChanges(mergerequest *gitlab.MergeRequest) []*m
 	changes := []*models.MergeRequestChanges{}
 	for i := 0; i < len(mergerequest.Changes); i++ {
 		c := mergerequest.Changes[i]
+
 		changes = append(changes, &models.MergeRequestChanges{
 			OldPath:     c.OldPath,
 			NewPath:     c.NewPath,
@@ -354,6 +355,11 @@ func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments
 
 		for i := 0; i < len(notes); i++ {
 			n := notes[i]
+
+			if n.FileName == "" {
+				continue
+			}
+
 			approved := false
 			if n.System {
 				approved = strings.Contains(n.Body, "approved")
@@ -370,6 +376,7 @@ func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments
 				CreatedAt:    *n.CreatedAt,
 				NoteableType: n.NoteableType,
 				ApprovedNote: approved,
+				FileName:     n.FileName,
 				Author: models.User{
 					ID:       n.Author.ID,
 					Name:     n.Author.Name,

@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 services:
   victoriametrics:
     container_name: victoriametrics
@@ -8,8 +8,8 @@ services:
     volumes:
       - vmdata:/storage
     command:
-      - '--storageDataPath=/storage'
-      - '--httpListenAddr=:8428'
+      - "--storageDataPath=/storage"
+      - "--httpListenAddr=:8428"
     networks:
       - swed_net
     restart: always
@@ -29,13 +29,6 @@ services:
     networks:
       - swed_net
     restart: always
-  swed:
-    container_name: swed
-    image: c1982/swed
-    networks:
-      - swed_net
-    command: --scm-gitlab-baseurl=${SWED_GITLAB_BASEURL} --scm-gitlab-token=${SWED_GITLAB_TOKEN} --victoriametrics-importurl=${SWED_VICTORIAMETRICS_BASEURL} --check-interval=${SWED_CHECK_INTERVAL}
-
 volumes:
   vmdata: {}
   grafanadata: {}

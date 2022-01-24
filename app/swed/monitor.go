@@ -2,12 +2,14 @@ package main
 
 import (
 	"swe-dashboard/internal/metrics/cycletime"
+	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/fridaymergerequests"
 	"swe-dashboard/internal/metrics/longrunningmergerequests"
 	"swe-dashboard/internal/metrics/mergerequestcomments"
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/metrics/mergerequestrate"
 	"swe-dashboard/internal/metrics/mergerequestsize"
+	"swe-dashboard/internal/metrics/mergerequestsuccessrate"
 	"swe-dashboard/internal/metrics/mergerequestthroughput"
 	"swe-dashboard/internal/metrics/selfmerging"
 	"swe-dashboard/internal/metrics/unreviewedmergerequests"
@@ -52,9 +54,17 @@ func setMetricsFunctions(mux *sync.RWMutex, gitlab *gitlab.SCM, pusher *victoria
 		"mergerequestthroughput": func() error {
 			return pusher.ImportMergeRequestThroughput(mergerequestthroughput.NewMergeRequestThroughputService(gitlab))
 		},
+		"defectrate": func() error {
+			return pusher.ImportDefectRate(defectrate.NewDefectRateService(gitlab))
+		},
+		"userdefectrate": func() error {
+			return pusher.ImportUserDefectRate(defectrate.NewDefectRateService(gitlab))
+		},
+		"mergerequestsuccessrate": func() error {
+			return pusher.ImportMergeRequestSuccessRate(mergerequestsuccessrate.NewMergeRequestSuccessRateService(gitlab))
+		},
 	}
 	mux.Unlock()
-
 	return metrics
 }
 
