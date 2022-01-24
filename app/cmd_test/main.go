@@ -17,7 +17,7 @@ func main() {
 		panic(err)
 	}
 
-	pusher, err := victoriametrics.NewPusher(victoriametrics.SetPushURL("http://localhost:8428/api/v1/import/prometheus"))
+	pusher, err := victoriametrics.NewPusher(victoriametrics.SetPushURL("http://localhost:8428"))
 	if err != nil {
 		panic(err)
 	}

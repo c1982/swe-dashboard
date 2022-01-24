@@ -1,12 +1,12 @@
 version: '3.5'
 services:
   victoriametrics:
-    container_name: victoriametrics
+    container_name: swed-victoriametrics
     image: victoriametrics/victoria-metrics
     ports:
       - 8428:8428
     volumes:
-      - vmdata:/storage
+      - swed_victoriametrics:/storage
     command:
       - '--storageDataPath=/storage'
       - '--httpListenAddr=:8428'
@@ -14,18 +14,18 @@ services:
       - swed_net
     restart: always
   grafana:
-    container_name: grafana
+    container_name: swed-grafana
     image: grafana/grafana
     depends_on:
       - "victoriametrics"
     ports:
       - 3000:3000
     volumes:
-      - grafanadata:/var/lib/grafana
-      - ./dashboards:/etc/grafana/provisioning/dashboards
-      - ./datasources:/etc/grafana/provisioning/datasources
-      - ../../grafana/swe-dashboard-metrics.json:/var/lib/grafana/dashboards/swe-dashboard-metrics.json
-      - ../../grafana/swe-dashboard-repository.json:/var/lib/grafana/dashboards/swe-dashboard-repository.json
+      - swed_grafana:/var/lib/grafana
+      - ./dashboards/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./datasources/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./../grafana/swe-dashboard-metrics.json:/var/lib/grafana/dashboards/swe-dashboard-metrics.json
+      - ./../grafana/swe-dashboard-repository.json:/var/lib/grafana/dashboards/swe-dashboard-repository.json
     networks:
       - swed_net
     restart: always
@@ -37,7 +37,7 @@ services:
     command: --scm-gitlab-baseurl=${SWED_GITLAB_BASEURL} --scm-gitlab-token=${SWED_GITLAB_TOKEN} --victoriametrics-importurl=${SWED_VICTORIAMETRICS_BASEURL} --check-interval=${SWED_CHECK_INTERVAL}
 
 volumes:
-  vmdata: {}
-  grafanadata: {}
+  swed_victoriametrics: {}
+  swed_grafana: {}
 networks:
   swed_net: null

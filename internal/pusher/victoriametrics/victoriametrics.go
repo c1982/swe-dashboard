@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-//curl -d 'foo{bar="baz"} 123' -X POST 'http://localhost:8428/api/v1/import/prometheus'
+//curl -d 'foo{bar="baz"} 123' -X POST 'http://localhost:8428/api/v1/import/prometheus?timestamp=1626957551000'
 //curl -G 'http://localhost:8428/api/v1/export' -d 'match={__name__=~"foo"}'
 
 type VictoriaMetricOption func(*Pusher) error
@@ -38,36 +38,45 @@ func NewPusher(options ...VictoriaMetricOption) (pusher *Pusher, err error) {
 }
 
 func (p *Pusher) Push(payload string) error {
-	return p.httpPost(p.host, payload)
+	url := fmt.Sprintf("%s/api/v1/import/prometheus", p.host)
+	_, err := p.httpPost(url, payload)
+	return err
 }
 
 func (p *Pusher) PushWithTime(payload string, date time.Time) error {
-	timestamp := date.Unix()
-	postURL := fmt.Sprintf("%s?timestamp=%d", p.host, timestamp)
-	return p.httpPost(postURL, payload)
+	timestamp := fmt.Sprintf("%d000", date.Unix())
+	postURL := fmt.Sprintf("%s/api/v1/import/prometheus?timestamp=%s", p.host, timestamp)
+	_, err := p.httpPost(postURL, payload)
+	return err
 }
 
-func (s *Pusher) setHost(pushURL string) error {
-	s.host = pushURL
+func (p *Pusher) Query(payload string) (result string, err error) {
+	url := fmt.Sprintf("%s/api/v1/export", p.host)
+	result, err = p.httpPost(url, payload)
+	return result, err
+}
+
+func (p *Pusher) setHost(pushURL string) error {
+	p.host = pushURL
 	return nil
 }
 
-func (s *Pusher) httpPost(postURL, payload string) error {
+func (p *Pusher) httpPost(postURL, payload string) (string, error) {
 	reqbody := bytes.NewBuffer([]byte(payload))
 	resp, err := http.Post(postURL, "application/x-www-form-urlencoded", reqbody)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if resp.StatusCode > 204 {
-		return fmt.Errorf("status code: %d, msg: %s", resp.StatusCode, string(body))
+		return "", fmt.Errorf("status code: %d, msg: %s", resp.StatusCode, string(body))
 	}
 
-	return nil
+	return string(body), nil
 }
