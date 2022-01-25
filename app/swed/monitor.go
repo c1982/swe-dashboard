@@ -69,6 +69,7 @@ func setMetricsFunctions(mux *sync.RWMutex, gitlab *gitlab.SCM, pusher *victoria
 }
 
 func executeMetricFunctions(metrics map[string]func() error) {
+	log.Info().Msg("begin ingestion")
 	var wg sync.WaitGroup
 	mux.RLock()
 	for name, f := range metrics {
@@ -86,6 +87,7 @@ func executeMetricFunctions(metrics map[string]func() error) {
 	}
 	mux.RUnlock()
 	wg.Wait()
+	log.Info().Msg("end ingestion")
 }
 
 func run(interval time.Duration, gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {

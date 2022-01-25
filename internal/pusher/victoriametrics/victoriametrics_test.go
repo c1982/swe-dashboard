@@ -1,3 +1,5 @@
+// +build integ
+
 package victoriametrics
 
 import (
@@ -35,4 +37,18 @@ func TestQueryInteg(t *testing.T) {
 	}
 
 	fmt.Println(result)
+}
+
+func TestFirstContactInteg(t *testing.T) {
+	p, err := NewPusher(SetPushURL("http://localhost:8428"))
+	if err != nil {
+		t.Error(err)
+	}
+
+	ok, err := p.FirstContact()
+	if err != nil {
+		t.Error(err)
+	}
+
+	t.Log("firstcontact: ", ok)
 }

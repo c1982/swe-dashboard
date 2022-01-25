@@ -75,8 +75,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "defect_rate{repository=\"$repository\"}",
@@ -138,8 +137,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
@@ -202,8 +200,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_review{repository=\"$repository\"}) / count by (repository) (time_to_review{repository=\"$repository\"})",
@@ -266,8 +263,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
@@ -329,8 +325,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_merge{repository=\"$repository\"}) / count by (repository) (time_to_merge{repository=\"$repository\"})",
@@ -392,8 +387,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_success_rate{repository=\"$repository\"}",
@@ -461,8 +455,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "time_to_open{repository=\"$repository\",title=\"$branch\"}",
@@ -473,8 +466,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "time_to_review{repository=\"headball2\",title=\"$branch\"}",
@@ -485,8 +477,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "time_to_approve{repository=\"$repository\",title=\"$branch\"}",
@@ -497,8 +488,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "time_to_merge{repository=\"$repository\",title=\"$branch\"}",
@@ -592,8 +582,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "(sum by (repository) (cycle_time{repository=\"$repository\"})[10m] / count by (repository) (cycle_time{repository=\"$repository\"})[10m])",
@@ -655,8 +644,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(cycle_time{repository=\"$repository\"})",
@@ -742,8 +730,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
@@ -754,8 +741,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_review{repository=\"$repository\"}) / count by (repository) (time_to_review{repository=\"$repository\"})",
@@ -765,8 +751,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
@@ -777,8 +762,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_merge{repository=\"$repository\"}) / count by (repository) (time_to_merge{repository=\"$repository\"})",
@@ -867,8 +851,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_success_rate{repository=\"$repository\"}",
@@ -933,8 +916,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(long_running_merge_request{repository=\"$repository\"})",
@@ -998,8 +980,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} <= 9)",
@@ -1011,8 +992,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 10 and merge_request_size{repository=\"$repository\"} < 29)",
@@ -1025,8 +1005,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 30 and merge_request_size{repository=\"$repository\"} < 99)  ",
@@ -1039,8 +1018,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 100 and merge_request_size{repository=\"$repository\"} < 499)  ",
@@ -1053,8 +1031,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 500 and merge_request_size{repository=\"$repository\"} < 999)  ",
@@ -1067,8 +1044,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 1000 )  ",
@@ -1202,8 +1178,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(sum(merge_request_size{repository=\"$repository\"}) by (title))",
@@ -1262,8 +1237,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(sum by (username, name) (defect_rate_user{repository=\"$repository\"}))",

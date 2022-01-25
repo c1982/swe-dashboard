@@ -102,8 +102,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_throughput{}",
@@ -192,8 +191,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_rate{}",
@@ -262,8 +260,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort(merge_request_success_rate{})",
@@ -351,8 +348,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_success_rate{}",
@@ -420,8 +416,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc(sum by (repository) (friday_merge_request{}))",
@@ -490,8 +485,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc(sum by (repository) (unreviewed_merge_request{}))",
@@ -552,8 +546,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(comments_leaderboard{})",
@@ -620,8 +613,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(participants_leaderboard{})",
@@ -692,8 +684,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(self_merging{})",
@@ -763,8 +754,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (cycle_time{})[1h] / count by (repository) (cycle_time{})[1h]) )",
@@ -827,8 +817,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(defect_rate{})",
@@ -917,8 +906,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "defect_rate{}",
@@ -975,8 +963,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(sum by (username, name) (defect_rate_user))",
@@ -1064,8 +1051,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (username, name) (defect_rate_user)",
@@ -1132,8 +1118,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (time_to_open{})[1h] / count by (repository) (time_to_open{})[1h]) )",
@@ -1220,8 +1205,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_open{})[1h] / count by (repository) (time_to_open{})[1h]",
@@ -1290,8 +1274,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (time_to_review{})[1h] / count by (repository) (time_to_review{})[1h]) )",
@@ -1390,8 +1373,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "(sum by (repository) (time_to_review{})[1h] / count by (repository) (time_to_review{})[1h]) ",
@@ -1460,8 +1442,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (time_to_approve{})[1h] / count by (repository) (time_to_approve{})[1h]) )",
@@ -1560,8 +1541,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "(sum by (repository) (time_to_approve{})[1h] / count by (repository) (time_to_approve{})[1h]) ",
@@ -1630,8 +1610,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (time_to_merge{})[1h] / count by (repository) (time_to_merge{})[1h]) )",
@@ -1718,8 +1697,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_merge{})[1h] / count by (repository) (time_to_merge{})[1h]",

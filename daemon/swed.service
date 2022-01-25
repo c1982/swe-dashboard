@@ -1,0 +1,16 @@
+[Unit]
+Description=SWE Dashboard Service
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+EnvironmentFile=/opt/swed/.swed.config
+ExecStart=/opt/swed/swed $SWED_GITLAB_BASEURL $SWED_GITLAB_TOKEN $SWED_VICTORIAMETRICS_URL $SWED_INTERVAL
+LimitNOFILE=131072
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=swed
+WorkingDirectory=/opt/swed
+
+[Install]
+WantedBy=multi-user.target

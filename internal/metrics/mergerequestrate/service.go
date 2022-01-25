@@ -31,7 +31,7 @@ type mergeRequestRates struct {
 }
 
 func (m *mergeRequestRates) MergeRequestRatesThisMonth() (rates []models.ItemCount, err error) {
-	m.mergerequests, err = m.scm.ListMergeRequest("merged", "all", time.Now().Day())
+	m.mergerequests, err = m.scm.ListMergeRequest("merged", "all", 1)
 	if err != nil {
 		return rates, err
 	}

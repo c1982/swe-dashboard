@@ -33,7 +33,6 @@ func NewPusher(options ...VictoriaMetricOption) (pusher *Pusher, err error) {
 			return p, err
 		}
 	}
-
 	return p, nil
 }
 
@@ -54,6 +53,25 @@ func (p *Pusher) Query(payload string) (result string, err error) {
 	url := fmt.Sprintf("%s/api/v1/export", p.host)
 	result, err = p.httpPost(url, payload)
 	return result, err
+}
+
+func (p *Pusher) FirstContact() (bool, error) {
+	result, err := p.Query(`match={__name__=~"first_contact"}`)
+	if err != nil {
+		return true, err
+	}
+
+	fmt.Println(result)
+	if result != "" {
+		return true, nil
+	}
+
+	err = p.Push("first_contact 1")
+	if err != nil {
+		return true, err
+	}
+
+	return false, nil
 }
 
 func (p *Pusher) setHost(pushURL string) error {

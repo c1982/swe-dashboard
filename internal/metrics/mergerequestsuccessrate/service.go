@@ -2,7 +2,6 @@ package mergerequestsuccessrate
 
 import (
 	"swe-dashboard/internal/models"
-	"time"
 )
 
 const (
@@ -33,7 +32,7 @@ func NewMergeRequestSuccessRateService(scm SCM) MergeRequestSuccessRateService {
 }
 
 func (s *successRate) List() (rates []models.ItemCount, err error) {
-	mergerequests, err := s.scm.ListMergeRequest("", "all", time.Now().Day())
+	mergerequests, err := s.scm.ListMergeRequest("", "all", 1)
 	if err != nil {
 		return rates, err
 	}

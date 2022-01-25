@@ -4,7 +4,6 @@ import (
 	"sort"
 	"strings"
 	"swe-dashboard/internal/models"
-	"time"
 )
 
 type SCM interface {
@@ -40,7 +39,7 @@ type cycleTime struct {
 
 func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 	cycletimes = []models.ItemCount{}
-	mergerequests, err := c.scm.ListMergeRequest("merged", "all", time.Now().Day())
+	mergerequests, err := c.scm.ListMergeRequest("merged", "all", 1)
 	if err != nil {
 		return cycletimes, err
 	}
@@ -65,41 +64,47 @@ func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 				return cycletimes, err
 			}
 
-			mergerequestopentime := mr.CreatedAt.Unix()
 			mergerequestfirstcommit := c.mergeRequestFirstCommit(commits)
+			if mergerequestfirstcommit == nil {
+				continue
+			}
+
 			mergerequestfirstcomment := c.mergeRequestFirstComment(comments)
-			mergerequestapprovalcomment := c.mergeRequestApprovalComment(comments)
+			if mergerequestfirstcomment == nil {
+				continue
+			}
 
+			mergerequestopentime := mr.CreatedAt.Unix()
 			opentime := mergerequestopentime - mergerequestfirstcommit.CreatedAt.Unix()
-			timetoreview := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestopentime
-			timetoapprove := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
-			mergetime := mr.MergedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
-			cycletime := mr.MergedAt.Unix() - mergerequestfirstcommit.CreatedAt.Unix()
-
 			c.timetoopens = append(c.timetoopens, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(opentime),
 			})
 
+			timetoreview := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestopentime
 			c.timetoreviews = append(c.timetoreviews, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(timetoreview),
 			})
 
+			mergerequestapprovalcomment := c.mergeRequestApprovalComment(comments)
+			timetoapprove := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
 			c.timetoapprove = append(c.timetoapprove, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(timetoapprove),
 			})
 
+			mergetime := mr.MergedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
 			c.timetomerge = append(c.timetomerge, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(mergetime),
 			})
 
+			cycletime := mr.MergedAt.Unix() - mergerequestfirstcommit.CreatedAt.Unix()
 			cycletimes = append(cycletimes, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
@@ -153,6 +158,10 @@ func (c cycleTime) mergeRequestFirstComment(comments []*models.Comment) *models.
 
 		commentIndex = i
 		break
+	}
+
+	if len(comments) < 1 {
+		return nil
 	}
 
 	return comments[commentIndex]

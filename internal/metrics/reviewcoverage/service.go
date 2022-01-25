@@ -27,7 +27,7 @@ func NewReviewCoverageService(scm SCM) ReviewCoverageService {
 }
 
 func (r *reviewCoverage) List() (coverages []models.ItemCount, err error) {
-	mergerequests, err := r.scm.ListMergeRequest("merged", "all", 7)
+	mergerequests, err := r.scm.ListMergeRequest("merged", "all", 1)
 	if err != nil {
 		return coverages, err
 	}
