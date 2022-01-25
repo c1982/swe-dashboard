@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"strings"
 	"swe-dashboard/internal/models"
 	"time"
 
@@ -87,6 +88,11 @@ func (s *SCM) listOrganizations() (orgs []*github.Organization, err error) {
 	return s.GetSelfOrganizations()
 }
 
+func (s *SCM) getPullRequest(owner, repo string, number int) (pr *github.PullRequest, err error) {
+	pr, _, err = s.client.PullRequests.Get(s.ctx, owner, repo, number)
+	return pr, err
+}
+
 func (s *SCM) OrganizationRepositoriesList(orgName string) (repos []*github.Repository, err error) {
 	opt := &github.RepositoryListByOrgOptions{
 		ListOptions: github.ListOptions{
@@ -137,10 +143,17 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 	mergerequests = []models.MergeRequest{}
 	filterdate := time.Now().AddDate(0, 0, -createdafterday)
 	mergedOnly := false
-	if state == "merged" {
+
+	switch state {
+	case "merged":
 		mergedOnly = true
 		state = "closed"
+	case "opened":
+		state = "open"
+	default:
+		state = "all"
 	}
+
 	opt := &github.PullRequestListOptions{
 		State:     state,
 		Sort:      "created",
@@ -173,6 +186,10 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 				}
 
 				for _, v := range list {
+					mergerequest, err := s.getPullRequest(orgLogin, repo.GetName(), int(v.GetNumber()))
+					if err != nil {
+						return mergerequests, err
+					}
 					if v.GetCreatedAt().Unix() < filterdate.Unix() {
 						break
 					}
@@ -180,9 +197,9 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 						if v.MergedAt == nil {
 							continue
 						}
-						mergerequests = append(mergerequests, s.convertGithubPullRequestToMergeRequest(v))
+						mergerequests = append(mergerequests, s.convertGithubPullRequestToMergeRequest(mergerequest))
 					} else {
-						mergerequests = append(mergerequests, s.convertGithubPullRequestToMergeRequest(v))
+						mergerequests = append(mergerequests, s.convertGithubPullRequestToMergeRequest(mergerequest))
 					}
 				}
 
@@ -201,8 +218,10 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments []*models.Comment, err error) {
 	comments = []*models.Comment{}
 
-	opt := &github.ListOptions{
-		PerPage: perPageItemCount,
+	opt := &github.PullRequestListCommentsOptions{
+		ListOptions: github.ListOptions{
+			PerPage: perPageItemCount,
+		},
 	}
 
 	repo, _, err := s.client.Repositories.GetByID(s.ctx, int64(projectID))
@@ -217,7 +236,7 @@ func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments
 	}
 
 	for {
-		data, rsp, err := s.client.PullRequests.ListReviews(s.ctx, owner, repo.GetName(), int(mergeRequestID), opt)
+		data, rsp, err := s.client.PullRequests.ListComments(s.ctx, owner, repo.GetName(), int(mergeRequestID), opt)
 		if err != nil {
 			return comments, err
 		}
@@ -420,6 +439,8 @@ func (s *SCM) convertGithubCommitToCommit(repoCommit *github.RepositoryCommit, r
 	commit := repoCommit.GetCommit()
 	return &models.Commit{
 		ID:             commit.GetNodeID(),
+		ShortID:        commit.GetSHA(),
+		Title:          commit.GetMessage(),
 		Message:        commit.GetMessage(),
 		AuthorName:     repoCommit.GetAuthor().GetName(),
 		CommitterName:  commit.GetAuthor().GetName(),
@@ -430,18 +451,25 @@ func (s *SCM) convertGithubCommitToCommit(repoCommit *github.RepositoryCommit, r
 	}
 }
 
-func (s *SCM) convertGithubPullRequestsCommentsToComments(comments []*github.PullRequestReview) []*models.Comment {
+func (s *SCM) convertGithubPullRequestsCommentsToComments(comments []*github.PullRequestComment) []*models.Comment {
 	var commentsList []*models.Comment
 
 	for _, comment := range comments {
 
+		approved := strings.Contains(comment.GetBody(), "approved")
+
 		//TODO: need to add more fields
 		commentsList = append(commentsList, &models.Comment{
-			ID:        int(comment.GetID()),
-			Body:      comment.GetBody(),
-			Author:    *s.convertGithubUserToUser(comment.User),
-			CreatedAt: comment.GetSubmittedAt(),
+			ID:           int(comment.GetID()),
+			Body:         comment.GetBody(),
+			Title:        "Empty",
+			Author:       *s.convertGithubUserToUser(comment.User),
+			CreatedAt:    comment.GetCreatedAt(),
+			UpdatedAt:    comment.GetUpdatedAt(),
+			ApprovedNote: approved,
+			Resolvable:   false,
 		})
+
 	}
 
 	return commentsList
@@ -460,7 +488,7 @@ func (s *SCM) convertGithubUsersToUsers(users []*github.User) []*models.User {
 func (s *SCM) convertGithubUserToUser(user *github.User) *models.User {
 	return &models.User{
 		ID:             int(user.GetID()),
-		Name:           user.GetName(),
+		Name:           user.GetLogin(),
 		Username:       user.GetLogin(),
 		Email:          user.GetEmail(),
 		IsAdmin:        user.GetSiteAdmin(),
@@ -476,8 +504,15 @@ func (s *SCM) convertGithubPullRequestToMergeRequest(pr *github.PullRequest) mod
 
 	state := pr.GetState()
 	//TODO: Check this trick for github merged state
-	if pr.MergedAt != nil {
-		state = "merged"
+	switch state {
+	case "closed":
+		state = "closed"
+		if pr.MergedAt != nil {
+			state = "merged"
+		}
+	case "open":
+		state = "opened"
+
 	}
 
 	return models.MergeRequest{
@@ -490,10 +525,10 @@ func (s *SCM) convertGithubPullRequestToMergeRequest(pr *github.PullRequest) mod
 		State:        state,
 		CreatedAt:    pr.GetCreatedAt(),
 		UpdatedAt:    pr.GetUpdatedAt(),
-		Assignee:     s.convertGithubUserToUser(pr.Assignee),
-		MergedBy:     s.convertGithubUserToUser(pr.MergedBy),
+		Assignee:     s.convertGithubUserToUser(pr.GetAssignee()),
+		MergedBy:     s.convertGithubUserToUser(pr.GetMergedBy()),
 		//TODO: Check this i am not sure about that closed by is correct value.
-		ClosedBy:  s.convertGithubUserToUser(pr.MergedBy),
+		ClosedBy:  s.convertGithubUserToUser(pr.GetMergedBy()),
 		MergedAt:  pr.MergedAt,
 		ClosedAt:  pr.ClosedAt,
 		Assignees: s.convertGithubUsersToUsers(pr.Assignees),

@@ -139,6 +139,10 @@ func (c *cycleTime) mergeRequestFirstCommit(commits []*models.Commit) *models.Co
 }
 
 func (c cycleTime) mergeRequestFirstComment(comments []*models.Comment) *models.Comment {
+	//TODO: not sure about that null check.
+	if len(comments) == 0 {
+		return &models.Comment{}
+	}
 	sort.Slice(comments, func(i, j int) bool {
 		return comments[i].CreatedAt.Before(comments[j].CreatedAt)
 	})
@@ -159,6 +163,10 @@ func (c cycleTime) mergeRequestFirstComment(comments []*models.Comment) *models.
 }
 
 func (c cycleTime) mergeRequestApprovalComment(comments []*models.Comment) *models.Comment {
+	//TODO: not sure about that null check.
+	if len(comments) == 0 {
+		return &models.Comment{}
+	}
 	sort.Slice(comments, func(i, j int) bool {
 		return comments[i].CreatedAt.Before(comments[j].CreatedAt)
 	})
