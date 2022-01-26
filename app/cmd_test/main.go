@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"swe-dashboard/internal/metrics/mergerequestsuccessrate"
+	"swe-dashboard/internal/metrics/longrunningmergerequests"
 	"swe-dashboard/internal/pusher/victoriametrics"
 	"swe-dashboard/internal/scm/gitlab"
 )
@@ -26,7 +26,7 @@ func main() {
 }
 
 func importMerics(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
-	service := mergerequestsuccessrate.NewMergeRequestSuccessRateService(gitlab)
+	service := longrunningmergerequests.NewLongRunningMergerequestsService(gitlab)
 	counts, err := service.List()
 	if err != nil {
 		fmt.Println(err)
@@ -34,7 +34,7 @@ func importMerics(gitlab *gitlab.SCM, pusher *victoriametrics.Pusher) {
 	}
 
 	for i := 0; i < len(counts); i++ {
-		payload := fmt.Sprintf(`merge_request_success_rate{repository="%s"} %f`, counts[i].Name, counts[i].Count)
+		payload := fmt.Sprintf(`long_running_merge_request{repository="%s", title="%s"} %f`, counts[i].Name, counts[i].Name1, counts[i].Count)
 		fmt.Println(payload)
 		err := pusher.Push(payload)
 		if err != nil {

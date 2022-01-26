@@ -347,6 +347,7 @@ func (s *SCM) GetMergeRequestParticipants(projectID int, mergeRequestID int) (us
 func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments []*models.Comment, err error) {
 	comments = []*models.Comment{}
 	opt := &gitlab.ListMergeRequestNotesOptions{}
+
 	for {
 		notes, rsp, err := s.client.Notes.ListMergeRequestNotes(projectID, mergeRequestID, opt)
 		if err != nil {
@@ -355,10 +356,6 @@ func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments
 
 		for i := 0; i < len(notes); i++ {
 			n := notes[i]
-
-			if n.FileName == "" {
-				continue
-			}
 
 			approved := false
 			if n.System {

@@ -3,6 +3,7 @@ package reviewcoverage
 import (
 	"strings"
 	"swe-dashboard/internal/models"
+	"time"
 )
 
 type SCM interface {
@@ -27,7 +28,7 @@ func NewReviewCoverageService(scm SCM) ReviewCoverageService {
 }
 
 func (r *reviewCoverage) List() (coverages []models.ItemCount, err error) {
-	mergerequests, err := r.scm.ListMergeRequest("merged", "all", 1)
+	mergerequests, err := r.scm.ListMergeRequest("merged", "all", time.Now().Day())
 	if err != nil {
 		return coverages, err
 	}

@@ -126,7 +126,7 @@ func (p *Pusher) ImportLongTunningMergeRequests(service longrunningmergerequests
 }
 
 func (p *Pusher) ImportMergeRequestComments(service mergerequestcomments.MergeRequestCommentsService) (err error) {
-	leaderboard, err := service.CommentsLeaderBoard()
+	leaderboard, err := service.List()
 	if err != nil {
 		return err
 	}
@@ -201,7 +201,7 @@ func (p *Pusher) ImportMergeRequestSize(service mergerequestsize.MergeRequestSiz
 }
 
 func (p *Pusher) ImportMergeRequestThroughput(service mergerequestthroughput.MergeRequestThroughputService) (err error) {
-	counts, err := service.Throughput()
+	counts, err := service.List()
 	if err != nil {
 		return err
 	}

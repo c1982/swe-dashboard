@@ -39,7 +39,7 @@ type cycleTime struct {
 
 func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 	cycletimes = []models.ItemCount{}
-	mergerequests, err := c.scm.ListMergeRequest("merged", "all", 1)
+	mergerequests, err := c.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return cycletimes, err
 	}

@@ -31,7 +31,7 @@ func NewDefectRateService(scm SCM) DefectRateService {
 }
 
 func (d *defectrate) List() (defects []models.ItemCount, err error) {
-	mergerequests, err := d.scm.ListMergeRequest("merged", "all", 1)
+	mergerequests, err := d.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return defects, err
 	}

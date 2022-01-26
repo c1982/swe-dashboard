@@ -3,6 +3,7 @@ package selfmerging
 import (
 	"sort"
 	"swe-dashboard/internal/models"
+	"time"
 )
 
 const (
@@ -29,7 +30,7 @@ func (s *selfMerging) GetSelfMergingUsers() (users []models.UserCount, err error
 	tmpusers := map[int]models.UserCount{}
 	users = []models.UserCount{}
 
-	mrs, err := s.scm.ListMergeRequest("merged", "all", 1)
+	mrs, err := s.scm.ListMergeRequest("merged", "all", time.Now().Day())
 	if err != nil {
 		return users, err
 	}
