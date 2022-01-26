@@ -208,7 +208,7 @@ func (p *Pusher) ImportMergeRequestThroughput(service mergerequestthroughput.Mer
 
 	for i := 0; i < len(counts); i++ {
 		payload := fmt.Sprintf(mergeRequestThroughputMetricName, counts[i].Name, counts[i].Count)
-		err := p.Push(payload)
+		err := p.PushWithTime(payload, counts[i].Date)
 		if err != nil {
 			return err
 		}

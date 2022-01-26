@@ -2,7 +2,6 @@ package mergerequestthroughput
 
 import (
 	"swe-dashboard/internal/models"
-	"time"
 )
 
 type SCM interface {
@@ -25,7 +24,7 @@ type mergeRequestThroughput struct {
 }
 
 func (t *mergeRequestThroughput) List() (throughputs []models.ItemCount, err error) {
-	mergerequests, err := t.scm.ListMergeRequest("merged", "all", time.Now().Day())
+	mergerequests, err := t.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return throughputs, err
 	}
@@ -39,11 +38,15 @@ func (t *mergeRequestThroughput) List() (throughputs []models.ItemCount, err err
 		}
 
 		repo.MRs = repositories[i].MRs
-		count := len(repo.MRs)
-		throughputs = append(throughputs, models.ItemCount{
-			Name:  repo.Name,
-			Count: float64(count),
-		})
+		days := repo.MRs.CountByDay()
+		for d := 0; d < len(days); d++ {
+			day := days[d]
+			throughputs = append(throughputs, models.ItemCount{
+				Name:  repo.Name,
+				Date:  day.Date,
+				Count: day.Count,
+			})
+		}
 	}
 
 	return throughputs, nil
