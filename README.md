@@ -10,9 +10,14 @@ Software Engineer Metrics
 
 ## Runing
 
-Download binary from releases
+Download binary from [releases](https://github.com/c1982/swe-dashboard/releases)
 
-> ./swed --scm-gitlab-baseurl=https://your-domain-name/api/v4 --scm-gitlab-token=TOKEN --victoriametrics-importurl=http://localhost:8428/api/v1/import/prometheus --check-interval=1h
+```bash
+./swed --scm-gitlab-baseurl=https://your-domain-name/api/v4 \
+--scm-gitlab-token=TOKEN \
+--victoriametrics-importurl=http://localhost:8428/api/v1/import/prometheus \
+--check-interval=1h
+```
 
 #### Docker
 
@@ -33,6 +38,20 @@ git clone https://github.com/c1982/swe-dashboard.git
 cd swe-dashboard/docker
 docker-compose --env-file ./config.env up
 ```
+#### Daemon
+
+If you want to run the daemon as a service, you can use the following commands:
+
+0. edit [.swed.config](./daemon/.swed.config) file for your system
+1. mkdir /opt/swed
+2. cd /opt/swed
+3. copy .swed-config /opt/swed
+4. copy swed binary to /opt/swed
+5. `chmod +x /opt/swed/swed`
+6. copy [.swed.config](./daemon/swed.service) to /etc/systemd/system
+7. `systemctl enable swed.service`
+8. `systemctl start swed.service`
+9. watch for errors `journalctl -u swed.service -f`
 
 ## Metrics
 
@@ -57,7 +76,7 @@ docker-compose --env-file ./config.env up
 
 ## Supported SCM
 
-* Gitlab
+* Gitlab Community Edition
 * GitHub (not implemented yet)
 
 ## Supported TimeSeries DB
@@ -138,3 +157,9 @@ TODO: image
 ### MRs/PRs Success Rate
 
 TODO: image
+
+
+### Grafana Dashboards
+
+* [SWE Dashboard - Metrics](./grafana/swe-dashboard-metrics.json)
+* [SWE Dashboard - Repository](./grafana/swe-dashboard-repository.json)
