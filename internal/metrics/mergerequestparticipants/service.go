@@ -29,7 +29,7 @@ type mergeRequestParticipants struct {
 }
 
 func (mrp *mergeRequestParticipants) ParticipantsLeaderBoard() (users []models.UserCount, err error) {
-	mergerequests, err := mrp.scm.ListMergeRequest("merged", "all", 14)
+	mergerequests, err := mrp.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return users, err
 	}

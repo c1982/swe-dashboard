@@ -184,7 +184,7 @@ func (p *Pusher) ImportMergeRequestRate(service mergerequestrate.MergeRequestRat
 }
 
 func (p *Pusher) ImportMergeRequestSize(service mergerequestsize.MergeRequestSizeService) (err error) {
-	counts, err := service.MergeRequestSizes()
+	counts, err := service.Sizes()
 	if err != nil {
 		return err
 	}

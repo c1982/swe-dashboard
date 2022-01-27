@@ -32,7 +32,7 @@ func NewMergeRequestSuccessRateService(scm SCM) MergeRequestSuccessRateService {
 }
 
 func (s *successRate) List() (rates []models.ItemCount, err error) {
-	mergerequests, err := s.scm.ListMergeRequest("", "all", 7)
+	mergerequests, err := s.scm.ListMergeRequest("", "all", 30)
 	if err != nil {
 		return rates, err
 	}

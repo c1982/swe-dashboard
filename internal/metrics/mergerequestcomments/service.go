@@ -31,7 +31,7 @@ func NewMergeRequestCommentsService(scm SCM) MergeRequestCommentsService {
 
 func (mrc *mergeRequestComments) List() (users []models.UserCount, err error) {
 	stats := map[int]models.UserCount{}
-	mergerequests, err := mrc.scm.ListMergeRequest("merged", "all", 14)
+	mergerequests, err := mrc.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return users, err
 	}
