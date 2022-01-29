@@ -25,7 +25,7 @@ type fridayMergerequests struct {
 }
 
 func (f *fridayMergerequests) List() (fridaymergerequests []models.ItemCount, err error) {
-	mergerequests, err := f.scm.ListMergeRequest("", "all", time.Now().Day())
+	mergerequests, err := f.scm.ListMergeRequest("", "all", 30)
 	if err != nil {
 		return fridaymergerequests, err
 	}

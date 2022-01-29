@@ -39,6 +39,27 @@ func NewSCM(options ...GitlabOption) (scm *SCM, err error) {
 	return scm, nil
 }
 
+func (s *SCM) ListProjects() (repositories []*models.Repo, err error) {
+	repositories = []*models.Repo{}
+	opt := &gitlab.ListProjectsOptions{
+		Simple:     gitlab.Bool(true),
+		Statistics: gitlab.Bool(true),
+	}
+
+	for {
+		list, resp, err := s.client.Projects.ListProjects(opt)
+		if err != nil {
+			return repositories, err
+		}
+		repositories = append(repositories, s.convertProjectsToRepo(list)...)
+		if resp.NextPage == 0 {
+			break
+		}
+		opt.Page = resp.NextPage
+	}
+	return repositories, nil
+}
+
 func (s *SCM) ListUsers() (users models.Users, err error) {
 	opt := &gitlab.ListUsersOptions{
 		ListOptions: gitlab.ListOptions{
@@ -83,6 +104,31 @@ func (s *SCM) ListUsers() (users models.Users, err error) {
 	}
 
 	return users, nil
+}
+
+func (s *SCM) ListCommits(projectID int, createdafterday int) (commits []*models.Commit, err error) {
+	createafter := -1 * ((time.Hour * 24) * time.Duration(createdafterday))
+	opt := &gitlab.ListCommitsOptions{
+		Since:     gitlab.Time(time.Now().Add(createafter)),
+		WithStats: gitlab.Bool(true),
+	}
+
+	commits = []*models.Commit{}
+	for {
+		list, rsp, err := s.client.Commits.ListCommits(projectID, opt)
+		if err != nil {
+			return commits, err
+		}
+
+		commits = append(commits, s.convertCommits(list)...)
+		if rsp.NextPage == 0 {
+			break
+		}
+
+		opt.Page = rsp.NextPage
+	}
+
+	return commits, nil
 }
 
 func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (mergerequests models.MergeRequests, err error) {
@@ -266,6 +312,71 @@ func (s *SCM) GetRepository(projectID int) (repository models.Repo, err error) {
 	return repository, nil
 }
 
+func (s *SCM) GetMergeRequestParticipants(projectID int, mergeRequestID int) (users []*models.User, err error) {
+	basicusers, _, err := s.client.MergeRequests.GetMergeRequestParticipants(projectID, mergeRequestID)
+	if err != nil {
+		return users, err
+	}
+
+	users = s.convertBasicUsersToUsers(basicusers)
+	return users, nil
+}
+
+func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments []*models.Comment, err error) {
+	comments = []*models.Comment{}
+	opt := &gitlab.ListMergeRequestNotesOptions{}
+
+	for {
+		notes, rsp, err := s.client.Notes.ListMergeRequestNotes(projectID, mergeRequestID, opt)
+		if err != nil {
+			return comments, err
+		}
+
+		for i := 0; i < len(notes); i++ {
+			n := notes[i]
+
+			approved := false
+			if n.System {
+				approved = strings.Contains(n.Body, "approved")
+			}
+
+			comments = append(comments, &models.Comment{
+				ID:           n.ID,
+				Body:         n.Body,
+				Title:        n.Title,
+				System:       n.System,
+				Resolvable:   n.Resolvable,
+				Resolved:     n.Resolved,
+				UpdatedAt:    *n.UpdatedAt,
+				CreatedAt:    *n.CreatedAt,
+				NoteableType: n.NoteableType,
+				ApprovedNote: approved,
+				FileName:     n.FileName,
+				Author: models.User{
+					ID:       n.Author.ID,
+					Name:     n.Author.Name,
+					Username: n.Author.Username,
+					State:    n.Author.State,
+				},
+				ResolvedBy: models.User{
+					ID:       n.ResolvedBy.ID,
+					Name:     n.ResolvedBy.Name,
+					Username: n.ResolvedBy.Username,
+					State:    n.ResolvedBy.State,
+				},
+			})
+		}
+
+		if rsp.NextPage == 0 {
+			break
+		}
+
+		opt.Page = rsp.NextPage
+	}
+
+	return comments, nil
+}
+
 func (s *SCM) convertBasicUsersToUsers(basicusers []*gitlab.BasicUser) []*models.User {
 	users := []*models.User{}
 	for i := 0; i < len(basicusers); i++ {
@@ -317,89 +428,54 @@ func (s *SCM) convertCommits(commits []*gitlab.Commit) []*models.Commit {
 	list := []*models.Commit{}
 	for i := 0; i < len(commits); i++ {
 		c := commits[i]
-		list = append(list, &models.Commit{
+		commit := &models.Commit{
 			ID:             c.ID,
 			ShortID:        c.ShortID,
 			Title:          c.Title,
 			AuthorName:     c.AuthorName,
+			AuthorEmail:    c.AuthorEmail,
 			CommitterName:  c.CommitterName,
 			CommitterEmail: c.CommitterEmail,
 			CommittedDate:  *c.CommittedDate,
 			CreatedAt:      *c.CreatedAt,
 			Message:        c.Message,
 			ProjectID:      c.ProjectID,
-		})
+			Additions:      c.Stats.Additions,
+			Deletions:      c.Stats.Deletions,
+			Total:          c.Stats.Total,
+		}
+
+		if c.Stats != nil {
+			commit.Additions = c.Stats.Additions
+			commit.Deletions = c.Stats.Deletions
+			commit.Total = c.Stats.Total
+		}
+
+		list = append(list, commit)
 	}
 
 	return list
 }
 
-func (s *SCM) GetMergeRequestParticipants(projectID int, mergeRequestID int) (users []*models.User, err error) {
-	basicusers, _, err := s.client.MergeRequests.GetMergeRequestParticipants(projectID, mergeRequestID)
-	if err != nil {
-		return users, err
+func (s *SCM) convertProjectsToRepo(projects []*gitlab.Project) []*models.Repo {
+	repos := []*models.Repo{}
+	for i := 0; i < len(projects); i++ {
+		p := projects[i]
+		r := &models.Repo{
+			ID:             p.ID,
+			Name:           p.Name,
+			Description:    p.Description,
+			CreatorID:      p.CreatorID,
+			LastActivityAt: p.LastActivityAt,
+			CreatedAt:      p.CreatedAt,
+		}
+		if p.Statistics != nil {
+			r.CommitCount = p.Statistics.CommitCount
+		}
+
+		repos = append(repos, r)
 	}
-
-	users = s.convertBasicUsersToUsers(basicusers)
-	return users, nil
-}
-
-func (s *SCM) ListMergeRequestNotes(projectID int, mergeRequestID int) (comments []*models.Comment, err error) {
-	comments = []*models.Comment{}
-	opt := &gitlab.ListMergeRequestNotesOptions{}
-	for {
-		notes, rsp, err := s.client.Notes.ListMergeRequestNotes(projectID, mergeRequestID, opt)
-		if err != nil {
-			return comments, err
-		}
-
-		for i := 0; i < len(notes); i++ {
-			n := notes[i]
-
-			if n.FileName == "" {
-				continue
-			}
-
-			approved := false
-			if n.System {
-				approved = strings.Contains(n.Body, "approved")
-			}
-
-			comments = append(comments, &models.Comment{
-				ID:           n.ID,
-				Body:         n.Body,
-				Title:        n.Title,
-				System:       n.System,
-				Resolvable:   n.Resolvable,
-				Resolved:     n.Resolved,
-				UpdatedAt:    *n.UpdatedAt,
-				CreatedAt:    *n.CreatedAt,
-				NoteableType: n.NoteableType,
-				ApprovedNote: approved,
-				FileName:     n.FileName,
-				Author: models.User{
-					ID:       n.Author.ID,
-					Name:     n.Author.Name,
-					Username: n.Author.Username,
-					State:    n.Author.State,
-				},
-				ResolvedBy: models.User{
-					ID:       n.ResolvedBy.ID,
-					Name:     n.ResolvedBy.Name,
-					Username: n.ResolvedBy.Username,
-					State:    n.ResolvedBy.State,
-				},
-			})
-		}
-
-		if rsp.NextPage == 0 {
-			break
-		}
-
-		opt.Page = rsp.NextPage
-	}
-
-	return comments, nil
+	return repos
 }
 
 func (s *SCM) setToken(token string) error {

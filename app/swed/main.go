@@ -12,8 +12,7 @@ import (
 func main() {
 	gitlabBaseURL := flag.String("scm-gitlab-baseurl", "", "--scm-gitlab-baseurl=https://your-domain-name/api/v4")
 	gitlabToken := flag.String("scm-gitlab-token", "", "--scm-gitlab-token=VERY-SECRED-TOKEN (take from gitlab access token")
-	//TODO: victoriametric basic auth params
-	victoriametricsImportURL := flag.String("victoriametrics-importurl", "", "--victoriametrics-importurl=http://localhost:8428/api/v1/import/prometheus")
+	victoriametricsImportURL := flag.String("victoriametrics-importurl", "", "--victoriametrics-importurl=http://localhost:8428")
 	checkInterval := flag.String("check-interval", "6h", "--check-interval=6h Valid time units are ns,us,ms,s,m,h")
 	flag.Parse()
 

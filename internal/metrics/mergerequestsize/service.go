@@ -13,7 +13,7 @@ type SCM interface {
 }
 
 type MergeRequestSizeService interface {
-	MergeRequestSizes() (sizes []models.ItemCount, err error)
+	Sizes() (sizes []models.ItemCount, err error)
 }
 
 func NewMergeRequestSizeService(scm SCM) MergeRequestSizeService {
@@ -28,7 +28,7 @@ type mergeRequestSizes struct {
 	mergerequests models.MergeRequests
 }
 
-func (m *mergeRequestSizes) MergeRequestSizes() (sizes []models.ItemCount, err error) {
+func (m *mergeRequestSizes) Sizes() (sizes []models.ItemCount, err error) {
 	m.mergerequests, err = m.scm.ListMergeRequest("merged", "all", time.Now().Day())
 	if err != nil {
 		return sizes, err

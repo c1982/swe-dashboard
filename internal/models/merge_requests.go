@@ -40,6 +40,34 @@ func (m MergeRequests) CountByMonth() []ItemCount {
 
 }
 
+func (m MergeRequests) CountByDay() []ItemCount {
+	list := []ItemCount{}
+	groupday := map[time.Time]int{}
+	for i := 0; i < len(m); i++ {
+		mr := m[i]
+		day := time.Date(mr.CreatedAt.Year(), mr.CreatedAt.Month(), mr.CreatedAt.Day(), 0, 0, 0, 0, time.UTC)
+		v, ok := groupday[day]
+		if ok {
+			groupday[day] = v + 1
+		} else {
+			groupday[day] = 1
+		}
+	}
+
+	for date, count := range groupday {
+		list = append(list, ItemCount{
+			Date:  date,
+			Count: float64(count),
+		})
+	}
+
+	sort.Slice(list, func(i, j int) bool {
+		return list[i].Date.Before(list[j].Date)
+	})
+
+	return list
+}
+
 func (m MergeRequests) GroupByRepositories() []*Repo {
 	group := map[int]*Repo{}
 	for i := 0; i < len(m); i++ {

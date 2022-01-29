@@ -19,14 +19,14 @@
         ]
     },
     "editable": true,
-    "fiscalYearStartMonth": 0,
+    "gnetId": null,
     "graphTooltip": 0,
-    "id": 6,
-    "iteration": 1642802396761,
+    "id": 416,
+    "iteration": 1643320299552,
     "links": [],
-    "liveNow": false,
     "panels": [
         {
+            "datasource": "VictoriaMetrics",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -69,14 +69,14 @@
                     "fields": "",
                     "values": false
                 },
+                "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "defect_rate{repository=\"$repository\"}",
@@ -90,6 +90,7 @@
             "type": "stat"
         },
         {
+            "datasource": "VictoriaMetrics",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -132,14 +133,14 @@
                     "fields": "",
                     "values": false
                 },
+                "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
@@ -153,6 +154,7 @@
             "type": "stat"
         },
         {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -196,14 +198,14 @@
                     "fields": "",
                     "values": false
                 },
+                "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_review{repository=\"$repository\"}) / count by (repository) (time_to_review{repository=\"$repository\"})",
@@ -217,6 +219,7 @@
             "type": "stat"
         },
         {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -260,14 +263,14 @@
                     "fields": "",
                     "values": false
                 },
+                "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
@@ -281,6 +284,7 @@
             "type": "stat"
         },
         {
+            "datasource": "VictoriaMetrics",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -323,14 +327,14 @@
                     "fields": "",
                     "values": false
                 },
+                "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_merge{repository=\"$repository\"}) / count by (repository) (time_to_merge{repository=\"$repository\"})",
@@ -344,6 +348,7 @@
             "type": "stat"
         },
         {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -355,11 +360,11 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
+                                "color": "semi-dark-red",
                                 "value": null
                             },
                             {
-                                "color": "red",
+                                "color": "semi-dark-green",
                                 "value": 80
                             }
                         ]
@@ -386,17 +391,18 @@
                     "fields": "",
                     "values": false
                 },
+                "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_success_rate{repository=\"$repository\"}",
+                    "instant": false,
                     "interval": "",
                     "legendFormat": "",
                     "refId": "A"
@@ -406,6 +412,80 @@
             "type": "stat"
         },
         {
+            "datasource": "VictoriaMetrics",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 604800
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 1209600
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 1728000
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 6,
+                "x": 18,
+                "y": 0
+            },
+            "id": 19,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "text": {},
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "(sum by (repository) (cycle_time{repository=\"$repository\"})[10m] / count by (repository) (cycle_time{repository=\"$repository\"})[10m])",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Cycle Time",
+            "transformations": [],
+            "type": "stat"
+        },
+        {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -455,17 +535,17 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": false
+                "showUnfilled": false,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "time_to_open{repository=\"$repository\",title=\"$branch\"}",
+                    "expr": "time_to_open{repository=\"$repository\",title=\"$mergerequest\"}",
                     "instant": false,
                     "interval": "",
                     "legendFormat": "Time to Open",
@@ -473,11 +553,10 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "time_to_review{repository=\"headball2\",title=\"$branch\"}",
+                    "expr": "time_to_review{repository=\"headball2\",title=\"$mergerequest\"}",
                     "hide": false,
                     "interval": "",
                     "legendFormat": "Time to Review",
@@ -485,11 +564,10 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "time_to_approve{repository=\"$repository\",title=\"$branch\"}",
+                    "expr": "time_to_approve{repository=\"$repository\",title=\"$mergerequest\"}",
                     "hide": false,
                     "interval": "",
                     "legendFormat": "Time to Approve",
@@ -497,53 +575,26 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "time_to_merge{repository=\"$repository\",title=\"$branch\"}",
+                    "expr": "time_to_merge{repository=\"$repository\",title=\"$mergerequest\"}",
                     "hide": false,
                     "interval": "",
                     "legendFormat": "Time to Merge",
                     "refId": "D"
                 }
             ],
-            "title": "MRs/PRs Times $repository/$branch",
+            "title": "MRs/PRs Times $repository/$mergerequest",
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
+            "description": "### MRs/PRs Size\n\nThe number of lines of code that were added, changed or removed.",
             "fieldConfig": {
                 "defaults": {
                     "color": {
-                        "mode": "palette-classic"
-                    },
-                    "custom": {
-                        "axisLabel": "",
-                        "axisPlacement": "auto",
-                        "barAlignment": 0,
-                        "drawStyle": "line",
-                        "fillOpacity": 0,
-                        "gradientMode": "none",
-                        "hideFrom": {
-                            "legend": false,
-                            "tooltip": false,
-                            "viz": false
-                        },
-                        "lineInterpolation": "linear",
-                        "lineWidth": 1,
-                        "pointSize": 5,
-                        "scaleDistribution": {
-                            "type": "linear"
-                        },
-                        "showPoints": "auto",
-                        "spanNulls": false,
-                        "stacking": {
-                            "group": "A",
-                            "mode": "none"
-                        },
-                        "thresholdsStyle": {
-                            "mode": "off"
-                        }
+                        "mode": "thresholds"
                     },
                     "mappings": [],
                     "thresholds": {
@@ -554,20 +605,15 @@
                                 "value": null
                             },
                             {
-                                "color": "green",
-                                "value": 604800
-                            },
-                            {
-                                "color": "#EAB839",
-                                "value": 1209600
+                                "color": "semi-dark-yellow",
+                                "value": 150
                             },
                             {
                                 "color": "semi-dark-red",
-                                "value": 1728000
+                                "value": 600
                             }
                         ]
-                    },
-                    "unit": "s"
+                    }
                 },
                 "overrides": []
             },
@@ -577,37 +623,106 @@
                 "x": 12,
                 "y": 5
             },
-            "id": 19,
+            "id": 20,
             "options": {
-                "legend": {
-                    "calcs": [],
-                    "displayMode": "list",
-                    "placement": "bottom"
+                "displayMode": "basic",
+                "orientation": "vertical",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
                 },
-                "tooltip": {
-                    "mode": "single"
-                }
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "(sum by (repository) (cycle_time{repository=\"$repository\"})[10m] / count by (repository) (cycle_time{repository=\"$repository\"})[10m])",
+                    "expr": "count(merge_request_size{repository=\"$repository\"} <= 9)",
+                    "format": "time_series",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{repository}}",
+                    "legendFormat": "XS",
                     "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "count(merge_request_size{repository=\"$repository\"} > 10 and merge_request_size{repository=\"$repository\"} < 29)",
+                    "format": "time_series",
+                    "hide": false,
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "S",
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "count(merge_request_size{repository=\"$repository\"} > 30 and merge_request_size{repository=\"$repository\"} < 99)  ",
+                    "format": "time_series",
+                    "hide": false,
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "M",
+                    "refId": "C"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "count(merge_request_size{repository=\"$repository\"} > 100 and merge_request_size{repository=\"$repository\"} < 499)  ",
+                    "format": "time_series",
+                    "hide": false,
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "L",
+                    "refId": "D"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "count(merge_request_size{repository=\"$repository\"} > 500 and merge_request_size{repository=\"$repository\"} < 999)  ",
+                    "format": "time_series",
+                    "hide": false,
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "XL",
+                    "refId": "E"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "count(merge_request_size{repository=\"$repository\"} > 1000 )  ",
+                    "format": "time_series",
+                    "hide": false,
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "XL",
+                    "refId": "F"
                 }
             ],
-            "title": "Cycle Time",
+            "title": "MRs/PRs Size Counts for $repository (this month)",
             "transformations": [],
-            "type": "timeseries"
+            "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -633,8 +748,8 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 12,
-                "w": 12,
+                "h": 11,
+                "w": 24,
                 "x": 0,
                 "y": 16
             },
@@ -649,14 +764,14 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(cycle_time{repository=\"$repository\"})",
@@ -665,11 +780,140 @@
                     "refId": "A"
                 }
             ],
-            "title": "Cycle Time by MRs/PRs ($repository)",
+            "title": "Cycle Time by MRs/PRs for $repository (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "max": 100,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percent"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 27
+            },
+            "id": 23,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true,
+                "text": {}
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(sum by (username, name) (defect_rate_user{repository=\"$repository\"}))",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{username}} ({{name}})",
+                    "refId": "A"
+                }
+            ],
+            "title": "User Defect Rate for $repository (last 30 days)",
+            "type": "bargauge"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 604800
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 1209600
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 24,
+                "x": 0,
+                "y": 37
+            },
+            "id": 4,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true,
+                "text": {}
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(long_running_merge_request{repository=\"$repository\"})",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{title}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Long Running MRs/PRs for $repository (last 90 days)",
+            "type": "bargauge"
+        },
+        {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -711,10 +955,6 @@
                             {
                                 "color": "green",
                                 "value": null
-                            },
-                            {
-                                "color": "red",
-                                "value": 80
                             }
                         ]
                     },
@@ -723,16 +963,18 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 12,
-                "w": 12,
-                "x": 12,
-                "y": 16
+                "h": 9,
+                "w": 24,
+                "x": 0,
+                "y": 46
             },
             "id": 12,
             "options": {
                 "legend": {
-                    "calcs": [],
-                    "displayMode": "hidden",
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
                     "placement": "right"
                 },
                 "tooltip": {
@@ -742,8 +984,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
@@ -754,8 +995,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_review{repository=\"$repository\"}) / count by (repository) (time_to_review{repository=\"$repository\"})",
@@ -765,8 +1005,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
@@ -777,8 +1016,7 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_merge{repository=\"$repository\"}) / count by (repository) (time_to_merge{repository=\"$repository\"})",
@@ -788,10 +1026,11 @@
                     "refId": "D"
                 }
             ],
-            "title": "MRs/PRs Speeds ($repository)",
+            "title": "MRs/PRs Speeds for $repository (last 30 days)",
             "type": "timeseries"
         },
         {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -848,7 +1087,7 @@
                 "h": 10,
                 "w": 24,
                 "x": 0,
-                "y": 28
+                "y": 55
             },
             "id": 26,
             "options": {
@@ -867,224 +1106,20 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_success_rate{repository=\"$repository\"}",
                     "interval": "",
-                    "legendFormat": "",
+                    "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
-            "title": "MRs/PRs Success Rate ($repository)",
+            "title": "MRs/PRs Success Rate for $repository (last 30 days)",
             "type": "timeseries"
         },
         {
-            "description": "",
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "mappings": [],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            },
-                            {
-                                "color": "#EAB839",
-                                "value": 604800
-                            },
-                            {
-                                "color": "semi-dark-red",
-                                "value": 1209600
-                            }
-                        ]
-                    },
-                    "unit": "s"
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 8,
-                "w": 24,
-                "x": 0,
-                "y": 38
-            },
-            "id": 4,
-            "options": {
-                "displayMode": "basic",
-                "orientation": "horizontal",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "showUnfilled": true,
-                "text": {}
-            },
-            "pluginVersion": "8.3.3",
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": true,
-                    "expr": "sort_desc(long_running_merge_request{repository=\"$repository\"})",
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "{{title}}",
-                    "refId": "A"
-                }
-            ],
-            "title": "Long Running MRs/PRs ($repository)",
-            "type": "bargauge"
-        },
-        {
-            "description": "",
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "mappings": [],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            },
-                            {
-                                "color": "semi-dark-yellow",
-                                "value": 150
-                            },
-                            {
-                                "color": "semi-dark-red",
-                                "value": 600
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 12,
-                "w": 12,
-                "x": 0,
-                "y": 46
-            },
-            "id": 20,
-            "options": {
-                "displayMode": "basic",
-                "orientation": "vertical",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "showUnfilled": true
-            },
-            "pluginVersion": "8.3.3",
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": true,
-                    "expr": "count(merge_request_size{repository=\"$repository\"} <= 9)",
-                    "format": "time_series",
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "XS",
-                    "refId": "A"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": true,
-                    "expr": "count(merge_request_size{repository=\"$repository\"} > 10 and merge_request_size{repository=\"$repository\"} < 29)",
-                    "format": "time_series",
-                    "hide": false,
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "S",
-                    "refId": "B"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": true,
-                    "expr": "count(merge_request_size{repository=\"$repository\"} > 30 and merge_request_size{repository=\"$repository\"} < 99)  ",
-                    "format": "time_series",
-                    "hide": false,
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "M",
-                    "refId": "C"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": true,
-                    "expr": "count(merge_request_size{repository=\"$repository\"} > 100 and merge_request_size{repository=\"$repository\"} < 499)  ",
-                    "format": "time_series",
-                    "hide": false,
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "L",
-                    "refId": "D"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": true,
-                    "expr": "count(merge_request_size{repository=\"$repository\"} > 500 and merge_request_size{repository=\"$repository\"} < 999)  ",
-                    "format": "time_series",
-                    "hide": false,
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "XL",
-                    "refId": "E"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
-                    },
-                    "exemplar": true,
-                    "expr": "count(merge_request_size{repository=\"$repository\"} > 1000 )  ",
-                    "format": "time_series",
-                    "hide": false,
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "XL",
-                    "refId": "F"
-                }
-            ],
-            "title": "MRs/PRs Size Counts ($repository)",
-            "transformations": [],
-            "type": "bargauge"
-        },
-        {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1181,9 +1216,9 @@
             },
             "gridPos": {
                 "h": 12,
-                "w": 12,
-                "x": 12,
-                "y": 46
+                "w": 24,
+                "x": 0,
+                "y": 65
             },
             "id": 6,
             "options": {
@@ -1196,14 +1231,14 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(sum(merge_request_size{repository=\"$repository\"}) by (title))",
@@ -1213,84 +1248,28 @@
                     "refId": "A"
                 }
             ],
-            "title": "MRs/PRs Sizes ($repository)",
+            "title": "MRs/PRs Sizes for $repository (this month)",
             "transformations": [],
-            "type": "bargauge"
-        },
-        {
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "mappings": [],
-                    "max": 100,
-                    "min": 0,
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            }
-                        ]
-                    },
-                    "unit": "percent"
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 10,
-                "w": 12,
-                "x": 0,
-                "y": 58
-            },
-            "id": 23,
-            "options": {
-                "displayMode": "basic",
-                "orientation": "horizontal",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "showUnfilled": true
-            },
-            "pluginVersion": "8.3.3",
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
-                    },
-                    "exemplar": true,
-                    "expr": "sort_desc(sum by (username, name) (defect_rate_user{repository=\"$repository\"}))",
-                    "interval": "",
-                    "legendFormat": "{{username}} ({{name}})",
-                    "refId": "A"
-                }
-            ],
-            "title": "User Defect Rate ($repository)",
             "type": "bargauge"
         }
     ],
     "refresh": "",
-    "schemaVersion": 34,
+    "schemaVersion": 30,
     "style": "dark",
     "tags": [],
     "templating": {
         "list": [
             {
+                "allValue": null,
                 "current": {
-                    "isNone": true,
                     "selected": false,
-                    "text": "None",
-                    "value": ""
+                    "text": "headball2",
+                    "value": "headball2"
                 },
+                "datasource": "VictoriaMetrics",
                 "definition": "merge_request_throughput{}",
                 "description": "",
+                "error": null,
                 "hide": 0,
                 "includeAll": false,
                 "label": "Repository",
@@ -1308,18 +1287,21 @@
                 "type": "query"
             },
             {
+                "allValue": null,
                 "current": {
-                    "isNone": true,
                     "selected": false,
-                    "text": "None",
-                    "value": ""
+                    "text": "[Facebook Platform Merge] feature-HB2-6375-facebook-cloud-disable-offerwall-and-rate-game",
+                    "value": "[Facebook Platform Merge] feature-HB2-6375-facebook-cloud-disable-offerwall-and-rate-game"
                 },
+                "datasource": "VictoriaMetrics",
                 "definition": "time_to_open{repository=\"$repository\"}",
+                "description": null,
+                "error": null,
                 "hide": 0,
                 "includeAll": false,
-                "label": "Branch",
+                "label": "MR/PR",
                 "multi": false,
-                "name": "branch",
+                "name": "mergerequest",
                 "options": [],
                 "query": {
                     "query": "time_to_open{repository=\"$repository\"}",
@@ -1334,13 +1316,12 @@
         ]
     },
     "time": {
-        "from": "now-6h",
+        "from": "now-24h",
         "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "SWE Dashboard - Repository",
-    "uid": "wAnLNBJ7z",
-    "version": 63,
-    "weekStart": ""
+    "uid": "nsA7zFxnz",
+    "version": 34
 }

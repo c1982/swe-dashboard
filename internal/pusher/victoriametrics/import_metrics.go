@@ -15,7 +15,6 @@ import (
 	"swe-dashboard/internal/metrics/selfmerging"
 	"swe-dashboard/internal/metrics/turnoverrate"
 	"swe-dashboard/internal/metrics/unreviewedmergerequests"
-	"time"
 )
 
 const (
@@ -127,7 +126,7 @@ func (p *Pusher) ImportLongTunningMergeRequests(service longrunningmergerequests
 }
 
 func (p *Pusher) ImportMergeRequestComments(service mergerequestcomments.MergeRequestCommentsService) (err error) {
-	leaderboard, err := service.CommentsLeaderBoard("merged", "all", time.Now().Day())
+	leaderboard, err := service.List()
 	if err != nil {
 		return err
 	}
@@ -147,7 +146,7 @@ func (p *Pusher) ImportMergeRequestComments(service mergerequestcomments.MergeRe
 }
 
 func (p *Pusher) ImportMergeRequestParticipants(service mergerequestparticipants.MergeRequestParticipantsService) (err error) {
-	leaderboard, err := service.ParticipantsLeaderBoard("merged", "all", time.Now().Day())
+	leaderboard, err := service.ParticipantsLeaderBoard()
 	if err != nil {
 		return err
 	}
@@ -185,7 +184,7 @@ func (p *Pusher) ImportMergeRequestRate(service mergerequestrate.MergeRequestRat
 }
 
 func (p *Pusher) ImportMergeRequestSize(service mergerequestsize.MergeRequestSizeService) (err error) {
-	counts, err := service.MergeRequestSizes()
+	counts, err := service.Sizes()
 	if err != nil {
 		return err
 	}
@@ -202,14 +201,14 @@ func (p *Pusher) ImportMergeRequestSize(service mergerequestsize.MergeRequestSiz
 }
 
 func (p *Pusher) ImportMergeRequestThroughput(service mergerequestthroughput.MergeRequestThroughputService) (err error) {
-	counts, err := service.Throughput()
+	counts, err := service.List()
 	if err != nil {
 		return err
 	}
 
 	for i := 0; i < len(counts); i++ {
 		payload := fmt.Sprintf(mergeRequestThroughputMetricName, counts[i].Name, counts[i].Count)
-		err := p.Push(payload)
+		err := p.PushWithTime(payload, counts[i].Date)
 		if err != nil {
 			return err
 		}

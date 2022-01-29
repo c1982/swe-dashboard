@@ -20,14 +20,14 @@
     },
     "description": "",
     "editable": true,
-    "fiscalYearStartMonth": 0,
+    "gnetId": null,
     "graphTooltip": 0,
-    "id": 2,
+    "id": 414,
     "links": [],
-    "liveNow": false,
     "panels": [
         {
-            "description": "",
+            "datasource": "VictoriaMetrics",
+            "description": "### MRs/PRs Throughput \n\nA count of how many pull requests are merged over a period of time.",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -38,16 +38,16 @@
                         "axisPlacement": "auto",
                         "barAlignment": 0,
                         "drawStyle": "line",
-                        "fillOpacity": 0,
-                        "gradientMode": "none",
+                        "fillOpacity": 33,
+                        "gradientMode": "hue",
                         "hideFrom": {
                             "legend": false,
                             "tooltip": false,
                             "viz": false
                         },
-                        "lineInterpolation": "linear",
+                        "lineInterpolation": "stepBefore",
                         "lineWidth": 1,
-                        "pointSize": 5,
+                        "pointSize": 2,
                         "scaleDistribution": {
                             "type": "linear"
                         },
@@ -55,7 +55,7 @@
                         "spanNulls": false,
                         "stacking": {
                             "group": "A",
-                            "mode": "none"
+                            "mode": "normal"
                         },
                         "thresholdsStyle": {
                             "mode": "off"
@@ -79,8 +79,8 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 12,
-                "w": 12,
+                "h": 10,
+                "w": 24,
                 "x": 0,
                 "y": 0
             },
@@ -88,7 +88,8 @@
             "options": {
                 "legend": {
                     "calcs": [
-                        "lastNotNull"
+                        "lastNotNull",
+                        "mean"
                     ],
                     "displayMode": "table",
                     "placement": "right",
@@ -102,8 +103,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_throughput{}",
@@ -112,11 +112,14 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "7d",
+            "timeShift": "1d",
             "title": "MRs/PRs Throughput ",
             "type": "timeseries"
         },
         {
-            "description": "",
+            "datasource": "VictoriaMetrics",
+            "description": "### MRs/PRs Rates\n\nThis is the ratio of product MRs authored by team members in Development Department to the number of team members in the Development Department. ",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -141,7 +144,7 @@
                             "type": "linear"
                         },
                         "showPoints": "auto",
-                        "spanNulls": false,
+                        "spanNulls": true,
                         "stacking": {
                             "group": "A",
                             "mode": "none"
@@ -168,10 +171,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 12,
-                "w": 12,
-                "x": 12,
-                "y": 0
+                "h": 11,
+                "w": 24,
+                "x": 0,
+                "y": 10
             },
             "id": 5,
             "options": {
@@ -192,8 +195,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_rate{}",
@@ -207,7 +209,8 @@
             "type": "timeseries"
         },
         {
-            "description": "",
+            "datasource": "VictoriaMetrics",
+            "description": "### MRs/PRs Success Rate\n\nThe percentage of opened MRs/PRs closed that are successfully merged. ",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -243,7 +246,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 12
+                "y": 21
             },
             "id": 34,
             "options": {
@@ -256,14 +259,14 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort(merge_request_success_rate{})",
@@ -272,10 +275,11 @@
                     "refId": "A"
                 }
             ],
-            "title": "MRs/PRs Success Rate",
+            "title": "MRs/PRs Success Rate (last 30 days)",
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -301,7 +305,7 @@
                             "type": "linear"
                         },
                         "showPoints": "auto",
-                        "spanNulls": false,
+                        "spanNulls": true,
                         "stacking": {
                             "group": "A",
                             "mode": "none"
@@ -331,7 +335,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 12
+                "y": 21
             },
             "id": 33,
             "options": {
@@ -351,8 +355,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "merge_request_success_rate{}",
@@ -365,7 +368,8 @@
             "type": "timeseries"
         },
         {
-            "description": "",
+            "datasource": "VictoriaMetrics",
+            "description": "### Friday MRs/PRs\n\nShows the number of MRs/PRs opened on Friday ",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -401,7 +405,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 0,
-                "y": 22
+                "y": 31
             },
             "id": 14,
             "options": {
@@ -414,14 +418,14 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc(sum by (repository) (friday_merge_request{}))",
@@ -430,12 +434,13 @@
                     "refId": "A"
                 }
             ],
-            "title": "Friday MRs/PRs",
+            "title": "Friday MRs/PRs (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
-            "description": "",
+            "datasource": "VictoriaMetrics",
+            "description": "### Unreviewed MRs/PRs\n\nThe percentage of pull requests that were merged without review.",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -471,7 +476,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 12,
-                "y": 22
+                "y": 31
             },
             "id": 15,
             "options": {
@@ -484,14 +489,14 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc(sum by (repository) (unreviewed_merge_request{}))",
@@ -500,12 +505,13 @@
                     "refId": "A"
                 }
             ],
-            "title": "Unreviewed MRs/PRs",
+            "title": "Unreviewed MRs/PRs (this month)",
             "transformations": [],
             "type": "bargauge"
         },
         {
-            "description": "",
+            "datasource": "VictoriaMetrics",
+            "description": "### MRs/PRs Comments\n\nThe sum of the number of comments a user has made on MR/PR ",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -532,7 +538,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 0,
-                "y": 31
+                "y": 40
             },
             "id": 2,
             "options": {
@@ -548,12 +554,11 @@
                 "showUnfilled": true,
                 "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(comments_leaderboard{})",
@@ -564,12 +569,13 @@
                     "refId": "A"
                 }
             ],
-            "title": "MRs/PRs Comments",
+            "title": "MRs/PRs Comments (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
-            "description": "",
+            "datasource": "VictoriaMetrics",
+            "description": "### MRs/PRs Participants \n\nThe total amount of participation a user has contributed to MR/PR ",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -600,7 +606,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 12,
-                "y": 31
+                "y": 40
             },
             "id": 3,
             "options": {
@@ -616,12 +622,11 @@
                 "showUnfilled": true,
                 "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(participants_leaderboard{})",
@@ -632,12 +637,13 @@
                     "refId": "A"
                 }
             ],
-            "title": "MRs/PRs Participants",
+            "title": "MRs/PRs Participants (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
-            "description": "",
+            "datasource": "VictoriaMetrics",
+            "description": "The MR sum that the user self-merged. Only for the current month ",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -672,11 +678,11 @@
                 "h": 8,
                 "w": 24,
                 "x": 0,
-                "y": 40
+                "y": 49
             },
             "id": 8,
             "options": {
-                "displayMode": "gradient",
+                "displayMode": "basic",
                 "orientation": "horizontal",
                 "reduceOptions": {
                     "calcs": [
@@ -688,12 +694,11 @@
                 "showUnfilled": true,
                 "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(self_merging{})",
@@ -704,11 +709,13 @@
                     "refId": "A"
                 }
             ],
-            "title": "Self-Merging Users",
+            "title": "Self-Merging Users (this month)",
             "transformations": [],
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
+            "description": "### Cycle Time\n\nThe time between when the first commit is authored to when a MR/PR is merged.",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -744,7 +751,7 @@
                 "h": 9,
                 "w": 24,
                 "x": 0,
-                "y": 48
+                "y": 57
             },
             "id": 18,
             "options": {
@@ -757,29 +764,30 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (cycle_time{})[1h] / count by (repository) (cycle_time{})[1h]) )",
-                    "instant": true,
+                    "instant": false,
                     "interval": "",
                     "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
-            "title": "Cycle Time",
+            "title": "Cycle Time (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
-            "description": "",
+            "datasource": "VictoriaMetrics",
+            "description": "### Repository Defect Rate \n\nThe percentage of merged pull requests that address defects.\n\nWe determine that a PR is addressing a defect by looking at its title and looking for the presence of a set of keywords, specifically any word that begins with:\n\n* fix\n* revert\n* bug\n* repair\n\nThus, it will match things like \"reverts\", \"bugfix\", \"fixes\", \"repairs\" etc. Because we're looking for words that begin with these keywords, we'll match for \"fixes\", but not \"prefix\".",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -808,7 +816,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 57
+                "y": 66
             },
             "id": 27,
             "options": {
@@ -821,14 +829,14 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(defect_rate{})",
@@ -837,10 +845,11 @@
                     "refId": "A"
                 }
             ],
-            "title": "Repository Defect Rate",
+            "title": "Repository Defect Rate (last 30 days)",
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -897,7 +906,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 57
+                "y": 66
             },
             "id": 28,
             "options": {
@@ -917,8 +926,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "defect_rate{}",
@@ -931,6 +939,8 @@
             "type": "timeseries"
         },
         {
+            "datasource": "VictoriaMetrics",
+            "description": "### User Defect Rate\n\n\nSame calculation method from Repository Defect Rate ",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -956,7 +966,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 67
+                "y": 76
             },
             "id": 30,
             "options": {
@@ -969,14 +979,14 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(sum by (username, name) (defect_rate_user))",
@@ -985,10 +995,11 @@
                     "refId": "A"
                 }
             ],
-            "title": "User Defect Rate",
+            "title": "User Defect Rate (last 30 days)",
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1008,13 +1019,16 @@
                             "viz": false
                         },
                         "lineInterpolation": "linear",
+                        "lineStyle": {
+                            "fill": "solid"
+                        },
                         "lineWidth": 1,
                         "pointSize": 5,
                         "scaleDistribution": {
                             "type": "linear"
                         },
                         "showPoints": "auto",
-                        "spanNulls": false,
+                        "spanNulls": true,
                         "stacking": {
                             "group": "A",
                             "mode": "none"
@@ -1043,7 +1057,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 67
+                "y": 76
             },
             "id": 31,
             "options": {
@@ -1064,11 +1078,10 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "P4169E866C3094E38"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "sum by (username, name) (defect_rate_user)",
+                    "expr": "sort_desc(sum by (username, name) (defect_rate_user))",
                     "interval": "",
                     "legendFormat": "{{username}} ({{name}})",
                     "refId": "A"
@@ -1078,6 +1091,8 @@
             "type": "timeseries"
         },
         {
+            "datasource": "VictoriaMetrics",
+            "description": "### Time To Open\n\nThe time between the earliest commit in a pull request and when the pull request is opened.\n\nTime to Open includes all MRs/PRs which were opened during the selected time frame. This includes MRs/PRs which were closed, declined, merged, or remain open. ",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1113,7 +1128,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 77
+                "y": 86
             },
             "id": 10,
             "options": {
@@ -1126,28 +1141,29 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (time_to_open{})[1h] / count by (repository) (time_to_open{})[1h]) )",
-                    "instant": true,
+                    "instant": false,
                     "interval": "",
                     "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
-            "title": "Time To Open",
+            "title": "Time To Open (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1199,7 +1215,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 77
+                "y": 86
             },
             "id": 22,
             "options": {
@@ -1220,8 +1236,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_open{})[1h] / count by (repository) (time_to_open{})[1h]",
@@ -1236,6 +1251,8 @@
             "type": "timeseries"
         },
         {
+            "datasource": "VictoriaMetrics",
+            "description": "### Time To Review \n\nThe average time between when a pull request is opened and when it received its first review. In calculating the average, each pull request is counted once (not as many times as there are reviewers).",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1271,7 +1288,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 84
+                "y": 93
             },
             "id": 19,
             "options": {
@@ -1284,28 +1301,29 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (time_to_review{})[1h] / count by (repository) (time_to_review{})[1h]) )",
-                    "instant": true,
+                    "instant": false,
                     "interval": "",
                     "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
-            "title": "Time to Review",
+            "title": "Time to Review (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1363,13 +1381,38 @@
                     },
                     "unit": "s"
                 },
-                "overrides": []
+                "overrides": [
+                    {
+                        "__systemRef": "hideSeriesFrom",
+                        "matcher": {
+                            "id": "byNames",
+                            "options": {
+                                "mode": "exclude",
+                                "names": [
+                                    "headball2"
+                                ],
+                                "prefix": "All except:",
+                                "readOnly": true
+                            }
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.hideFrom",
+                                "value": {
+                                    "legend": false,
+                                    "tooltip": false,
+                                    "viz": true
+                                }
+                            }
+                        ]
+                    }
+                ]
             },
             "gridPos": {
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 84
+                "y": 93
             },
             "id": 23,
             "options": {
@@ -1390,8 +1433,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "(sum by (repository) (time_to_review{})[1h] / count by (repository) (time_to_review{})[1h]) ",
@@ -1406,6 +1448,7 @@
             "type": "timeseries"
         },
         {
+            "datasource": "VictoriaMetrics",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1441,7 +1484,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 91
+                "y": 100
             },
             "id": 20,
             "options": {
@@ -1454,28 +1497,29 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (time_to_approve{})[1h] / count by (repository) (time_to_approve{})[1h]) )",
-                    "instant": true,
+                    "instant": false,
                     "interval": "",
                     "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
-            "title": "Time to Approve",
+            "title": "Time to Approve (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1539,7 +1583,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 91
+                "y": 100
             },
             "id": 24,
             "options": {
@@ -1560,8 +1604,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "(sum by (repository) (time_to_approve{})[1h] / count by (repository) (time_to_approve{})[1h]) ",
@@ -1576,6 +1619,8 @@
             "type": "timeseries"
         },
         {
+            "datasource": "VictoriaMetrics",
+            "description": "### Time To Merge\n\nThe duration between when a pull request is opened and when it is merged.",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1611,7 +1656,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 98
+                "y": 107
             },
             "id": 21,
             "options": {
@@ -1624,28 +1669,29 @@
                     "fields": "",
                     "values": false
                 },
-                "showUnfilled": true
+                "showUnfilled": true,
+                "text": {}
             },
-            "pluginVersion": "8.3.3",
+            "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": false,
                     "expr": "sort_desc( (sum by (repository) (time_to_merge{})[1h] / count by (repository) (time_to_merge{})[1h]) )",
-                    "instant": true,
+                    "instant": false,
                     "interval": "",
                     "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
-            "title": "Time to Merge",
+            "title": "Time to Merge (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
+            "datasource": "VictoriaMetrics",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1697,7 +1743,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 98
+                "y": 107
             },
             "id": 25,
             "options": {
@@ -1718,8 +1764,7 @@
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus",
-                        "uid": "Vy8z2s07z"
+                        "type": "prometheus"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_merge{})[1h] / count by (repository) (time_to_merge{})[1h]",
@@ -1734,21 +1779,20 @@
             "type": "timeseries"
         }
     ],
-    "refresh": "",
-    "schemaVersion": 34,
+    "refresh": false,
+    "schemaVersion": 30,
     "style": "dark",
     "tags": [],
     "templating": {
         "list": []
     },
     "time": {
-        "from": "now-12h",
+        "from": "now-24h",
         "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "SWE Dashboard - Metrics",
-    "uid": "0CMC2yA7z",
-    "version": 95,
-    "weekStart": ""
+    "uid": "kVnmzFb7z",
+    "version": 33
 }

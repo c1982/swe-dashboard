@@ -34,7 +34,7 @@ func NewLongRunningMergerequestsService(scm SCM) LongRunningMergerequestsService
 }
 
 func (l *longRunningMergerequests) List() (longrunnings []models.ItemCount, err error) {
-	mergerequests, err := l.scm.ListMergeRequest("opened", "all", ninetydays)
+	mergerequests, err := l.scm.ListMergeRequest("opened", "all", 90)
 	if err != nil {
 		return longrunnings, err
 	}

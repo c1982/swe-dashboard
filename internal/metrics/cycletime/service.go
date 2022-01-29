@@ -4,7 +4,6 @@ import (
 	"sort"
 	"strings"
 	"swe-dashboard/internal/models"
-	"time"
 )
 
 type SCM interface {
@@ -40,7 +39,7 @@ type cycleTime struct {
 
 func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 	cycletimes = []models.ItemCount{}
-	mergerequests, err := c.scm.ListMergeRequest("merged", "all", time.Now().Day())
+	mergerequests, err := c.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return cycletimes, err
 	}
@@ -65,41 +64,51 @@ func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 				return cycletimes, err
 			}
 
-			mergerequestopentime := mr.CreatedAt.Unix()
 			mergerequestfirstcommit := c.mergeRequestFirstCommit(commits)
+			if mergerequestfirstcommit == nil {
+				continue
+			}
+
 			mergerequestfirstcomment := c.mergeRequestFirstComment(comments)
+			if mergerequestfirstcomment == nil {
+				continue
+			}
+
 			mergerequestapprovalcomment := c.mergeRequestApprovalComment(comments)
+			if mergerequestapprovalcomment == nil {
+				continue
+			}
 
+			mergerequestopentime := mr.CreatedAt.Unix()
 			opentime := mergerequestopentime - mergerequestfirstcommit.CreatedAt.Unix()
-			timetoreview := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestopentime
-			timetoapprove := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
-			mergetime := mr.MergedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
-			cycletime := mr.MergedAt.Unix() - mergerequestfirstcommit.CreatedAt.Unix()
-
 			c.timetoopens = append(c.timetoopens, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(opentime),
 			})
 
+			timetoreview := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestopentime
 			c.timetoreviews = append(c.timetoreviews, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(timetoreview),
 			})
 
+			timetoapprove := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
 			c.timetoapprove = append(c.timetoapprove, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(timetoapprove),
 			})
 
+			mergetime := mr.MergedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
 			c.timetomerge = append(c.timetomerge, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
 				Count: float64(mergetime),
 			})
 
+			cycletime := mr.MergedAt.Unix() - mergerequestfirstcommit.CreatedAt.Unix()
 			cycletimes = append(cycletimes, models.ItemCount{
 				Name:  repo.Name,
 				Name1: c.cleanTitle(mr.Title),
@@ -139,16 +148,16 @@ func (c *cycleTime) mergeRequestFirstCommit(commits []*models.Commit) *models.Co
 }
 
 func (c cycleTime) mergeRequestFirstComment(comments []*models.Comment) *models.Comment {
-	//TODO: not sure about that null check.
-	if len(comments) == 0 {
-		return &models.Comment{}
+	if len(comments) < 1 {
+		return nil
 	}
+
 	sort.Slice(comments, func(i, j int) bool {
 		return comments[i].CreatedAt.Before(comments[j].CreatedAt)
 	})
 
 	//filter organic comments
-	commentIndex := 0
+	commentIndex := -1
 	for i := 0; i < len(comments); i++ {
 		c := comments[i]
 		if c.System {
@@ -159,24 +168,25 @@ func (c cycleTime) mergeRequestFirstComment(comments []*models.Comment) *models.
 		break
 	}
 
+	if commentIndex < 0 {
+		return nil
+	}
+
 	return comments[commentIndex]
 }
 
 func (c cycleTime) mergeRequestApprovalComment(comments []*models.Comment) *models.Comment {
-	//TODO: not sure about that null check.
-	if len(comments) == 0 {
-		return &models.Comment{}
+	if len(comments) < 1 {
+		return nil
 	}
+
 	sort.Slice(comments, func(i, j int) bool {
 		return comments[i].CreatedAt.Before(comments[j].CreatedAt)
 	})
 
-	commentIndex := 0
+	commentIndex := -1
 	for i := 0; i < len(comments); i++ {
 		c := comments[i]
-		if !c.System {
-			continue
-		}
 
 		if !c.ApprovedNote {
 			continue
@@ -184,6 +194,10 @@ func (c cycleTime) mergeRequestApprovalComment(comments []*models.Comment) *mode
 
 		commentIndex = i
 		break
+	}
+
+	if commentIndex < 0 {
+		return nil
 	}
 
 	return comments[commentIndex]

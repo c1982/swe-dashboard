@@ -10,7 +10,7 @@ type SCM interface {
 }
 
 type MergeRequestThroughputService interface {
-	Throughput() (unrevieweds []models.ItemCount, err error)
+	List() (unrevieweds []models.ItemCount, err error)
 }
 
 func NewMergeRequestThroughputService(scm SCM) MergeRequestThroughputService {
@@ -23,8 +23,8 @@ type mergeRequestThroughput struct {
 	scm SCM
 }
 
-func (t *mergeRequestThroughput) Throughput() (throughputs []models.ItemCount, err error) {
-	mergerequests, err := t.scm.ListMergeRequest("merged", "all", 1)
+func (t *mergeRequestThroughput) List() (throughputs []models.ItemCount, err error) {
+	mergerequests, err := t.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return throughputs, err
 	}
@@ -38,11 +38,15 @@ func (t *mergeRequestThroughput) Throughput() (throughputs []models.ItemCount, e
 		}
 
 		repo.MRs = repositories[i].MRs
-		count := len(repo.MRs)
-		throughputs = append(throughputs, models.ItemCount{
-			Name:  repo.Name,
-			Count: float64(count),
-		})
+		days := repo.MRs.CountByDay()
+		for d := 0; d < len(days); d++ {
+			day := days[d]
+			throughputs = append(throughputs, models.ItemCount{
+				Name:  repo.Name,
+				Date:  day.Date,
+				Count: day.Count,
+			})
+		}
 	}
 
 	return throughputs, nil

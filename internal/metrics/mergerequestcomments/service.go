@@ -15,7 +15,7 @@ type SCM interface {
 }
 
 type MergeRequestCommentsService interface {
-	CommentsLeaderBoard(state, scope string, createdafterday int) (users []models.UserCount, err error)
+	List() (users []models.UserCount, err error)
 }
 
 type mergeRequestComments struct {
@@ -29,18 +29,15 @@ func NewMergeRequestCommentsService(scm SCM) MergeRequestCommentsService {
 	return mrc
 }
 
-func (mrc *mergeRequestComments) CommentsLeaderBoard(state, scope string, createdafterday int) (users []models.UserCount, err error) {
+func (mrc *mergeRequestComments) List() (users []models.UserCount, err error) {
 	stats := map[int]models.UserCount{}
-	mergerequests, err := mrc.scm.ListMergeRequest(state, scope, createdafterday)
+	mergerequests, err := mrc.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return users, err
 	}
 
 	for i := 0; i < len(mergerequests); i++ {
 		mr := mergerequests[i]
-		if mr.State != mrStateMerged {
-			continue
-		}
 
 		comments, err := mrc.scm.ListMergeRequestNotes(mr.ProjectID, mr.IID)
 		if err != nil {
