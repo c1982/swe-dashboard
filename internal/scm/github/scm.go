@@ -152,16 +152,10 @@ func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (merger
 	mergerequests = []models.MergeRequest{}
 	filterdate := time.Now().AddDate(0, 0, -createdafterday)
 	mergedOnly := false
-
-	switch state {
-	case "merged":
+	if state == "merged" {
 		mergedOnly = true
-		state = "closed"
-	case "opened":
-		state = "open"
-	default:
-		state = "all"
 	}
+	s.convertPullRequestState(state)
 
 	opt := &github.PullRequestListOptions{
 		State:     state,
@@ -590,6 +584,19 @@ func (s *SCM) convertGithubContributorToUser(contributor *github.Contributor) *m
 		AvatarURL: contributor.GetAvatarURL(),
 		State:     "",
 	}
+}
+
+func (s *SCM) convertPullRequestState(state string) string {
+	switch state {
+	case "merged":
+		state = "closed"
+	case "opened":
+		state = "open"
+	default:
+		state = "all"
+	}
+
+	return state
 }
 
 func (s *SCM) setToken(token string) error {
