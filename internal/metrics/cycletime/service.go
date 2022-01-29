@@ -74,6 +74,11 @@ func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 				continue
 			}
 
+			mergerequestapprovalcomment := c.mergeRequestApprovalComment(comments)
+			if mergerequestapprovalcomment == nil {
+				continue
+			}
+
 			mergerequestopentime := mr.CreatedAt.Unix()
 			opentime := mergerequestopentime - mergerequestfirstcommit.CreatedAt.Unix()
 			c.timetoopens = append(c.timetoopens, models.ItemCount{
@@ -89,7 +94,6 @@ func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 				Count: float64(timetoreview),
 			})
 
-			mergerequestapprovalcomment := c.mergeRequestApprovalComment(comments)
 			timetoapprove := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
 			c.timetoapprove = append(c.timetoapprove, models.ItemCount{
 				Name:  repo.Name,
@@ -144,12 +148,16 @@ func (c *cycleTime) mergeRequestFirstCommit(commits []*models.Commit) *models.Co
 }
 
 func (c cycleTime) mergeRequestFirstComment(comments []*models.Comment) *models.Comment {
+	if len(comments) < 1 {
+		return nil
+	}
+
 	sort.Slice(comments, func(i, j int) bool {
 		return comments[i].CreatedAt.Before(comments[j].CreatedAt)
 	})
 
 	//filter organic comments
-	commentIndex := 0
+	commentIndex := -1
 	for i := 0; i < len(comments); i++ {
 		c := comments[i]
 		if c.System {
@@ -160,7 +168,7 @@ func (c cycleTime) mergeRequestFirstComment(comments []*models.Comment) *models.
 		break
 	}
 
-	if len(comments) < 1 {
+	if commentIndex < 0 {
 		return nil
 	}
 
@@ -168,16 +176,17 @@ func (c cycleTime) mergeRequestFirstComment(comments []*models.Comment) *models.
 }
 
 func (c cycleTime) mergeRequestApprovalComment(comments []*models.Comment) *models.Comment {
+	if len(comments) < 1 {
+		return nil
+	}
+
 	sort.Slice(comments, func(i, j int) bool {
 		return comments[i].CreatedAt.Before(comments[j].CreatedAt)
 	})
 
-	commentIndex := 0
+	commentIndex := -1
 	for i := 0; i < len(comments); i++ {
 		c := comments[i]
-		if !c.System {
-			continue
-		}
 
 		if !c.ApprovedNote {
 			continue
@@ -185,6 +194,10 @@ func (c cycleTime) mergeRequestApprovalComment(comments []*models.Comment) *mode
 
 		commentIndex = i
 		break
+	}
+
+	if commentIndex < 0 {
+		return nil
 	}
 
 	return comments[commentIndex]

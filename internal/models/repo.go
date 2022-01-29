@@ -4,9 +4,11 @@ import "time"
 
 type Repo struct {
 	ID             int
+	CreatorID      int
 	Name           string
 	Description    string
-	LastActivityAt *time.Time
-	CreatorID      int
 	MRs            MergeRequests
+	LastActivityAt *time.Time
+	CreatedAt      *time.Time
+	CommitCount    int
 }
