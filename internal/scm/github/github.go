@@ -14,6 +14,12 @@ func GithubBaseURL(baseuri string) GithubOption {
 	}
 }
 
+func GithubUploadURL(uploaduri string) GithubOption {
+	return func(s *SCM) error {
+		return s.setUploadURL(uploaduri)
+	}
+}
+
 func GithubOrganizations(list []string) GithubOption {
 	return func(s *SCM) error {
 		return s.setOrganizations(list)

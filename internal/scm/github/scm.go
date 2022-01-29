@@ -14,6 +14,7 @@ type SCM struct {
 	client        *github.Client
 	token         string
 	baseURL       string
+	uploadUrl     string
 	ctx           context.Context
 	organizations []string
 }
@@ -39,9 +40,17 @@ func NewSCM(options ...GithubOption) (scm *SCM, err error) {
 		&oauth2.Token{AccessToken: scm.token},
 	)
 	tc := oauth2.NewClient(ctx, ts)
-	c := github.NewClient(tc)
 
-	scm.client = c
+	if scm.baseURL == "" {
+		c := github.NewClient(tc)
+		scm.client = c
+	} else {
+		c, err := github.NewEnterpriseClient(scm.baseURL, scm.uploadUrl, tc)
+		if err != nil {
+			return scm, err
+		}
+		scm.client = c
+	}
 
 	return scm, nil
 }
@@ -590,6 +599,11 @@ func (s *SCM) setToken(token string) error {
 
 func (s *SCM) setBaseURL(baseuri string) error {
 	s.baseURL = baseuri
+	return nil
+}
+
+func (s *SCM) setUploadURL(uploaduri string) error {
+	s.uploadUrl = uploaduri
 	return nil
 }
 
