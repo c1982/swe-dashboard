@@ -11,6 +11,7 @@ vendor/
 tmp/
 app/cmd_test/cmd
 app/cmd_test/cmd_test
+app/cmd_github_test/*
 app/swed/swed
 swed_darwin_amd64
 swed_linux_amd64
