@@ -73,16 +73,22 @@ If you want to run the daemon as a service, you can use the following commands:
 * Review Coverage
 * Defect Rate
 * MRs/PRs Success Rate
+* Active Contributors
+* Additin/Deletion Lines of Code
 
 ## Supported SCM
 
 * Gitlab Community Edition
-* GitHub (not implemented yet)
+* GitHub (implemented, not tested)
 
 ## Supported TimeSeries DB
 
 * Victoriametrics
 
+### Grafana Dashboards
+
+* [SWE Dashboard - Metrics](./grafana/swe-dashboard-metrics.json)
+* [SWE Dashboard - Repository](./grafana/swe-dashboard-repository.json)
 
 ### MRs/PRs Cycle Times
 
@@ -158,8 +164,6 @@ TODO: image
 
 TODO: image
 
+### Active Contributors
 
-### Grafana Dashboards
-
-* [SWE Dashboard - Metrics](./grafana/swe-dashboard-metrics.json)
-* [SWE Dashboard - Repository](./grafana/swe-dashboard-repository.json)
+![](docs/images/active-contributors.png)
