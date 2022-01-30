@@ -22,46 +22,81 @@
     "gnetId": null,
     "graphTooltip": 0,
     "id": 416,
-    "iteration": 1643320299552,
+    "iteration": 1643577793346,
     "links": [],
     "panels": [
         {
             "datasource": "VictoriaMetrics",
+            "description": "",
             "fieldConfig": {
                 "defaults": {
                     "color": {
-                        "mode": "thresholds"
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        }
                     },
                     "mappings": [],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
+                    "unit": "short"
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Deletions"
+                        },
+                        "properties": [
                             {
-                                "color": "green",
-                                "value": null
-                            },
-                            {
-                                "color": "red",
-                                "value": 172800
+                                "id": "color",
+                                "value": {
+                                    "fixedColor": "dark-red",
+                                    "mode": "fixed"
+                                }
                             }
                         ]
                     },
-                    "unit": "percent"
-                },
-                "overrides": []
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Additions"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "fixedColor": "dark-green",
+                                    "mode": "fixed"
+                                }
+                            }
+                        ]
+                    }
+                ]
             },
             "gridPos": {
-                "h": 5,
-                "w": 3,
+                "h": 8,
+                "w": 5,
                 "x": 0,
                 "y": 0
             },
-            "id": 21,
+            "id": 33,
             "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
+                "displayLabels": [
+                    "name",
+                    "value",
+                    "percent"
+                ],
+                "legend": {
+                    "displayMode": "hidden",
+                    "placement": "bottom",
+                    "values": [
+                        "percent"
+                    ]
+                },
+                "pieType": "pie",
                 "reduceOptions": {
                     "calcs": [
                         "lastNotNull"
@@ -69,89 +104,29 @@
                     "fields": "",
                     "values": false
                 },
-                "text": {},
-                "textMode": "auto"
+                "tooltip": {
+                    "mode": "single"
+                }
             },
-            "pluginVersion": "8.0.5",
             "targets": [
                 {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
                     "exemplar": true,
-                    "expr": "defect_rate{repository=\"$repository\"}",
-                    "instant": false,
+                    "expr": "sum (commit_additions{repository=\"$repository\"})",
                     "interval": "",
-                    "legendFormat": "",
+                    "legendFormat": "Additions",
                     "refId": "A"
-                }
-            ],
-            "title": "Defect Rate",
-            "type": "stat"
-        },
-        {
-            "datasource": "VictoriaMetrics",
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "mappings": [],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            },
-                            {
-                                "color": "red",
-                                "value": 172800
-                            }
-                        ]
-                    },
-                    "unit": "s"
                 },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 5,
-                "w": 3,
-                "x": 3,
-                "y": 0
-            },
-            "id": 14,
-            "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "text": {},
-                "textMode": "auto"
-            },
-            "pluginVersion": "8.0.5",
-            "targets": [
                 {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
                     "exemplar": true,
-                    "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
-                    "instant": false,
+                    "expr": "sum (commit_deletions{repository=\"$repository\"})",
+                    "hide": false,
                     "interval": "",
-                    "legendFormat": "Open Speed",
-                    "refId": "A"
+                    "legendFormat": "Deletions",
+                    "refId": "B"
                 }
             ],
-            "title": "Open Speed",
-            "type": "stat"
+            "title": "Additions/Deletions Line of Code (last 30 days)",
+            "type": "piechart"
         },
         {
             "datasource": "VictoriaMetrics",
@@ -180,9 +155,9 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 5,
+                "h": 3,
                 "w": 3,
-                "x": 6,
+                "x": 5,
                 "y": 0
             },
             "id": 15,
@@ -220,7 +195,6 @@
         },
         {
             "datasource": "VictoriaMetrics",
-            "description": "",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -236,7 +210,7 @@
                             },
                             {
                                 "color": "red",
-                                "value": 14400
+                                "value": 172800
                             }
                         ]
                     },
@@ -245,12 +219,12 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 5,
+                "h": 3,
                 "w": 3,
-                "x": 9,
+                "x": 8,
                 "y": 0
             },
-            "id": 16,
+            "id": 14,
             "options": {
                 "colorMode": "value",
                 "graphMode": "none",
@@ -273,14 +247,14 @@
                         "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
+                    "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "Approved Speed",
+                    "legendFormat": "Open Speed",
                     "refId": "A"
                 }
             ],
-            "title": "Approved Speed",
+            "title": "Open Speed",
             "type": "stat"
         },
         {
@@ -309,9 +283,9 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 5,
+                "h": 3,
                 "w": 3,
-                "x": 12,
+                "x": 11,
                 "y": 0
             },
             "id": 17,
@@ -349,6 +323,143 @@
         },
         {
             "datasource": "VictoriaMetrics",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 604800
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 1209600
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 1728000
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 10,
+                "x": 14,
+                "y": 0
+            },
+            "id": 19,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "text": {},
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "(sum by (repository) (cycle_time{repository=\"$repository\"})[10m] / count by (repository) (cycle_time{repository=\"$repository\"})[10m])",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Cycle Time",
+            "transformations": [],
+            "type": "stat"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 172800
+                            }
+                        ]
+                    },
+                    "unit": "percent"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 5,
+                "y": 3
+            },
+            "id": 21,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "text": {},
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "defect_rate{repository=\"$repository\"}",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "title": "Defect Rate",
+            "type": "stat"
+        },
+        {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -375,8 +486,8 @@
             "gridPos": {
                 "h": 5,
                 "w": 3,
-                "x": 15,
-                "y": 0
+                "x": 8,
+                "y": 3
             },
             "id": 25,
             "options": {
@@ -413,6 +524,7 @@
         },
         {
             "datasource": "VictoriaMetrics",
+            "description": "",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -427,16 +539,8 @@
                                 "value": null
                             },
                             {
-                                "color": "green",
-                                "value": 604800
-                            },
-                            {
-                                "color": "#EAB839",
-                                "value": 1209600
-                            },
-                            {
-                                "color": "semi-dark-red",
-                                "value": 1728000
+                                "color": "red",
+                                "value": 14400
                             }
                         ]
                     },
@@ -446,14 +550,14 @@
             },
             "gridPos": {
                 "h": 5,
-                "w": 6,
-                "x": 18,
-                "y": 0
+                "w": 3,
+                "x": 11,
+                "y": 3
             },
-            "id": 19,
+            "id": 16,
             "options": {
                 "colorMode": "value",
-                "graphMode": "area",
+                "graphMode": "none",
                 "justifyMode": "auto",
                 "orientation": "auto",
                 "reduceOptions": {
@@ -473,16 +577,321 @@
                         "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "(sum by (repository) (cycle_time{repository=\"$repository\"})[10m] / count by (repository) (cycle_time{repository=\"$repository\"})[10m])",
+                    "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "Approved Speed",
+                    "refId": "A"
+                }
+            ],
+            "title": "Approved Speed",
+            "type": "stat"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "### MRs/PRs Throughput \n\nA count of how many pull requests are merged over a period of time.",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 33,
+                        "gradientMode": "hue",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "stepBefore",
+                        "lineWidth": 1,
+                        "pointSize": 2,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "normal"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "light-red",
+                                "value": null
+                            },
+                            {
+                                "color": "semi-dark-green",
+                                "value": 5
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 0,
+                "y": 8
+            },
+            "id": 29,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull",
+                        "mean"
+                    ],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "sortBy": "Last *",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "merge_request_throughput{repository=\"$repository\"}",
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": "7d",
+            "timeShift": "1d",
+            "title": "MRs/PRs Throughput ",
+            "type": "timeseries"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "### MRs/PRs Rates\n\nThis is the ratio of product MRs authored by team members in Development Department to the number of team members in the Development Department. ",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 12,
+                "y": 8
+            },
+            "id": 31,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "sortBy": "Last *",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.3.3",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "merge_request_rate{repository=\"$repository\"}",
                     "instant": false,
                     "interval": "",
                     "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
-            "title": "Cycle Time",
-            "transformations": [],
-            "type": "stat"
+            "title": "MRs/PRs Rates",
+            "type": "timeseries"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 43,
+                        "gradientMode": "opacity",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineStyle": {
+                            "fill": "solid"
+                        },
+                        "lineWidth": 0,
+                        "pointSize": 2,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Deletions  "
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "fixedColor": "semi-dark-red",
+                                    "mode": "fixed"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Deletions"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "fixedColor": "semi-dark-red",
+                                    "mode": "fixed"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 24,
+                "x": 0,
+                "y": 18
+            },
+            "id": 35,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "list",
+                    "placement": "bottom"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "targets": [
+                {
+                    "exemplar": true,
+                    "expr": "sum (commit_additions{repository=\"$repository\"})",
+                    "interval": "",
+                    "legendFormat": "Additions",
+                    "refId": "A"
+                },
+                {
+                    "exemplar": true,
+                    "expr": "sum (-1 * commit_deletions{repository=\"$repository\"})",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "Deletions",
+                    "refId": "B"
+                }
+            ],
+            "title": "Additions/Deletions Line of Code",
+            "type": "timeseries"
         },
         {
             "datasource": "VictoriaMetrics",
@@ -522,7 +931,7 @@
                 "h": 11,
                 "w": 12,
                 "x": 0,
-                "y": 5
+                "y": 27
             },
             "id": 10,
             "options": {
@@ -585,7 +994,7 @@
                     "refId": "D"
                 }
             ],
-            "title": "MRs/PRs Times $repository/$mergerequest",
+            "title": "MRs/PRs Times for $mergerequest",
             "type": "bargauge"
         },
         {
@@ -621,7 +1030,7 @@
                 "h": 11,
                 "w": 12,
                 "x": 12,
-                "y": 5
+                "y": 27
             },
             "id": 20,
             "options": {
@@ -751,7 +1160,7 @@
                 "h": 11,
                 "w": 24,
                 "x": 0,
-                "y": 16
+                "y": 38
             },
             "id": 8,
             "options": {
@@ -810,9 +1219,9 @@
             },
             "gridPos": {
                 "h": 10,
-                "w": 24,
+                "w": 12,
                 "x": 0,
-                "y": 27
+                "y": 49
             },
             "id": 23,
             "options": {
@@ -851,49 +1260,70 @@
             "fieldConfig": {
                 "defaults": {
                     "color": {
-                        "mode": "thresholds"
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
                     },
                     "mappings": [],
+                    "max": 100,
+                    "min": 0,
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
                             {
                                 "color": "green",
                                 "value": null
-                            },
-                            {
-                                "color": "#EAB839",
-                                "value": 604800
-                            },
-                            {
-                                "color": "semi-dark-red",
-                                "value": 1209600
                             }
                         ]
                     },
-                    "unit": "s"
+                    "unit": "percent"
                 },
                 "overrides": []
             },
             "gridPos": {
-                "h": 9,
-                "w": 24,
-                "x": 0,
-                "y": 37
+                "h": 10,
+                "w": 12,
+                "x": 12,
+                "y": 49
             },
-            "id": 4,
+            "id": 27,
             "options": {
-                "displayMode": "basic",
-                "orientation": "horizontal",
-                "reduceOptions": {
+                "legend": {
                     "calcs": [
                         "lastNotNull"
                     ],
-                    "fields": "",
-                    "values": false
+                    "displayMode": "list",
+                    "placement": "bottom"
                 },
-                "showUnfilled": true,
-                "text": {}
+                "tooltip": {
+                    "mode": "single"
+                }
             },
             "pluginVersion": "8.0.5",
             "targets": [
@@ -902,15 +1332,15 @@
                         "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "sort_desc(long_running_merge_request{repository=\"$repository\"})",
+                    "expr": "sort_desc(avg by (repository) (defect_rate_user{repository=\"$repository\"}))",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{title}}",
+                    "legendFormat": "Rate",
                     "refId": "A"
                 }
             ],
-            "title": "Long Running MRs/PRs for $repository (last 90 days)",
-            "type": "bargauge"
+            "title": "Defect Rate Average for $repository (last 30 days)",
+            "type": "timeseries"
         },
         {
             "datasource": "VictoriaMetrics",
@@ -939,7 +1369,7 @@
                             "type": "linear"
                         },
                         "showPoints": "auto",
-                        "spanNulls": false,
+                        "spanNulls": true,
                         "stacking": {
                             "group": "A",
                             "mode": "none"
@@ -966,7 +1396,7 @@
                 "h": 9,
                 "w": 24,
                 "x": 0,
-                "y": 46
+                "y": 59
             },
             "id": 12,
             "options": {
@@ -1056,7 +1486,7 @@
                             "type": "linear"
                         },
                         "showPoints": "auto",
-                        "spanNulls": false,
+                        "spanNulls": true,
                         "stacking": {
                             "group": "A",
                             "mode": "none"
@@ -1087,7 +1517,7 @@
                 "h": 10,
                 "w": 24,
                 "x": 0,
-                "y": 55
+                "y": 68
             },
             "id": 26,
             "options": {
@@ -1117,6 +1547,73 @@
             ],
             "title": "MRs/PRs Success Rate for $repository (last 30 days)",
             "type": "timeseries"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 604800
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 1209600
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 24,
+                "x": 0,
+                "y": 78
+            },
+            "id": 4,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true,
+                "text": {}
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(long_running_merge_request{repository=\"$repository\"})",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{title}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Long Running MRs/PRs for $repository (last 90 days)",
+            "type": "bargauge"
         },
         {
             "datasource": "VictoriaMetrics",
@@ -1218,11 +1715,11 @@
                 "h": 12,
                 "w": 24,
                 "x": 0,
-                "y": 65
+                "y": 87
             },
             "id": 6,
             "options": {
-                "displayMode": "gradient",
+                "displayMode": "basic",
                 "orientation": "horizontal",
                 "reduceOptions": {
                     "calcs": [
@@ -1267,7 +1764,7 @@
                     "value": "headball2"
                 },
                 "datasource": "VictoriaMetrics",
-                "definition": "merge_request_throughput{}",
+                "definition": "commit_additions",
                 "description": "",
                 "error": null,
                 "hide": 0,
@@ -1277,11 +1774,11 @@
                 "name": "repository",
                 "options": [],
                 "query": {
-                    "query": "merge_request_throughput{}",
+                    "query": "commit_additions",
                     "refId": "StandardVariableQuery"
                 },
                 "refresh": 1,
-                "regex": "merge_request_throughput{repository=\"(.+)\"}",
+                "regex": ".+repository=\"(.+)\".+",
                 "skipUrlSync": false,
                 "sort": 1,
                 "type": "query"
@@ -1290,8 +1787,8 @@
                 "allValue": null,
                 "current": {
                     "selected": false,
-                    "text": "[Facebook Platform Merge] feature-HB2-6375-facebook-cloud-disable-offerwall-and-rate-game",
-                    "value": "[Facebook Platform Merge] feature-HB2-6375-facebook-cloud-disable-offerwall-and-rate-game"
+                    "text": "HB2-6529-Deleting-sequence-calls",
+                    "value": "HB2-6529-Deleting-sequence-calls"
                 },
                 "datasource": "VictoriaMetrics",
                 "definition": "time_to_open{repository=\"$repository\"}",
@@ -1316,12 +1813,12 @@
         ]
     },
     "time": {
-        "from": "now-24h",
+        "from": "now-2d",
         "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "SWE Dashboard - Repository",
     "uid": "nsA7zFxnz",
-    "version": 34
+    "version": 59
 }
