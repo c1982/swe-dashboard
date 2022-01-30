@@ -69,6 +69,7 @@ func importContributors(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
 		}
 	}
 }
+
 func importMerics(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
 	service := cycletime.NewCycleTimeService(gitlab)
 	metrics, err := service.CycleTime()

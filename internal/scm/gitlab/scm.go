@@ -440,9 +440,6 @@ func (s *SCM) convertCommits(commits []*gitlab.Commit) []*models.Commit {
 			CreatedAt:      *c.CreatedAt,
 			Message:        c.Message,
 			ProjectID:      c.ProjectID,
-			Additions:      c.Stats.Additions,
-			Deletions:      c.Stats.Deletions,
-			Total:          c.Stats.Total,
 		}
 
 		if c.Stats != nil {

@@ -2,6 +2,7 @@ package victoriametrics
 
 import (
 	"fmt"
+	"swe-dashboard/internal/metrics/activecontributors"
 	"swe-dashboard/internal/metrics/cycletime"
 	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/fridaymergerequests"
@@ -36,6 +37,9 @@ const (
 	defectRateMetricName              = `defect_rate{repository="%s"} %f`
 	userDefectRateMetricName          = `defect_rate_user{repository="%s", username="%s", name="%s"} %f`
 	mergeRequestSuccessRateMetricName = `merge_request_success_rate{repository="%s"} %f`
+	activeContributorsMetricName      = `active_contributors{repository="%s", author="%s"} %f`
+	commitAdditionsMetricName         = `commit_additions{repository="%s", author="%s"} %f`
+	commitDeletionsMetricName         = `commit_deletions{repository="%s", author="%s"} %f`
 )
 
 func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err error) {
@@ -309,6 +313,40 @@ func (p *Pusher) ImportMergeRequestSuccessRate(service mergerequestsuccessrate.M
 
 	for i := 0; i < len(counts); i++ {
 		payload := fmt.Sprintf(mergeRequestSuccessRateMetricName, counts[i].Name, counts[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (p *Pusher) ImportActiveContributors(service activecontributors.ActiveContributorsService) (err error) {
+	metrics, err := service.List()
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(metrics); i++ {
+		payload := fmt.Sprintf(activeContributorsMetricName, metrics[i].Name, metrics[i].Name1, metrics[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	impact := service.Impact()
+	for i := 0; i < len(impact); i++ {
+		payload := fmt.Sprintf(commitAdditionsMetricName, impact[i].Name, impact[i].Name1, impact[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	for i := 0; i < len(impact); i++ {
+		payload := fmt.Sprintf(commitDeletionsMetricName, impact[i].Name, impact[i].Name1, impact[i].Count1)
 		err := p.Push(payload)
 		if err != nil {
 			return err

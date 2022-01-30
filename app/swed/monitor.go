@@ -1,6 +1,7 @@
 package main
 
 import (
+	"swe-dashboard/internal/metrics/activecontributors"
 	"swe-dashboard/internal/metrics/cycletime"
 	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/fridaymergerequests"
@@ -62,6 +63,9 @@ func setMetricsFunctions(mux *sync.RWMutex, gitlab *gitlab.SCM, pusher *victoria
 		},
 		"mergerequestsuccessrate": func() error {
 			return pusher.ImportMergeRequestSuccessRate(mergerequestsuccessrate.NewMergeRequestSuccessRateService(gitlab))
+		},
+		"activecontributors": func() error {
+			return pusher.ImportActiveContributors(activecontributors.NewActiveContributors(gitlab))
 		},
 	}
 	mux.Unlock()
