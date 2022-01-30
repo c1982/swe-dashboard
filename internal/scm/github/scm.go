@@ -10,18 +10,18 @@ import (
 	"golang.org/x/oauth2"
 )
 
+const (
+	perPageItemCount = 25
+)
+
 type SCM struct {
 	client        *github.Client
 	token         string
 	baseURL       string
-	uploadUrl     string
+	uploadURL     string
 	ctx           context.Context
 	organizations []string
 }
-
-const (
-	perPageItemCount = 25
-)
 
 func NewSCM(options ...GithubOption) (scm *SCM, err error) {
 	scm = &SCM{}
@@ -45,7 +45,7 @@ func NewSCM(options ...GithubOption) (scm *SCM, err error) {
 		c := github.NewClient(tc)
 		scm.client = c
 	} else {
-		c, err := github.NewEnterpriseClient(scm.baseURL, scm.uploadUrl, tc)
+		c, err := github.NewEnterpriseClient(scm.baseURL, scm.uploadURL, tc)
 		if err != nil {
 			return scm, err
 		}
@@ -61,7 +61,6 @@ func (s *SCM) GetSelfOrganizations() (orgs []*github.Organization, err error) {
 	}
 
 	organizations := []*github.Organization{}
-
 	for {
 		data, rsp, err := s.client.Organizations.List(s.ctx, "", opt)
 		if err != nil {
@@ -131,7 +130,6 @@ func (s *SCM) OrganizationRepositoriesList(orgName string) (repos []*github.Repo
 }
 
 func (s *SCM) GetRepository(projectID int) (repository models.Repo, err error) {
-
 	repo, _, err := s.client.Repositories.GetByID(s.ctx, int64(projectID))
 	if err != nil {
 		return repository, err
@@ -610,7 +608,7 @@ func (s *SCM) setBaseURL(baseuri string) error {
 }
 
 func (s *SCM) setUploadURL(uploaduri string) error {
-	s.uploadUrl = uploaduri
+	s.uploadURL = uploaduri
 	return nil
 }
 
