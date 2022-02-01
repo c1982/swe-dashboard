@@ -2,7 +2,6 @@ package unreviewedmergerequests
 
 import (
 	"swe-dashboard/internal/models"
-	"time"
 )
 
 type SCM interface {
@@ -26,7 +25,7 @@ type unreviewedMergeRequests struct {
 }
 
 func (u *unreviewedMergeRequests) List() (unrevieweds []models.ItemCount, err error) {
-	mergerequests, err := u.scm.ListMergeRequest("merged", "all", time.Now().Day())
+	mergerequests, err := u.scm.ListMergeRequest("merged", "all", 14)
 	if err != nil {
 		return unrevieweds, err
 	}
