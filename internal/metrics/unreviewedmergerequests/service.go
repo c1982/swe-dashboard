@@ -25,7 +25,7 @@ type unreviewedMergeRequests struct {
 }
 
 func (u *unreviewedMergeRequests) List() (unrevieweds []models.ItemCount, err error) {
-	mergerequests, err := u.scm.ListMergeRequest("merged", "all", 14)
+	mergerequests, err := u.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return unrevieweds, err
 	}
