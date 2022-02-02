@@ -88,11 +88,13 @@ func (c *cycleTime) CycleTime() (cycletimes []models.ItemCount, err error) {
 			})
 
 			timetoreview := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestopentime
-			c.timetoreviews = append(c.timetoreviews, models.ItemCount{
-				Name:  repo.Name,
-				Name1: c.cleanTitle(mr.Title),
-				Count: float64(timetoreview),
-			})
+			if mr.Author.ID != mr.MergedBy.ID { //exclude self-mergeds
+				c.timetoreviews = append(c.timetoreviews, models.ItemCount{
+					Name:  repo.Name,
+					Name1: c.cleanTitle(mr.Title),
+					Count: float64(timetoreview),
+				})
+			}
 
 			timetoapprove := mergerequestfirstcomment.CreatedAt.Unix() - mergerequestapprovalcomment.CreatedAt.Unix()
 			c.timetoapprove = append(c.timetoapprove, models.ItemCount{

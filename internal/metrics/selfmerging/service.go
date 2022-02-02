@@ -30,17 +30,13 @@ func (s *selfMerging) GetSelfMergingUsers() (users []models.UserCount, err error
 	tmpusers := map[int]models.UserCount{}
 	users = []models.UserCount{}
 
-	mrs, err := s.scm.ListMergeRequest("merged", "all", time.Now().Day())
+	mrs, err := s.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return users, err
 	}
 
 	for i := 0; i < len(mrs); i++ {
 		mr := mrs[i]
-		if mr.State != mrStateMerged {
-			continue
-		}
-
 		if mr.Author.ID != mr.MergedBy.ID {
 			continue
 		}
