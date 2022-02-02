@@ -25,6 +25,9 @@ func NewCycleTimeService(scm SCM) CycleTimeService {
 	c := &cycleTime{
 		scm:           scm,
 		timetoreviews: []models.ItemCount{},
+		timetoopens:   []models.ItemCount{},
+		timetoapprove: []models.ItemCount{},
+		timetomerge:   []models.ItemCount{},
 	}
 	return c
 }
