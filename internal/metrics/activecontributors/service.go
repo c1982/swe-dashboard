@@ -38,7 +38,7 @@ func (a *activecontributors) List() (counts []models.ItemCount, err error) {
 	impacts := []models.ItemCount{}
 	for i := 0; i < len(repos); i++ {
 		r := repos[i]
-		commits, err := a.scm.ListCommits(r.ID, 7)
+		commits, err := a.scm.ListCommits(r.ID, 30)
 		if err != nil {
 			return counts, err
 		}
