@@ -66,7 +66,7 @@ func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err 
 	}
 
 	timetoreview := service.TimeToReview()
-	for i := 0; i < len(timetoopens); i++ {
+	for i := 0; i < len(timetoreview); i++ {
 		payload := fmt.Sprintf(timetoReviewMetricName, timetoreview[i].Name, timetoreview[i].Name1, timetoreview[i].Count)
 		err := p.Push(payload)
 		if err != nil {
@@ -75,7 +75,7 @@ func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err 
 	}
 
 	timetoapprove := service.TimeToApprove()
-	for i := 0; i < len(timetoopens); i++ {
+	for i := 0; i < len(timetoapprove); i++ {
 		payload := fmt.Sprintf(timetoApproveMetricName, timetoapprove[i].Name, timetoapprove[i].Name1, timetoapprove[i].Count)
 		err := p.Push(payload)
 		if err != nil {
@@ -84,7 +84,7 @@ func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err 
 	}
 
 	timetomerge := service.TimeToMerge()
-	for i := 0; i < len(timetoopens); i++ {
+	for i := 0; i < len(timetomerge); i++ {
 		payload := fmt.Sprintf(timetoMergeMetricName, timetomerge[i].Name, timetomerge[i].Name1, timetomerge[i].Count)
 		err := p.Push(payload)
 		if err != nil {
