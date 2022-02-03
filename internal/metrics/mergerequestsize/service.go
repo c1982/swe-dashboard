@@ -3,7 +3,6 @@ package mergerequestsize
 import (
 	"strings"
 	"swe-dashboard/internal/models"
-	"time"
 )
 
 type SCM interface {
@@ -29,11 +28,10 @@ type mergeRequestSizes struct {
 }
 
 func (m *mergeRequestSizes) Sizes() (sizes []models.ItemCount, err error) {
-	m.mergerequests, err = m.scm.ListMergeRequest("merged", "all", time.Now().Day())
+	m.mergerequests, err = m.scm.ListMergeRequest("merged", "all", 30)
 	if err != nil {
 		return sizes, err
 	}
-
 	sizes = []models.ItemCount{}
 	repositories := m.mergerequests.GroupByRepositories()
 	for i := 0; i < len(repositories); i++ {
