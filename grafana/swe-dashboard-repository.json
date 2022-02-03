@@ -22,7 +22,7 @@
     "gnetId": null,
     "graphTooltip": 0,
     "id": 416,
-    "iteration": 1643577793346,
+    "iteration": 1643918563548,
     "links": [],
     "panels": [
         {
@@ -160,6 +160,7 @@
                 "x": 5,
                 "y": 0
             },
+            "hideTimeOverride": true,
             "id": 15,
             "options": {
                 "colorMode": "value",
@@ -190,6 +191,7 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "Review Speed",
             "type": "stat"
         },
@@ -420,7 +422,7 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 5,
+                "h": 2,
                 "w": 3,
                 "x": 5,
                 "y": 3
@@ -479,7 +481,8 @@
                                 "value": 80
                             }
                         ]
-                    }
+                    },
+                    "unit": "percent"
                 },
                 "overrides": []
             },
@@ -585,6 +588,79 @@
                 }
             ],
             "title": "Approved Speed",
+            "type": "stat"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "### Unreviewed MRs/PRs\n\nThe percentage of pull requests that were merged without review.",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "semi-dark-yellow",
+                                "value": 1
+                            },
+                            {
+                                "color": "semi-dark-orange",
+                                "value": 4
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 8
+                            }
+                        ]
+                    },
+                    "unit": "percent"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 3,
+                "w": 3,
+                "x": 5,
+                "y": 5
+            },
+            "id": 41,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "text": {},
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": false,
+                    "expr": "unreviewed_merge_request{repository=\"$repository\"}",
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Unreviewed MRs/PRs",
+            "transformations": [],
             "type": "stat"
         },
         {
@@ -772,6 +848,105 @@
         },
         {
             "datasource": "VictoriaMetrics",
+            "description": "### Unreviewed MRs/PRs\n\nThe percentage of pull requests that were merged without review.",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "semi-dark-yellow",
+                                "value": 1
+                            },
+                            {
+                                "color": "semi-dark-orange",
+                                "value": 4
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 8
+                            }
+                        ]
+                    },
+                    "unit": "percent"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 0,
+                "y": 18
+            },
+            "id": 37,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull",
+                        "mean"
+                    ],
+                    "displayMode": "hidden",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": false,
+                    "expr": "unreviewed_merge_request{repository=\"$repository\"}",
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Unreviewed MRs/PRs Trend for $repository",
+            "transformations": [],
+            "type": "timeseries"
+        },
+        {
+            "datasource": "VictoriaMetrics",
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -783,7 +958,7 @@
                         "axisPlacement": "auto",
                         "barAlignment": 0,
                         "drawStyle": "line",
-                        "fillOpacity": 43,
+                        "fillOpacity": 65,
                         "gradientMode": "opacity",
                         "hideFrom": {
                             "legend": false,
@@ -794,7 +969,7 @@
                         "lineStyle": {
                             "fill": "solid"
                         },
-                        "lineWidth": 0,
+                        "lineWidth": 1,
                         "pointSize": 2,
                         "scaleDistribution": {
                             "type": "linear"
@@ -856,8 +1031,8 @@
             },
             "gridPos": {
                 "h": 9,
-                "w": 24,
-                "x": 0,
+                "w": 12,
+                "x": 12,
                 "y": 18
             },
             "id": 35,
@@ -1126,7 +1301,7 @@
                     "refId": "F"
                 }
             ],
-            "title": "MRs/PRs Size Counts for $repository (this month)",
+            "title": "MRs/PRs Size Counts for $repository",
             "transformations": [],
             "type": "bargauge"
         },
@@ -1223,6 +1398,7 @@
                 "x": 0,
                 "y": 49
             },
+            "hideTimeOverride": true,
             "id": 23,
             "options": {
                 "displayMode": "basic",
@@ -1247,10 +1423,11 @@
                     "expr": "sort_desc(sum by (username, name) (defect_rate_user{repository=\"$repository\"}))",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{username}} ({{name}})",
+                    "legendFormat": "{{name}} ({{username}})",
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "User Defect Rate for $repository (last 30 days)",
             "type": "bargauge"
         },
@@ -1379,6 +1556,96 @@
                         }
                     },
                     "mappings": [],
+                    "max": 100,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percent"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 59
+            },
+            "id": 40,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull",
+                        "mean"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(sum by (username, name) (defect_rate_user{repository=\"$repository\"}))",
+                    "hide": false,
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{name}} ({{username}})",
+                    "refId": "A"
+                }
+            ],
+            "title": "User Defect Rate for $repository (last 30 days)",
+            "type": "timeseries"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
@@ -1396,7 +1663,7 @@
                 "h": 9,
                 "w": 24,
                 "x": 0,
-                "y": 59
+                "y": 69
             },
             "id": 12,
             "options": {
@@ -1517,7 +1784,7 @@
                 "h": 10,
                 "w": 24,
                 "x": 0,
-                "y": 68
+                "y": 78
             },
             "id": 26,
             "options": {
@@ -1525,8 +1792,8 @@
                     "calcs": [
                         "lastNotNull"
                     ],
-                    "displayMode": "table",
-                    "placement": "right"
+                    "displayMode": "list",
+                    "placement": "bottom"
                 },
                 "tooltip": {
                     "mode": "single"
@@ -1582,8 +1849,9 @@
                 "h": 9,
                 "w": 24,
                 "x": 0,
-                "y": 78
+                "y": 88
             },
+            "hideTimeOverride": true,
             "id": 4,
             "options": {
                 "displayMode": "basic",
@@ -1612,6 +1880,7 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": null,
             "title": "Long Running MRs/PRs for $repository (last 90 days)",
             "type": "bargauge"
         },
@@ -1715,7 +1984,7 @@
                 "h": 12,
                 "w": 24,
                 "x": 0,
-                "y": 87
+                "y": 97
             },
             "id": 6,
             "options": {
@@ -1745,7 +2014,8 @@
                     "refId": "A"
                 }
             ],
-            "title": "MRs/PRs Sizes for $repository (this month)",
+            "timeFrom": null,
+            "title": "MRs/PRs Sizes for $repository",
             "transformations": [],
             "type": "bargauge"
         }
@@ -1819,6 +2089,5 @@
     "timepicker": {},
     "timezone": "",
     "title": "SWE Dashboard - Repository",
-    "uid": "nsA7zFxnz",
-    "version": 59
+    "version": 79
 }

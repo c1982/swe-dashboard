@@ -140,7 +140,7 @@
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
-                        "drawStyle": "line",
+                        "drawStyle": "bars",
                         "fillOpacity": 33,
                         "gradientMode": "hue",
                         "hideFrom": {
@@ -148,7 +148,7 @@
                             "tooltip": false,
                             "viz": false
                         },
-                        "lineInterpolation": "stepBefore",
+                        "lineInterpolation": "linear",
                         "lineWidth": 1,
                         "pointSize": 2,
                         "scaleDistribution": {
@@ -187,12 +187,14 @@
                 "x": 5,
                 "y": 0
             },
+            "hideTimeOverride": true,
             "id": 17,
             "options": {
                 "legend": {
                     "calcs": [
                         "lastNotNull",
-                        "mean"
+                        "mean",
+                        "sum"
                     ],
                     "displayMode": "table",
                     "placement": "right",
@@ -217,7 +219,7 @@
             ],
             "timeFrom": "7d",
             "timeShift": "1d",
-            "title": "MRs/PRs Throughput ",
+            "title": "MRs/PRs Throughput (last 30 days)",
             "type": "timeseries"
         },
         {
@@ -313,6 +315,327 @@
         },
         {
             "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [
+                        {
+                            "options": {
+                                "from": 0,
+                                "result": {
+                                    "index": 0,
+                                    "text": "XS"
+                                },
+                                "to": 9.99
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 10,
+                                "result": {
+                                    "index": 1,
+                                    "text": "S"
+                                },
+                                "to": 29
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 30,
+                                "result": {
+                                    "index": 2,
+                                    "text": "M"
+                                },
+                                "to": 99
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 100,
+                                "result": {
+                                    "index": 3,
+                                    "text": "L"
+                                },
+                                "to": 499
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 500,
+                                "result": {
+                                    "index": 4,
+                                    "text": "XL"
+                                },
+                                "to": 999
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 1000,
+                                "result": {
+                                    "index": 5,
+                                    "text": "XXL"
+                                },
+                                "to": 10000
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 10001,
+                                "result": {
+                                    "index": 6,
+                                    "text": "O_o"
+                                },
+                                "to": 20000
+                            },
+                            "type": "range"
+                        }
+                    ],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 150
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 600
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 0,
+                "y": 21
+            },
+            "hideTimeOverride": true,
+            "id": 47,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true,
+                "text": {}
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(avg by (repository) (sum(merge_request_size) by (title, repository)))",
+                    "format": "time_series",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "B"
+                }
+            ],
+            "timeFrom": "1h",
+            "title": "MRs/PRs Sizes Average",
+            "transformations": [],
+            "type": "bargauge"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [
+                        {
+                            "options": {
+                                "from": 0,
+                                "result": {
+                                    "index": 0,
+                                    "text": "XS"
+                                },
+                                "to": 9.99
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 10,
+                                "result": {
+                                    "index": 1,
+                                    "text": "S"
+                                },
+                                "to": 29
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 30,
+                                "result": {
+                                    "index": 2,
+                                    "text": "M"
+                                },
+                                "to": 99
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 100,
+                                "result": {
+                                    "index": 3,
+                                    "text": "L"
+                                },
+                                "to": 499
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 500,
+                                "result": {
+                                    "index": 4,
+                                    "text": "XL"
+                                },
+                                "to": 999
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 1000,
+                                "result": {
+                                    "index": 5,
+                                    "text": "XXL"
+                                },
+                                "to": 10000
+                            },
+                            "type": "range"
+                        },
+                        {
+                            "options": {
+                                "from": 10001,
+                                "result": {
+                                    "index": 6,
+                                    "text": "O_o"
+                                },
+                                "to": 20000
+                            },
+                            "type": "range"
+                        }
+                    ],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "#EAB839",
+                                "value": 150
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 600
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 12,
+                "y": 21
+            },
+            "id": 48,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(avg by (repository) (sum(merge_request_size) by (title, repository)))",
+                    "format": "time_series",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "B"
+                }
+            ],
+            "title": "MRs/PRs Sizes  Average Trend",
+            "transformations": [],
+            "type": "timeseries"
+        },
+        {
+            "datasource": "VictoriaMetrics",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -335,8 +658,9 @@
                 "h": 11,
                 "w": 12,
                 "x": 0,
-                "y": 21
+                "y": 31
             },
+            "hideTimeOverride": true,
             "id": 42,
             "options": {
                 "displayMode": "basic",
@@ -355,12 +679,15 @@
             "targets": [
                 {
                     "exemplar": true,
-                    "expr": "sort_desc(sum by (author) (active_contributors{}))",
+                    "expr": "sort_desc(sum by (author,email) (active_contributors{}))",
+                    "instant": false,
                     "interval": "",
-                    "legendFormat": "{{author}}",
+                    "legendFormat": "{{author}} ({{email}})",
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
+            "timeShift": null,
             "title": "Active Contributors for all Repositories (last 30 days)",
             "type": "bargauge"
         },
@@ -437,7 +764,7 @@
                 "h": 11,
                 "w": 12,
                 "x": 12,
-                "y": 21
+                "y": 31
             },
             "id": 43,
             "options": {
@@ -510,8 +837,9 @@
                 "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 32
+                "y": 42
             },
+            "hideTimeOverride": true,
             "id": 34,
             "options": {
                 "displayMode": "basic",
@@ -539,6 +867,8 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
+            "timeShift": null,
             "title": "MRs/PRs Success Rate (last 30 days)",
             "type": "bargauge"
         },
@@ -600,7 +930,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 32
+                "y": 42
             },
             "id": 33,
             "options": {
@@ -671,8 +1001,9 @@
                 "h": 9,
                 "w": 12,
                 "x": 0,
-                "y": 42
+                "y": 52
             },
+            "hideTimeOverride": true,
             "id": 15,
             "options": {
                 "displayMode": "basic",
@@ -700,7 +1031,8 @@
                     "refId": "A"
                 }
             ],
-            "title": "Unreviewed MRs/PRs (this month)",
+            "timeFrom": "1h",
+            "title": "Unreviewed MRs/PRs (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
@@ -770,7 +1102,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 12,
-                "y": 42
+                "y": 52
             },
             "id": 35,
             "options": {
@@ -836,8 +1168,9 @@
                 "h": 9,
                 "w": 12,
                 "x": 0,
-                "y": 51
+                "y": 61
             },
+            "hideTimeOverride": true,
             "id": 3,
             "options": {
                 "displayMode": "basic",
@@ -867,6 +1200,7 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "MRs/PRs Participants (last 30 days)",
             "transformations": [],
             "type": "bargauge"
@@ -932,7 +1266,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 12,
-                "y": 51
+                "y": 61
             },
             "id": 36,
             "options": {
@@ -996,8 +1330,9 @@
                 "h": 9,
                 "w": 12,
                 "x": 0,
-                "y": 60
+                "y": 70
             },
+            "hideTimeOverride": true,
             "id": 2,
             "options": {
                 "displayMode": "basic",
@@ -1027,6 +1362,7 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "MRs/PRs Comments (last 30 days)",
             "transformations": [],
             "type": "bargauge"
@@ -1088,7 +1424,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 12,
-                "y": 60
+                "y": 70
             },
             "id": 37,
             "options": {
@@ -1119,7 +1455,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "MRs/PRs Comments (last 30 days)",
+            "title": "MRs/PRs Comments Trend",
             "transformations": [],
             "type": "timeseries"
         },
@@ -1161,8 +1497,9 @@
                 "h": 9,
                 "w": 12,
                 "x": 0,
-                "y": 69
+                "y": 79
             },
+            "hideTimeOverride": true,
             "id": 14,
             "options": {
                 "displayMode": "basic",
@@ -1190,9 +1527,113 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "Friday MRs/PRs (last 30 days)",
             "transformations": [],
             "type": "bargauge"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineStyle": {
+                            "fill": "solid"
+                        },
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "semi-dark-yellow",
+                                "value": 10
+                            },
+                            {
+                                "color": "semi-dark-orange",
+                                "value": 15
+                            },
+                            {
+                                "color": "semi-dark-red",
+                                "value": 20
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 12,
+                "y": 79
+            },
+            "hideTimeOverride": true,
+            "id": 49,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": false,
+                    "expr": "sort_desc(sum by (repository) (friday_merge_request{} > 0 ))",
+                    "interval": "",
+                    "legendFormat": "{{repository}}",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "title": "Friday MRs/PRs Trend",
+            "transformations": [],
+            "type": "timeseries"
         },
         {
             "datasource": "VictoriaMetrics",
@@ -1230,9 +1671,10 @@
             "gridPos": {
                 "h": 9,
                 "w": 12,
-                "x": 12,
-                "y": 69
+                "x": 0,
+                "y": 88
             },
+            "hideTimeOverride": true,
             "id": 8,
             "options": {
                 "displayMode": "basic",
@@ -1262,9 +1704,111 @@
                     "refId": "A"
                 }
             ],
-            "title": "Self-Merging Users (this month)",
+            "timeFrom": "1h",
+            "title": "Self-Merging Users (last 30 days)",
             "transformations": [],
             "type": "bargauge"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "light-green",
+                                "value": null
+                            },
+                            {
+                                "color": "semi-dark-yellow",
+                                "value": 2
+                            },
+                            {
+                                "color": "dark-orange",
+                                "value": 8
+                            },
+                            {
+                                "color": "dark-red",
+                                "value": 10
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 12,
+                "y": 88
+            },
+            "hideTimeOverride": true,
+            "id": 50,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(self_merging{})",
+                    "format": "time_series",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{name}}",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "title": "Self-Merging Users Trend",
+            "transformations": [],
+            "type": "timeseries"
         },
         {
             "datasource": "VictoriaMetrics",
@@ -1297,8 +1841,9 @@
                 "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 78
+                "y": 97
             },
+            "hideTimeOverride": true,
             "id": 27,
             "options": {
                 "displayMode": "basic",
@@ -1321,11 +1866,14 @@
                     },
                     "exemplar": true,
                     "expr": "sort_desc(defect_rate{}) > 0",
+                    "instant": false,
                     "interval": "",
                     "legendFormat": "{{repository}}",
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
+            "timeShift": null,
             "title": "Repository Defect Rate (last 30 days)",
             "type": "bargauge"
         },
@@ -1387,7 +1935,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 78
+                "y": 97
             },
             "id": 28,
             "options": {
@@ -1447,8 +1995,9 @@
                 "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 88
+                "y": 107
             },
+            "hideTimeOverride": true,
             "id": 30,
             "options": {
                 "displayMode": "basic",
@@ -1476,6 +2025,7 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "User Defect Rate (last 30 days)",
             "type": "bargauge"
         },
@@ -1538,7 +2088,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 88
+                "y": 107
             },
             "id": 31,
             "options": {
@@ -1570,6 +2120,20 @@
             ],
             "title": "User Defect Rate Trend",
             "type": "timeseries"
+        },
+        {
+            "collapsed": false,
+            "datasource": null,
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 117
+            },
+            "id": 45,
+            "panels": [],
+            "title": "Cycle Times",
+            "type": "row"
         },
         {
             "datasource": "VictoriaMetrics",
@@ -1609,8 +2173,9 @@
                 "h": 9,
                 "w": 12,
                 "x": 0,
-                "y": 98
+                "y": 118
             },
+            "hideTimeOverride": true,
             "id": 18,
             "options": {
                 "displayMode": "basic",
@@ -1639,6 +2204,7 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "Cycle Time (last 30 days)",
             "transformations": [],
             "type": "bargauge"
@@ -1709,7 +2275,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 12,
-                "y": 98
+                "y": 118
             },
             "id": 38,
             "options": {
@@ -1781,8 +2347,9 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 107
+                "y": 127
             },
+            "hideTimeOverride": true,
             "id": 10,
             "options": {
                 "displayMode": "basic",
@@ -1811,6 +2378,7 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "Time To Open (last 30 days)",
             "transformations": [],
             "type": "bargauge"
@@ -1868,7 +2436,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 107
+                "y": 127
             },
             "id": 22,
             "options": {
@@ -1941,7 +2509,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 114
+                "y": 134
             },
             "id": 19,
             "options": {
@@ -2040,7 +2608,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 114
+                "y": 134
             },
             "id": 23,
             "options": {
@@ -2112,8 +2680,9 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 121
+                "y": 141
             },
+            "hideTimeOverride": true,
             "id": 20,
             "options": {
                 "displayMode": "basic",
@@ -2142,6 +2711,7 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "Time to Approve (last 30 days)",
             "transformations": [],
             "type": "bargauge"
@@ -2211,7 +2781,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 121
+                "y": 141
             },
             "id": 24,
             "options": {
@@ -2284,8 +2854,9 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 128
+                "y": 148
             },
+            "hideTimeOverride": true,
             "id": 21,
             "options": {
                 "displayMode": "basic",
@@ -2314,6 +2885,7 @@
                     "refId": "A"
                 }
             ],
+            "timeFrom": "1h",
             "title": "Time to Merge (last 30 days)",
             "transformations": [],
             "type": "bargauge"
@@ -2371,7 +2943,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 128
+                "y": 148
             },
             "id": 25,
             "options": {
@@ -2434,6 +3006,5 @@
     },
     "timezone": "",
     "title": "SWE Dashboard - Metrics",
-    "uid": "kVnmzFb7z",
-    "version": 66
+    "version": 111
 }
