@@ -10,11 +10,14 @@ import (
 )
 
 const (
-	cycleTimeMetricName     = `cycle_time{repository="%s", title="%s"} %f`
-	timeToOpenMetricName    = `time_to_open{repository="%s", title="%s"} %f`
-	timetoReviewMetricName  = `time_to_review{repository="%s", title="%s"} %f`
-	timetoApproveMetricName = `time_to_approve{repository="%s", title="%s"} %f`
-	timetoMergeMetricName   = `time_to_merge{repository="%s", title="%s"} %f`
+	cycleTimeMetricName          = `cycle_time{repository="%s", title="%s"} %f`
+	timeToOpenMetricName         = `time_to_open{repository="%s", title="%s"} %f`
+	timetoReviewMetricName       = `time_to_review{repository="%s", title="%s"} %f`
+	timetoApproveMetricName      = `time_to_approve{repository="%s", title="%s"} %f`
+	timetoMergeMetricName        = `time_to_merge{repository="%s", title="%s"} %f`
+	activeContributorsMetricName = `active_contributors{repository="%s", author="%s", email="%s"} %f`
+	commitAdditionsMetricName    = `commit_additions{repository="%s", author="%s", email="%s"} %f`
+	commitDeletionsMetricName    = `commit_deletions{repository="%s", author="%s", email="%s"} %f`
 )
 
 func main() {
@@ -42,7 +45,7 @@ func importContributors(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
 	}
 
 	for i := 0; i < len(metrics); i++ {
-		payload := fmt.Sprintf(`active_contributors{repository="%s", author="%s"} %f`, metrics[i].Name, metrics[i].Name1, metrics[i].Count)
+		payload := fmt.Sprintf(activeContributorsMetricName, metrics[i].Name, metrics[i].Name1, metrics[i].Name2, metrics[i].Count)
 		fmt.Println(payload)
 		err := p.Push(payload)
 		if err != nil {
@@ -52,7 +55,7 @@ func importContributors(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
 
 	impact := service.Impact()
 	for i := 0; i < len(impact); i++ {
-		payload := fmt.Sprintf(`commit_additions{repository="%s", author="%s"} %f`, impact[i].Name, impact[i].Name1, impact[i].Count)
+		payload := fmt.Sprintf(commitAdditionsMetricName, impact[i].Name, impact[i].Name1, impact[i].Name2, impact[i].Count)
 		fmt.Println(payload)
 		err := p.Push(payload)
 		if err != nil {
@@ -61,7 +64,7 @@ func importContributors(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
 	}
 
 	for i := 0; i < len(impact); i++ {
-		payload := fmt.Sprintf(`commit_deletions{repository="%s", author="%s"} %f`, impact[i].Name, impact[i].Name1, impact[i].Count1)
+		payload := fmt.Sprintf(commitDeletionsMetricName, impact[i].Name, impact[i].Name1, impact[i].Name2, impact[i].Count1)
 		fmt.Println(payload)
 		err := p.Push(payload)
 		if err != nil {

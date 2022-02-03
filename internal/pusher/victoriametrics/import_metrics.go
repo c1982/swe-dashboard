@@ -37,9 +37,9 @@ const (
 	defectRateMetricName              = `defect_rate{repository="%s"} %f`
 	userDefectRateMetricName          = `defect_rate_user{repository="%s", username="%s", name="%s"} %f`
 	mergeRequestSuccessRateMetricName = `merge_request_success_rate{repository="%s"} %f`
-	activeContributorsMetricName      = `active_contributors{repository="%s", author="%s"} %f`
-	commitAdditionsMetricName         = `commit_additions{repository="%s", author="%s"} %f`
-	commitDeletionsMetricName         = `commit_deletions{repository="%s", author="%s"} %f`
+	activeContributorsMetricName      = `active_contributors{repository="%s", author="%s", email="%s"} %f`
+	commitAdditionsMetricName         = `commit_additions{repository="%s", author="%s", email="%s"} %f`
+	commitDeletionsMetricName         = `commit_deletions{repository="%s", author="%s", email="%s"} %f`
 )
 
 func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err error) {
@@ -329,7 +329,7 @@ func (p *Pusher) ImportActiveContributors(service activecontributors.ActiveContr
 	}
 
 	for i := 0; i < len(metrics); i++ {
-		payload := fmt.Sprintf(activeContributorsMetricName, metrics[i].Name, metrics[i].Name1, metrics[i].Count)
+		payload := fmt.Sprintf(activeContributorsMetricName, metrics[i].Name, metrics[i].Name1, metrics[i].Name2, metrics[i].Count)
 		err := p.Push(payload)
 		if err != nil {
 			return err
@@ -338,7 +338,7 @@ func (p *Pusher) ImportActiveContributors(service activecontributors.ActiveContr
 
 	impact := service.Impact()
 	for i := 0; i < len(impact); i++ {
-		payload := fmt.Sprintf(commitAdditionsMetricName, impact[i].Name, impact[i].Name1, impact[i].Count)
+		payload := fmt.Sprintf(commitAdditionsMetricName, impact[i].Name, impact[i].Name1, impact[i].Name2, impact[i].Count)
 		err := p.Push(payload)
 		if err != nil {
 			return err
@@ -346,7 +346,7 @@ func (p *Pusher) ImportActiveContributors(service activecontributors.ActiveContr
 	}
 
 	for i := 0; i < len(impact); i++ {
-		payload := fmt.Sprintf(commitDeletionsMetricName, impact[i].Name, impact[i].Name1, impact[i].Count1)
+		payload := fmt.Sprintf(commitDeletionsMetricName, impact[i].Name, impact[i].Name1, impact[i].Name2, impact[i].Count1)
 		err := p.Push(payload)
 		if err != nil {
 			return err
