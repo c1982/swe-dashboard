@@ -25,19 +25,16 @@ func main() {
 		log.Fatal().Err(err).Str("interval", *checkInterval).Msg("interval could not be parsed")
 		return
 	}
-
 	gitlab, err := gitlab.NewSCM(gitlab.GitlabBaseURL(*gitlabBaseURL), gitlab.GitlabToken(*gitlabToken))
 	if err != nil {
 		log.Fatal().Err(err).Str("url", *gitlabBaseURL).Send()
 		return
 	}
-
 	pusher, err := victoriametrics.NewPusher(victoriametrics.SetPushURL(*victoriametricsImportURL))
 	if err != nil {
 		log.Fatal().Err(err).Str("url", *victoriametricsImportURL).Send()
 		return
 	}
-
 	log.Info().Msg("running swed daemon")
 	run(interval, gitlab, pusher)
 }

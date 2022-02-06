@@ -5,6 +5,12 @@ import (
 	"swe-dashboard/internal/models"
 )
 
+type engageItem struct {
+	Author *models.User
+	Merger *models.User
+	Count  float64
+}
+
 type SCM interface {
 	GetRepository(projectID int) (repository models.Repo, err error)
 	ListMergeRequest(state, scope string, createdafterday int) (mergerequests models.MergeRequests, err error)
@@ -75,10 +81,4 @@ func (m *mergeEngagements) mergerCount(mergerequests models.MergeRequests) map[s
 		}
 	}
 	return counts
-}
-
-type engageItem struct {
-	Author *models.User
-	Merger *models.User
-	Count  float64
 }
