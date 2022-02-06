@@ -5,6 +5,7 @@ import (
 	"os"
 	"swe-dashboard/internal/metrics/activecontributors"
 	"swe-dashboard/internal/metrics/cycletime"
+	"swe-dashboard/internal/metrics/mergerequestengagement"
 	"swe-dashboard/internal/pusher/victoriametrics"
 	"swe-dashboard/internal/scm/gitlab"
 )
@@ -34,7 +35,24 @@ func main() {
 		panic(err)
 	}
 
-	importContributors(gitlab, pusher)
+	importMergerequestEngagement(gitlab, pusher)
+}
+
+func importMergerequestEngagement(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
+	service := mergerequestengagement.NewMergeRequestEngagementService(gitlab)
+	metrics, err := service.List()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for i := 0; i < len(metrics); i++ {
+		payload := fmt.Sprintf(`merge_request_engagement{repository="%s", author="%s", mergedby="%s"} %f`, metrics[i].Name, metrics[i].Name1, metrics[i].Name2, metrics[i].Count)
+		fmt.Println(payload)
+		err := p.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 }
 
 func importContributors(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {

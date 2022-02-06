@@ -7,6 +7,7 @@ import (
 	"swe-dashboard/internal/metrics/fridaymergerequests"
 	"swe-dashboard/internal/metrics/longrunningmergerequests"
 	"swe-dashboard/internal/metrics/mergerequestcomments"
+	"swe-dashboard/internal/metrics/mergerequestengagement"
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/metrics/mergerequestrate"
 	"swe-dashboard/internal/metrics/mergerequestsize"
@@ -66,6 +67,9 @@ func setMetricsFunctions(mux *sync.RWMutex, gitlab *gitlab.SCM, pusher *victoria
 		},
 		"activecontributors": func() error {
 			return pusher.ImportActiveContributors(activecontributors.NewActiveContributors(gitlab))
+		},
+		"mergerequestengagement": func() error {
+			return pusher.ImportMergeRequestEngagement(mergerequestengagement.NewMergeRequestEngagementService(gitlab))
 		},
 	}
 	mux.Unlock()

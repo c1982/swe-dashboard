@@ -8,6 +8,7 @@ import (
 	"swe-dashboard/internal/metrics/fridaymergerequests"
 	"swe-dashboard/internal/metrics/longrunningmergerequests"
 	"swe-dashboard/internal/metrics/mergerequestcomments"
+	"swe-dashboard/internal/metrics/mergerequestengagement"
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/metrics/mergerequestrate"
 	"swe-dashboard/internal/metrics/mergerequestsize"
@@ -40,6 +41,7 @@ const (
 	activeContributorsMetricName      = `active_contributors{repository="%s", author="%s", email="%s"} %f`
 	commitAdditionsMetricName         = `commit_additions{repository="%s", author="%s", email="%s"} %f`
 	commitDeletionsMetricName         = `commit_deletions{repository="%s", author="%s", email="%s"} %f`
+	mergeRequestEngagementMetricName  = `merge_request_engagement{repository="%s", author="%s", mergedby="%s"} %f`
 )
 
 func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err error) {
@@ -171,7 +173,7 @@ func (p *Pusher) ImportMergeRequestParticipants(service mergerequestparticipants
 }
 
 func (p *Pusher) ImportMergeRequestRate(service mergerequestrate.MergeRequestRateService) (err error) {
-	counts, err := service.MergeRequestRatesThisMonth()
+	counts, err := service.MergeRequestRates()
 	if err != nil {
 		return err
 	}
@@ -353,5 +355,20 @@ func (p *Pusher) ImportActiveContributors(service activecontributors.ActiveContr
 		}
 	}
 
+	return nil
+}
+
+func (p *Pusher) ImportMergeRequestEngagement(service mergerequestengagement.MergeRequestEngagementService) (err error) {
+	metrics, err := service.List()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < len(metrics); i++ {
+		payload := fmt.Sprintf(mergeRequestEngagementMetricName, metrics[i].Name, metrics[i].Name1, metrics[i].Name2, metrics[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }

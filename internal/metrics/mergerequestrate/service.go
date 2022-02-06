@@ -14,7 +14,7 @@ type SCM interface {
 
 //MergeRequestRateService Return Pull/Merge Request rates service
 type MergeRequestRateService interface {
-	MergeRequestRatesThisMonth() (rates []models.ItemCount, err error)
+	MergeRequestRates() (rates []models.ItemCount, err error)
 }
 
 func NewMergeRequestRateService(scm SCM) MergeRequestRateService {
@@ -30,7 +30,7 @@ type mergeRequestRates struct {
 	mergerequests models.MergeRequests
 }
 
-func (m *mergeRequestRates) MergeRequestRatesThisMonth() (rates []models.ItemCount, err error) {
+func (m *mergeRequestRates) MergeRequestRates() (rates []models.ItemCount, err error) {
 	m.mergerequests, err = m.scm.ListMergeRequest("merged", "all", 7)
 	if err != nil {
 		return rates, err
@@ -52,8 +52,9 @@ func (m *mergeRequestRates) MergeRequestRatesThisMonth() (rates []models.ItemCou
 
 		rate := float64(len(repo.MRs)) / float64(len(members))
 		rates = append(rates, models.ItemCount{
-			Name:  repo.Name,
-			Count: rate,
+			Name:   repo.Name,
+			Count:  rate,
+			Count1: float64(len(members)),
 		})
 	}
 
