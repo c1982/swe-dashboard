@@ -168,10 +168,6 @@ func (mrp *mergeRequestParticipants) engagementParticipantCounts(author *models.
 }
 
 func (mrp *mergeRequestParticipants) engagementCounts(mr models.MergeRequest, counts map[string]*engageItem) {
-	//passed self-mergeds
-	if mr.Author.ID == mr.MergedBy.ID {
-		return
-	}
 	pair := fmt.Sprintf("%d-%d", mr.Author.ID, mr.MergedBy.ID)
 	v, ok := counts[pair]
 	if !ok {
