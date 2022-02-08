@@ -5,7 +5,7 @@ import (
 	"os"
 	"swe-dashboard/internal/metrics/activecontributors"
 	"swe-dashboard/internal/metrics/cycletime"
-	"swe-dashboard/internal/metrics/mergerequestengagement"
+	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/pusher/victoriametrics"
 	"swe-dashboard/internal/scm/gitlab"
 )
@@ -19,6 +19,10 @@ const (
 	activeContributorsMetricName = `active_contributors{repository="%s", author="%s", email="%s"} %f`
 	commitAdditionsMetricName    = `commit_additions{repository="%s", author="%s", email="%s"} %f`
 	commitDeletionsMetricName    = `commit_deletions{repository="%s", author="%s", email="%s"} %f`
+
+	mergeRequestParticipantsdMetricName          = `merge_request_participants{repository="%s",user="%s", name="%s"} %f`
+	mergeRequestEngagementsMetricName            = `merge_request_engagement{repository="%s", author="%s", mergedby="%s"} %f`
+	mergeRequestEngagementParticipantsMetricName = `merge_request_engage_participants{repository="%s",author="%s", participant="%s"} %f`
 )
 
 func main() {
@@ -35,18 +39,38 @@ func main() {
 		panic(err)
 	}
 
-	importMergerequestEngagement(gitlab, pusher)
+	ImportMergerequestParticipants(gitlab, pusher)
 }
 
-func importMergerequestEngagement(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
-	service := mergerequestengagement.NewMergeRequestEngagementService(gitlab)
+func ImportMergerequestParticipants(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
+	service := mergerequestparticipants.NewMergeRequestParticipantsService(gitlab)
 	metrics, err := service.List()
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	for i := 0; i < len(metrics); i++ {
-		payload := fmt.Sprintf(`merge_request_engagement{repository="%s", author="%s", mergedby="%s"} %f`, metrics[i].Name, metrics[i].Name1, metrics[i].Name2, metrics[i].Count)
+		payload := fmt.Sprintf(mergeRequestParticipantsdMetricName, metrics[i].Name, metrics[i].Name1, metrics[i].Name2, metrics[i].Count)
+		fmt.Println(payload)
+		err := p.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
+	engageparticipants := service.EngageParticipants()
+	for i := 0; i < len(engageparticipants); i++ {
+		payload := fmt.Sprintf(mergeRequestEngagementParticipantsMetricName, engageparticipants[i].Name, engageparticipants[i].Name1, engageparticipants[i].Name2, engageparticipants[i].Count)
+		fmt.Println(payload)
+		err := p.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
+	engagements := service.Engagements()
+	for i := 0; i < len(engagements); i++ {
+		payload := fmt.Sprintf(mergeRequestEngagementsMetricName, engagements[i].Name, engagements[i].Name1, engagements[i].Name2, engagements[i].Count)
 		fmt.Println(payload)
 		err := p.Push(payload)
 		if err != nil {
