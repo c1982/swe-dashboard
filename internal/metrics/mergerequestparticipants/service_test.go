@@ -23,12 +23,12 @@ func TestCountParticipants(t *testing.T) {
 
 	src.countParticipants(author, counts, participants)
 
-	if len(counts) != 5 {
-		t.Errorf("invalid counts. got: %d, want: 5", len(counts))
+	if len(counts) != 4 {
+		t.Errorf("invalid counts. got: %d, want: 4", len(counts))
 	}
 
 	v := counts[5]
-	if v.Name2 != "didaho" {
+	if v.Name1 != "didaho" {
 		t.Errorf("invalid user. got: %s, want: didaho", v.Name1)
 	}
 
@@ -74,12 +74,12 @@ func TestEngagementParticipantCounts(t *testing.T) {
 		t.Error("author id not found. want: 2")
 	}
 
-	if len(a1) != 5 {
-		t.Errorf("invalid participant count a1. got: %d, want: 5", len(counts))
+	if len(a1) != 4 {
+		t.Errorf("invalid participant count a1. got: %d, want: 4", len(a1))
 	}
 
-	if len(a2) != 5 {
-		t.Errorf("invalid participant count a2. got: %d, want: 5", len(counts))
+	if len(a2) != 4 {
+		t.Errorf("invalid participant count a2. got: %d, want: 4", len(a2))
 	}
 }
 
@@ -102,8 +102,8 @@ func TestEngagementCounts(t *testing.T) {
 		svc.engagementCounts(mrs[i], counts)
 	}
 
-	if len(counts) != 2 {
-		t.Errorf("invalid counts. got: %d, want: 2", len(counts))
+	if len(counts) != 3 {
+		t.Errorf("invalid counts. got: %d, want: 3", len(counts))
 	}
 
 	v, ok := counts[fmt.Sprintf("%d-%d", 1, 2)]
@@ -113,10 +113,5 @@ func TestEngagementCounts(t *testing.T) {
 
 	if v.Author.ID != 1 {
 		t.Errorf("invalid author id. got: %d want: 1", v.Author.ID)
-	}
-
-	v, ok = counts[fmt.Sprintf("%d-%d", 5, 5)]
-	if ok {
-		t.Error("pair must be not found. want: 5-5")
 	}
 }

@@ -141,7 +141,6 @@ func (mrp *mergeRequestParticipants) engagementParticipantCounts(author *models.
 		if participant.ID == author.ID {
 			continue
 		}
-
 		v, ok := counts[author.ID]
 		if !ok {
 			count := map[int]*engageItem{}
