@@ -19,28 +19,29 @@ import (
 )
 
 const (
-	cycleTimeMetricName                 = `cycle_time{repository="%s", title="%s"} %f`
-	timeToOpenMetricName                = `time_to_open{repository="%s", title="%s"} %f`
-	timetoReviewMetricName              = `time_to_review{repository="%s", title="%s"} %f`
-	timetoApproveMetricName             = `time_to_approve{repository="%s", title="%s"} %f`
-	timetoMergeMetricName               = `time_to_merge{repository="%s", title="%s"} %f`
-	fridayMergeRequestMetricName        = `friday_merge_request{repository="%s"} %f`
-	longRunningMergeRequestMetricName   = `long_running_merge_request{repository="%s", title="%s"} %f`
-	commentsLeaderboardMetricName       = `comments_leaderboard{id="%d",user="%s", name="%s"} %f`
-	mergeRequestRateMetricName          = `merge_request_rate{repository="%s"} %f`
-	mergeRequestSizeMetricName          = `merge_request_size{repository="%s", title="%s"} %f`
-	mergeRequestThroughputMetricName    = `merge_request_throughput{repository="%s"} %f`
-	selfMergingMetricName               = `self_merging{name="%s", username="%s"} %f`
-	turnOverRateMetricName              = `turn_over_rate{} %f`
-	unreviewedMergeRequestMetricName    = `unreviewed_merge_request{repository="%s"} %f`
-	defectRateMetricName                = `defect_rate{repository="%s"} %f`
-	userDefectRateMetricName            = `defect_rate_user{repository="%s", username="%s", name="%s"} %f`
-	mergeRequestSuccessRateMetricName   = `merge_request_success_rate{repository="%s"} %f`
-	activeContributorsMetricName        = `active_contributors{repository="%s", author="%s", email="%s"} %f`
-	commitAdditionsMetricName           = `commit_additions{repository="%s", author="%s", email="%s"} %f`
-	commitDeletionsMetricName           = `commit_deletions{repository="%s", author="%s", email="%s"} %f`
-	mergeRequestEngagementMetricName    = `merge_request_engagement{repository="%s", author="%s", mergedby="%s"} %f`
-	mergeRequestParticipantsdMetricName = `merge_request_participants{repository="%s", user="%s", name="%s"} %f`
+	cycleTimeMetricName                          = `cycle_time{repository="%s", title="%s"} %f`
+	timeToOpenMetricName                         = `time_to_open{repository="%s", title="%s"} %f`
+	timetoReviewMetricName                       = `time_to_review{repository="%s", title="%s"} %f`
+	timetoApproveMetricName                      = `time_to_approve{repository="%s", title="%s"} %f`
+	timetoMergeMetricName                        = `time_to_merge{repository="%s", title="%s"} %f`
+	fridayMergeRequestMetricName                 = `friday_merge_request{repository="%s"} %f`
+	longRunningMergeRequestMetricName            = `long_running_merge_request{repository="%s", title="%s"} %f`
+	commentsLeaderboardMetricName                = `comments_leaderboard{id="%d",user="%s", name="%s"} %f`
+	mergeRequestRateMetricName                   = `merge_request_rate{repository="%s"} %f`
+	mergeRequestSizeMetricName                   = `merge_request_size{repository="%s", title="%s"} %f`
+	mergeRequestThroughputMetricName             = `merge_request_throughput{repository="%s"} %f`
+	selfMergingMetricName                        = `self_merging{name="%s", username="%s"} %f`
+	turnOverRateMetricName                       = `turn_over_rate{} %f`
+	unreviewedMergeRequestMetricName             = `unreviewed_merge_request{repository="%s"} %f`
+	defectRateMetricName                         = `defect_rate{repository="%s"} %f`
+	userDefectRateMetricName                     = `defect_rate_user{repository="%s", username="%s", name="%s"} %f`
+	mergeRequestSuccessRateMetricName            = `merge_request_success_rate{repository="%s"} %f`
+	activeContributorsMetricName                 = `active_contributors{repository="%s", author="%s", email="%s"} %f`
+	commitAdditionsMetricName                    = `commit_additions{repository="%s", author="%s", email="%s"} %f`
+	commitDeletionsMetricName                    = `commit_deletions{repository="%s", author="%s", email="%s"} %f`
+	mergeRequestParticipantsdMetricName          = `merge_request_participants{repository="%s",user="%s", name="%s"} %f`
+	mergeRequestEngagementsMetricName            = `merge_request_engagement{repository="%s", author="%s", mergedby="%s"} %f`
+	mergeRequestEngagementParticipantsMetricName = `merge_request_engage_participants{repository="%s",author="%s", participant="%s"} %f`
 )
 
 func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err error) {
@@ -162,6 +163,32 @@ func (p *Pusher) ImportMergeRequestParticipants(service mergerequestparticipants
 			leaderboard[i].Name1,
 			leaderboard[i].Name2,
 			leaderboard[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	engageparticipants := service.EngageParticipants()
+	for i := 0; i < len(engageparticipants); i++ {
+		payload := fmt.Sprintf(mergeRequestEngagementParticipantsMetricName,
+			engageparticipants[i].Name,
+			engageparticipants[i].Name1,
+			engageparticipants[i].Name2,
+			engageparticipants[i].Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	engagements := service.Engagements()
+	for i := 0; i < len(engagements); i++ {
+		payload := fmt.Sprintf(mergeRequestEngagementsMetricName,
+			engagements[i].Name,
+			engagements[i].Name1,
+			engagements[i].Name2,
+			engagements[i].Count)
 		err := p.Push(payload)
 		if err != nil {
 			return err

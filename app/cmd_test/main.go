@@ -50,7 +50,11 @@ func ImportMergerequestParticipants(gitlab *gitlab.SCM, p *victoriametrics.Pushe
 	}
 
 	for i := 0; i < len(metrics); i++ {
-		payload := fmt.Sprintf(mergeRequestParticipantsdMetricName, metrics[i].Name, metrics[i].Name1, metrics[i].Name2, metrics[i].Count)
+		payload := fmt.Sprintf(mergeRequestParticipantsdMetricName,
+			metrics[i].Name,
+			metrics[i].Name1,
+			metrics[i].Name2,
+			metrics[i].Count)
 		fmt.Println(payload)
 		err := p.Push(payload)
 		if err != nil {
