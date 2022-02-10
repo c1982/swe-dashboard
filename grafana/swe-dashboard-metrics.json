@@ -140,7 +140,7 @@
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
-                        "drawStyle": "bars",
+                        "drawStyle": "line",
                         "fillOpacity": 33,
                         "gradientMode": "hue",
                         "hideFrom": {
@@ -148,7 +148,7 @@
                             "tooltip": false,
                             "viz": false
                         },
-                        "lineInterpolation": "linear",
+                        "lineInterpolation": "stepBefore",
                         "lineWidth": 1,
                         "pointSize": 2,
                         "scaleDistribution": {
@@ -171,10 +171,6 @@
                             {
                                 "color": "light-red",
                                 "value": null
-                            },
-                            {
-                                "color": "semi-dark-green",
-                                "value": 5
                             }
                         ]
                     }
@@ -187,7 +183,7 @@
                 "x": 5,
                 "y": 0
             },
-            "hideTimeOverride": true,
+            "hideTimeOverride": false,
             "id": 17,
             "options": {
                 "legend": {
@@ -456,8 +452,8 @@
                     "refId": "B"
                 }
             ],
-            "timeFrom": "1h",
-            "title": "MRs/PRs Sizes Average",
+            "timeFrom": "2h",
+            "title": "MRs/PRs Sizes Average (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
@@ -686,9 +682,9 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": "1h",
+            "timeFrom": "2h",
             "timeShift": null,
-            "title": "Active Contributors for all Repositories (last 30 days)",
+            "title": "Active Contributors (last 30 days)",
             "type": "bargauge"
         },
         {
@@ -766,7 +762,7 @@
                 "x": 12,
                 "y": 31
             },
-            "id": 43,
+            "id": 51,
             "options": {
                 "legend": {
                     "calcs": [
@@ -867,7 +863,7 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": "1h",
+            "timeFrom": "2h",
             "timeShift": null,
             "title": "MRs/PRs Success Rate (last 30 days)",
             "type": "bargauge"
@@ -936,8 +932,7 @@
             "options": {
                 "legend": {
                     "calcs": [
-                        "lastNotNull",
-                        "mean"
+                        "lastNotNull"
                     ],
                     "displayMode": "table",
                     "placement": "right",
@@ -1031,14 +1026,14 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": "1h",
+            "timeFrom": "2h",
             "title": "Unreviewed MRs/PRs (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
             "datasource": "VictoriaMetrics",
-            "description": "### Unreviewed MRs/PRs\n\nThe percentage of pull requests that were merged without review.",
+            "description": "",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1108,8 +1103,7 @@
             "options": {
                 "legend": {
                     "calcs": [
-                        "lastNotNull",
-                        "mean"
+                        "lastNotNull"
                     ],
                     "displayMode": "table",
                     "placement": "right"
@@ -1137,7 +1131,7 @@
         },
         {
             "datasource": "VictoriaMetrics",
-            "description": "### MRs/PRs Participants \n\nThe total amount of participation a user has contributed to MR/PR ",
+            "description": "",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1165,7 +1159,7 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 9,
+                "h": 10,
                 "w": 12,
                 "x": 0,
                 "y": 61
@@ -1192,22 +1186,22 @@
                         "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "sort_desc(participants_leaderboard{})",
+                    "expr": "sort_desc(sum(merge_request_participants) by (user, name))",
                     "format": "time_series",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{name}}",
+                    "legendFormat": "{{name}} ({{user}})",
                     "refId": "A"
                 }
             ],
-            "timeFrom": "1h",
+            "timeFrom": "2h",
             "title": "MRs/PRs Participants (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
             "datasource": "VictoriaMetrics",
-            "description": "### MRs/PRs Participants \n\nThe total amount of participation a user has contributed to MR/PR ",
+            "description": "",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1263,7 +1257,7 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 9,
+                "h": 10,
                 "w": 12,
                 "x": 12,
                 "y": 61
@@ -1272,8 +1266,7 @@
             "options": {
                 "legend": {
                     "calcs": [
-                        "lastNotNull",
-                        "mean"
+                        "lastNotNull"
                     ],
                     "displayMode": "table",
                     "placement": "right"
@@ -1289,16 +1282,460 @@
                         "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "sort_desc(participants_leaderboard{})",
+                    "expr": "sum(merge_request_participants) by (user, name)",
                     "format": "time_series",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{name}}",
+                    "legendFormat": "{{name}} ({{user}})",
                     "refId": "A"
                 }
             ],
+            "timeFrom": null,
+            "timeShift": null,
             "title": "MRs/PRs Participants Trend",
             "transformations": [],
+            "type": "timeseries"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "semi-dark-green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 0,
+                "y": 71
+            },
+            "hideTimeOverride": true,
+            "id": 56,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true,
+                "text": {}
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "sort_desc(sum(merge_request_engage_participants) by (author,participant))",
+                    "format": "time_series",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{author}} -> engage {{participant}}",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": "2h",
+            "title": "MRs/PRs Participant Engagements (last 30 days)",
+            "transformations": [],
+            "type": "bargauge"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "semi-dark-green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 12,
+                "y": 71
+            },
+            "hideTimeOverride": true,
+            "id": 57,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus"
+                    },
+                    "exemplar": true,
+                    "expr": "sum(merge_request_engage_participants) by (author,participant)",
+                    "format": "time_series",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "{{author}} engage {{participant}}",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "title": "MRs/PRs Participant Engagements",
+            "transformations": [],
+            "type": "timeseries"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 0,
+                "y": 81
+            },
+            "hideTimeOverride": true,
+            "id": 53,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true,
+                "text": {}
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "exemplar": true,
+                    "expr": "sort_desc(sum(merge_request_engagement) by (author, mergedby))",
+                    "interval": "",
+                    "legendFormat": "{{author}} -> merged by {{mergedby}}",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": "1h",
+            "title": "MRs/PRs User Merge Engagements (last 30 days)",
+            "type": "bargauge"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 12,
+                "y": 81
+            },
+            "id": 59,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "exemplar": true,
+                    "expr": "sort_desc(sum(merge_request_engagement) by (author, mergedby))",
+                    "interval": "",
+                    "legendFormat": "{{author}} -> merged by {{mergedby}}",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "title": "MRs/PRs User Merge Engagements  Trends",
+            "type": "timeseries"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 0,
+                "y": 91
+            },
+            "hideTimeOverride": true,
+            "id": 55,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true,
+                "text": {}
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "exemplar": true,
+                    "expr": "sort_desc(sum(merge_request_engagement) by (mergedby))",
+                    "interval": "",
+                    "legendFormat": " {{mergedby}}",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": "1h",
+            "title": "MRs/PRs Merged By Counts (last 30 days)",
+            "type": "bargauge"
+        },
+        {
+            "datasource": "VictoriaMetrics",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 12,
+                "y": 91
+            },
+            "id": 58,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "pluginVersion": "8.0.5",
+            "targets": [
+                {
+                    "exemplar": true,
+                    "expr": "sort_desc(sum(merge_request_engagement) by (mergedby))",
+                    "interval": "",
+                    "legendFormat": " {{mergedby}}",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "title": "MRs/PRs Merged By Counts",
             "type": "timeseries"
         },
         {
@@ -1327,10 +1764,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 9,
+                "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 70
+                "y": 101
             },
             "hideTimeOverride": true,
             "id": 2,
@@ -1358,18 +1795,18 @@
                     "format": "time_series",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{name}}",
+                    "legendFormat": "{{name}} ({{user}})",
                     "refId": "A"
                 }
             ],
-            "timeFrom": "1h",
+            "timeFrom": "2h",
             "title": "MRs/PRs Comments (last 30 days)",
             "transformations": [],
             "type": "bargauge"
         },
         {
             "datasource": "VictoriaMetrics",
-            "description": "### MRs/PRs Comments\n\nThe sum of the number of comments a user has made on MR/PR ",
+            "description": "",
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -1421,17 +1858,16 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 9,
+                "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 70
+                "y": 101
             },
             "id": 37,
             "options": {
                 "legend": {
                     "calcs": [
-                        "lastNotNull",
-                        "mean"
+                        "lastNotNull"
                     ],
                     "displayMode": "table",
                     "placement": "right"
@@ -1447,11 +1883,11 @@
                         "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "sort_desc(comments_leaderboard{})",
+                    "expr": "comments_leaderboard{}",
                     "format": "time_series",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{name}}",
+                    "legendFormat": "{{name}} ({{user}})",
                     "refId": "A"
                 }
             ],
@@ -1494,10 +1930,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 9,
+                "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 79
+                "y": 111
             },
             "hideTimeOverride": true,
             "id": 14,
@@ -1527,7 +1963,7 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": "1h",
+            "timeFrom": "2h",
             "title": "Friday MRs/PRs (last 30 days)",
             "transformations": [],
             "type": "bargauge"
@@ -1598,10 +2034,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 9,
+                "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 79
+                "y": 111
             },
             "hideTimeOverride": true,
             "id": 49,
@@ -1669,10 +2105,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 9,
+                "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 88
+                "y": 121
             },
             "hideTimeOverride": true,
             "id": 8,
@@ -1704,7 +2140,7 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": "1h",
+            "timeFrom": "2h",
             "title": "Self-Merging Users (last 30 days)",
             "transformations": [],
             "type": "bargauge"
@@ -1771,10 +2207,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 9,
+                "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 88
+                "y": 121
             },
             "hideTimeOverride": true,
             "id": 50,
@@ -1841,7 +2277,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 97
+                "y": 131
             },
             "hideTimeOverride": true,
             "id": 27,
@@ -1872,7 +2308,7 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": "1h",
+            "timeFrom": "2h",
             "timeShift": null,
             "title": "Repository Defect Rate (last 30 days)",
             "type": "bargauge"
@@ -1935,7 +2371,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 97
+                "y": 131
             },
             "id": 28,
             "options": {
@@ -1995,7 +2431,7 @@
                 "h": 10,
                 "w": 12,
                 "x": 0,
-                "y": 107
+                "y": 141
             },
             "hideTimeOverride": true,
             "id": 30,
@@ -2019,13 +2455,13 @@
                         "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "sort_desc(sum by (username, name) (defect_rate_user{} > 0 ))",
+                    "expr": "sort_desc(sum by (username, name) (defect_rate_user{}) > 0)",
                     "interval": "",
                     "legendFormat": "{{name}} ({{username}})",
                     "refId": "A"
                 }
             ],
-            "timeFrom": "1h",
+            "timeFrom": "2h",
             "title": "User Defect Rate (last 30 days)",
             "type": "bargauge"
         },
@@ -2082,13 +2518,38 @@
                     },
                     "unit": "percent"
                 },
-                "overrides": []
+                "overrides": [
+                    {
+                        "__systemRef": "hideSeriesFrom",
+                        "matcher": {
+                            "id": "byNames",
+                            "options": {
+                                "mode": "exclude",
+                                "names": [
+                                    "Uğurcan Kılıç (ugurcan.kilic)"
+                                ],
+                                "prefix": "All except:",
+                                "readOnly": true
+                            }
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.hideFrom",
+                                "value": {
+                                    "legend": false,
+                                    "tooltip": false,
+                                    "viz": true
+                                }
+                            }
+                        ]
+                    }
+                ]
             },
             "gridPos": {
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 107
+                "y": 141
             },
             "id": 31,
             "options": {
@@ -2128,7 +2589,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 117
+                "y": 151
             },
             "id": 45,
             "panels": [],
@@ -2173,7 +2634,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 0,
-                "y": 118
+                "y": 152
             },
             "hideTimeOverride": true,
             "id": 18,
@@ -2275,7 +2736,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 12,
-                "y": 118
+                "y": 152
             },
             "id": 38,
             "options": {
@@ -2347,7 +2808,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 127
+                "y": 161
             },
             "hideTimeOverride": true,
             "id": 10,
@@ -2436,7 +2897,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 127
+                "y": 161
             },
             "id": 22,
             "options": {
@@ -2509,7 +2970,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 134
+                "y": 168
             },
             "id": 19,
             "options": {
@@ -2608,7 +3069,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 134
+                "y": 168
             },
             "id": 23,
             "options": {
@@ -2680,7 +3141,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 141
+                "y": 175
             },
             "hideTimeOverride": true,
             "id": 20,
@@ -2781,7 +3242,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 141
+                "y": 175
             },
             "id": 24,
             "options": {
@@ -2854,7 +3315,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 0,
-                "y": 148
+                "y": 182
             },
             "hideTimeOverride": true,
             "id": 21,
@@ -2943,7 +3404,7 @@
                 "h": 7,
                 "w": 12,
                 "x": 12,
-                "y": 148
+                "y": 182
             },
             "id": 25,
             "options": {
@@ -2987,7 +3448,7 @@
         "list": []
     },
     "time": {
-        "from": "now-2d",
+        "from": "now-7d",
         "to": "now"
     },
     "timepicker": {
@@ -3006,5 +3467,5 @@
     },
     "timezone": "",
     "title": "SWE Dashboard - Metrics",
-    "version": 111
+    "version": 156
 }
