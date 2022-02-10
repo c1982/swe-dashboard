@@ -90,6 +90,10 @@ If you want to run the daemon as a service, you can use the following commands:
 * [SWE Dashboard - Metrics](./grafana/swe-dashboard-metrics.json)
 * [SWE Dashboard - Repository](./grafana/swe-dashboard-repository.json)
 
+### Metrics Dashboard:
+
+![](docs/images/main-dashboard.png)
+
 ### MRs/PRs Cycle Times
 
 ![](docs/images/merge-request-cycle-times.png)
