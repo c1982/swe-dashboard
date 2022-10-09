@@ -10,7 +10,8 @@ services:
     command:
       - "--storageDataPath=/storage"
       - "--httpListenAddr=:8428"
-      - "-retentionPeriod=6" #six months
+      - "-retentionPeriod=1y"
+      - "-search.disableAutoCacheReset"
     networks:
       - swed_net
     restart: always

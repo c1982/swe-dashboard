@@ -3,6 +3,7 @@ package victoriametrics
 import (
 	"fmt"
 	"swe-dashboard/internal/metrics/activecontributors"
+	"swe-dashboard/internal/metrics/assetworkingtime"
 	"swe-dashboard/internal/metrics/cycletime"
 	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/fridaymergerequests"
@@ -42,6 +43,10 @@ const (
 	mergeRequestParticipantsdMetricName          = `merge_request_participants{repository="%s",user="%s", name="%s"} %f`
 	mergeRequestEngagementsMetricName            = `merge_request_engagement{repository="%s", author="%s", mergedby="%s"} %f`
 	mergeRequestEngagementParticipantsMetricName = `merge_request_engage_participants{repository="%s",author="%s", participant="%s"} %f`
+
+	assetWorkingTimesWeights    = `assets_weights{repository="%s",name="%s"} %f`
+	assetWorkingTimesHours      = `assets_working_hours{repository="%s",name="%s"} %f`
+	assetWorkingTimesIterations = `assets_iterations{repository="%s",name="%s"} %f`
 )
 
 func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err error) {
@@ -265,7 +270,7 @@ func (p *Pusher) ImportSelfMerging(service selfmerging.SelfMergingService) (err 
 	return nil
 }
 
-//TODO: don't use until fixed
+// TODO: don't use until fixed
 func (p *Pusher) ImportTurnOverRate(service turnoverrate.TurnOverrateService) (err error) {
 	counts, err := service.TurnOverRate()
 	if err != nil {
@@ -288,7 +293,6 @@ func (p *Pusher) ImportUnreviewedMergeRequests(service unreviewedmergerequests.U
 	if err != nil {
 		return err
 	}
-
 	for i := 0; i < len(counts); i++ {
 		payload := fmt.Sprintf(unreviewedMergeRequestMetricName, counts[i].Name, counts[i].Count)
 		err := p.Push(payload)
@@ -296,7 +300,6 @@ func (p *Pusher) ImportUnreviewedMergeRequests(service unreviewedmergerequests.U
 			return err
 		}
 	}
-
 	return nil
 }
 
@@ -372,9 +375,46 @@ func (p *Pusher) ImportActiveContributors(service activecontributors.ActiveContr
 			return err
 		}
 	}
-
 	for i := 0; i < len(impact); i++ {
 		payload := fmt.Sprintf(commitDeletionsMetricName, impact[i].Name, impact[i].Name1, impact[i].Name2, impact[i].Count1)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (p *Pusher) ImportAssetWorkingTime(service assetworkingtime.AssetWorkingTimeService) (err error) {
+	err = service.CalculateChanges()
+	if err != nil {
+		return err
+	}
+
+	weights := service.Weights()
+	for i := 0; i < len(weights); i++ {
+		w := weights[i]
+		payload := fmt.Sprintf(assetWorkingTimesWeights, w.Name, w.Name1, w.Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	workinghours := service.WorkingHours()
+	for i := 0; i < len(workinghours); i++ {
+		w := workinghours[i]
+		payload := fmt.Sprintf(assetWorkingTimesHours, w.Name, w.Name1, w.Count)
+		err := p.Push(payload)
+		if err != nil {
+			return err
+		}
+	}
+
+	iterations := service.Iterations()
+	for i := 0; i < len(iterations); i++ {
+		w := iterations[i]
+		payload := fmt.Sprintf(assetWorkingTimesIterations, w.Name, w.Name1, w.Count)
 		err := p.Push(payload)
 		if err != nil {
 			return err

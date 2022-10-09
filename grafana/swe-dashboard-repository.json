@@ -1798,7 +1798,6 @@
                         "type": "prometheus"
                     },
                     "exemplar": true,
-                    "expr": "time_to_review{repository=\"headball2\",title=\"$mergerequest\"}",
                     "hide": false,
                     "interval": "",
                     "legendFormat": "Time to Review",
@@ -2402,11 +2401,6 @@
         "list": [
             {
                 "allValue": null,
-                "current": {
-                    "selected": false,
-                    "text": "headball2",
-                    "value": "headball2"
-                },
                 "datasource": "VictoriaMetrics",
                 "definition": "commit_additions",
                 "description": "",
@@ -2429,11 +2423,6 @@
             },
             {
                 "allValue": null,
-                "current": {
-                    "selected": false,
-                    "text": "HB2-6529-Deleting-sequence-calls",
-                    "value": "HB2-6529-Deleting-sequence-calls"
-                },
                 "datasource": "VictoriaMetrics",
                 "definition": "time_to_open{repository=\"$repository\"}",
                 "description": null,

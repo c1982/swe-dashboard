@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"swe-dashboard/internal/metrics/activecontributors"
+	"swe-dashboard/internal/metrics/assetworkingtime"
 	"swe-dashboard/internal/metrics/cycletime"
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/pusher/victoriametrics"
@@ -23,6 +24,10 @@ const (
 	mergeRequestParticipantsdMetricName          = `merge_request_participants{repository="%s",user="%s", name="%s"} %f`
 	mergeRequestEngagementsMetricName            = `merge_request_engagement{repository="%s", author="%s", mergedby="%s"} %f`
 	mergeRequestEngagementParticipantsMetricName = `merge_request_engage_participants{repository="%s",author="%s", participant="%s"} %f`
+
+	assetWorkingTimesWeights    = `assets_weights{repository="%s",name="%s"} %f`
+	assetWorkingTimesHours      = `assets_working_hours{repository="%s",name="%s"} %f`
+	assetWorkingTimesIterations = `assets_iterations{repository="%s",name="%s"} %f`
 )
 
 func main() {
@@ -39,7 +44,46 @@ func main() {
 		panic(err)
 	}
 
-	ImportMergerequestParticipants(gitlab, pusher)
+	AssetWorkingTime(gitlab, pusher)
+}
+
+func AssetWorkingTime(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
+	svc := assetworkingtime.NewAssetWorkingTimeService(gitlab, ".jpg", ".jpeg", ".png", ".psd", ".psb")
+	err := svc.CalculateChanges()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	weights := svc.Weights()
+	for i := 0; i < len(weights); i++ {
+		w := weights[i]
+		payload := fmt.Sprintf(assetWorkingTimesWeights, w.Name, w.Name1, w.Count)
+		err := p.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
+	workinghours := svc.WorkingHours()
+	for i := 0; i < len(workinghours); i++ {
+		w := workinghours[i]
+		payload := fmt.Sprintf(assetWorkingTimesHours, w.Name, w.Name1, w.Count)
+		fmt.Println(payload)
+		err := p.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
+	iterations := svc.Iterations()
+	for i := 0; i < len(iterations); i++ {
+		w := iterations[i]
+		payload := fmt.Sprintf(assetWorkingTimesIterations, w.Name, w.Name1, w.Count)
+		err := p.Push(payload)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 }
 
 func ImportMergerequestParticipants(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {

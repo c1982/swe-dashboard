@@ -53,6 +53,16 @@ If you want to run the daemon as a service, you can use the following commands:
 8. `systemctl start swed.service`
 9. watch for errors `journalctl -u swed.service -f`
 
+#### VictoriaMetrics Tips
+
+Delete time series;
+
+> curl http://localhost:8428/api/v1/admin/tsdb/delete_series?match[]=METRIC_NAME
+
+Clear Cache;
+
+> curl http://localhost:8428/internal/resetRollupResultCache
+
 ## Metrics
 
 * Cycletime

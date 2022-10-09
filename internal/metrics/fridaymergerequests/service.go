@@ -29,7 +29,6 @@ func (f *fridayMergerequests) List() (fridaymergerequests []models.ItemCount, er
 	if err != nil {
 		return fridaymergerequests, err
 	}
-
 	fridaymergerequests = []models.ItemCount{}
 	repositories := mergerequests.GroupByRepositories()
 	for i := 0; i < len(repositories); i++ {
@@ -44,7 +43,6 @@ func (f *fridayMergerequests) List() (fridaymergerequests []models.ItemCount, er
 			Count: float64(count),
 		})
 	}
-
 	return fridaymergerequests, nil
 }
 
@@ -55,7 +53,6 @@ func (f *fridayMergerequests) fridayOpenedMergeRequests(mergerequests []models.M
 		if mr.CreatedAt.Weekday() != time.Friday {
 			continue
 		}
-
 		count++
 	}
 	return count

@@ -4,6 +4,7 @@ import (
 	"strings"
 	"swe-dashboard/internal/models"
 	"time"
+	"unicode/utf8"
 
 	"github.com/xanzy/go-gitlab"
 )
@@ -119,16 +120,63 @@ func (s *SCM) ListCommits(projectID int, createdafterday int) (commits []*models
 		if err != nil {
 			return commits, err
 		}
-
 		commits = append(commits, s.convertCommits(list)...)
 		if rsp.NextPage == 0 {
 			break
 		}
-
 		opt.Page = rsp.NextPage
 	}
 
 	return commits, nil
+}
+
+func (s *SCM) CommitChanges(projectID int, commitID string) (changes []*models.Change, err error) {
+	diffs, _, err := s.client.Commits.GetCommitDiff(projectID, commitID, &gitlab.GetCommitDiffOptions{})
+	if err != nil {
+		return changes, err
+	}
+
+	changes = []*models.Change{}
+	for i := 0; i < len(diffs); i++ {
+		d := diffs[i]
+		if d.DeletedFile {
+			continue
+		}
+		changes = append(changes, &models.Change{
+			ProjectID: projectID,
+			Name:      d.NewPath,
+			Weight:    s.calculateCommitDiffWeight(d.Diff),
+		})
+	}
+
+	return changes, nil
+}
+
+func (s *SCM) calculateCommitDiffWeight(diff string) int {
+	lines := strings.Split(diff, "\n")
+	var linecount int
+	var linesize int
+
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
+		line = strings.TrimSpace(line)
+		size := utf8.RuneCountInString(line)
+		if size == 0 {
+			continue
+		}
+		if line == "" {
+			continue
+		}
+		linesize += size
+		linecount++
+	}
+
+	if linesize == 0 || linecount == 0 {
+		return 0
+	}
+
+	weight := linesize / linecount
+	return weight
 }
 
 func (s *SCM) ListMergeRequest(state, scope string, createdafterday int) (mergerequests models.MergeRequests, err error) {

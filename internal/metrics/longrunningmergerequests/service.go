@@ -38,7 +38,6 @@ func (l *longRunningMergerequests) List() (longrunnings []models.ItemCount, err 
 	if err != nil {
 		return longrunnings, err
 	}
-
 	longrunnings = []models.ItemCount{}
 	repositories := mergerequests.GroupByRepositories()
 	for i := 0; i < len(repositories); i++ {
@@ -46,29 +45,24 @@ func (l *longRunningMergerequests) List() (longrunnings []models.ItemCount, err 
 		if err != nil {
 			return longrunnings, err
 		}
-
 		repo.MRs = repositories[i].MRs
 		for n := 0; n < len(repo.MRs); n++ {
 			mr := repo.MRs[n]
 			if mr.Draft {
 				continue
 			}
-
 			comments, err := l.scm.ListMergeRequestNotes(repo.ID, mr.IID)
 			if err != nil {
 				return longrunnings, err
 			}
-
 			lastactivitycomment := l.mergeRequestLastActivity(comments)
 			if lastactivitycomment == nil {
 				continue
 			}
-
 			worktime := time.Now().Unix() - lastactivitycomment.CreatedAt.Unix()
 			if worktime < tenDays {
 				continue
 			}
-
 			longrunnings = append(longrunnings, models.ItemCount{
 				Name:  repo.Name,
 				Name1: l.cleanTitle(mr.Title),
@@ -76,7 +70,6 @@ func (l *longRunningMergerequests) List() (longrunnings []models.ItemCount, err 
 			})
 		}
 	}
-
 	return longrunnings, nil
 }
 

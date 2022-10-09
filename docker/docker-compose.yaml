@@ -10,6 +10,7 @@ services:
     command:
       - '--storageDataPath=/storage'
       - '--httpListenAddr=:8428'
+      - '-search.disableAutoCacheReset'
     networks:
       - swed_net
     restart: always
