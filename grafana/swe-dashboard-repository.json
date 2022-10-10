@@ -3,7 +3,10 @@
         "list": [
             {
                 "builtIn": 1,
-                "datasource": "-- Grafana --",
+                "datasource": {
+                    "type": "datasource",
+                    "uid": "grafana"
+                },
                 "enable": true,
                 "hide": true,
                 "iconColor": "rgba(0, 211, 255, 1)",
@@ -19,14 +22,17 @@
         ]
     },
     "editable": true,
-    "gnetId": null,
+    "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 416,
-    "iteration": 1644499508118,
+    "id": 2,
     "links": [],
+    "liveNow": false,
     "panels": [
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -82,6 +88,7 @@
                 "x": 0,
                 "y": 0
             },
+            "hideTimeOverride": false,
             "id": 33,
             "options": {
                 "displayLabels": [
@@ -90,8 +97,9 @@
                     "percent"
                 ],
                 "legend": {
-                    "displayMode": "hidden",
+                    "displayMode": "list",
                     "placement": "bottom",
+                    "showLegend": false,
                     "values": [
                         "percent"
                     ]
@@ -105,11 +113,16 @@
                     "values": false
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "targets": [
                 {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
                     "exemplar": true,
                     "expr": "sum (commit_additions{repository=\"$repository\"})",
                     "interval": "",
@@ -117,6 +130,10 @@
                     "refId": "A"
                 },
                 {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
                     "exemplar": true,
                     "expr": "sum (commit_deletions{repository=\"$repository\"})",
                     "hide": false,
@@ -125,11 +142,15 @@
                     "refId": "B"
                 }
             ],
+            "timeShift": "30",
             "title": "Additions/Deletions Line of Code (last 30 days)",
             "type": "piechart"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -177,11 +198,12 @@
                 "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_review{repository=\"$repository\"}) / count by (repository) (time_to_review{repository=\"$repository\"})",
@@ -196,7 +218,10 @@
             "type": "stat"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -242,11 +267,12 @@
                 "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
@@ -260,7 +286,10 @@
             "type": "stat"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -306,11 +335,12 @@
                 "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_merge{repository=\"$repository\"}) / count by (repository) (time_to_merge{repository=\"$repository\"})",
@@ -324,7 +354,10 @@
             "type": "stat"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -378,11 +411,12 @@
                 "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "(sum by (repository) (cycle_time{repository=\"$repository\"})[10m] / count by (repository) (cycle_time{repository=\"$repository\"})[10m])",
@@ -397,7 +431,10 @@
             "type": "stat"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -443,11 +480,12 @@
                 "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "defect_rate{repository=\"$repository\"}",
@@ -461,7 +499,10 @@
             "type": "stat"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -508,11 +549,12 @@
                 "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "merge_request_success_rate{repository=\"$repository\"}",
@@ -526,7 +568,10 @@
             "type": "stat"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -573,11 +618,12 @@
                 "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
@@ -591,7 +637,10 @@
             "type": "stat"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "### Unreviewed MRs/PRs\n\nThe percentage of pull requests that were merged without review.",
             "fieldConfig": {
                 "defaults": {
@@ -646,11 +695,12 @@
                 "text": {},
                 "textMode": "auto"
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": false,
                     "expr": "unreviewed_merge_request{repository=\"$repository\"}",
@@ -664,7 +714,10 @@
             "type": "stat"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "### MRs/PRs Throughput \n\nA count of how many pull requests are merged over a period of time.",
             "fieldConfig": {
                 "defaults": {
@@ -672,6 +725,8 @@
                         "mode": "palette-classic"
                     },
                     "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
@@ -732,17 +787,20 @@
                     ],
                     "displayMode": "list",
                     "placement": "bottom",
+                    "showLegend": true,
                     "sortBy": "Last *",
                     "sortDesc": true
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "merge_request_throughput{repository=\"$repository\"}",
@@ -757,7 +815,10 @@
             "type": "timeseries"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "### MRs/PRs Rates\n\nThis is the ratio of product MRs authored by team members in Development Department to the number of team members in the Development Department. ",
             "fieldConfig": {
                 "defaults": {
@@ -765,6 +826,8 @@
                         "mode": "palette-classic"
                     },
                     "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
@@ -823,18 +886,21 @@
                     ],
                     "displayMode": "list",
                     "placement": "bottom",
+                    "showLegend": true,
                     "sortBy": "Last *",
                     "sortDesc": true
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "pluginVersion": "8.3.3",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "merge_request_rate{repository=\"$repository\"}",
@@ -848,7 +914,10 @@
             "type": "timeseries"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "fieldConfig": {
                 "defaults": {
                     "color": {
@@ -877,6 +946,8 @@
             "id": 46,
             "options": {
                 "displayMode": "basic",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
                 "orientation": "horizontal",
                 "reduceOptions": {
                     "calcs": [
@@ -888,9 +959,13 @@
                 "showUnfilled": true,
                 "text": {}
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
                     "exemplar": true,
                     "expr": "sort_desc(sum by (author,email) (active_contributors{repository=\"$repository\"}))",
                     "instant": false,
@@ -900,12 +975,14 @@
                 }
             ],
             "timeFrom": "2h",
-            "timeShift": null,
             "title": "Active Contributors for $repository (last 30 days)",
             "type": "bargauge"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -913,6 +990,8 @@
                         "mode": "palette-classic"
                     },
                     "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
@@ -1001,14 +1080,20 @@
                         "lastNotNull"
                     ],
                     "displayMode": "list",
-                    "placement": "bottom"
+                    "placement": "bottom",
+                    "showLegend": true
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "targets": [
                 {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
                     "exemplar": true,
                     "expr": "sum (commit_additions{repository=\"$repository\"})",
                     "interval": "",
@@ -1016,6 +1101,10 @@
                     "refId": "A"
                 },
                 {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
                     "exemplar": true,
                     "expr": "sum (-1 * commit_deletions{repository=\"$repository\"})",
                     "hide": false,
@@ -1028,7 +1117,319 @@
             "type": "timeseries"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        }
+                    },
+                    "mappings": []
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 29
+            },
+            "id": 49,
+            "options": {
+                "displayLabels": [
+                    "percent",
+                    "name"
+                ],
+                "legend": {
+                    "displayMode": "table",
+                    "placement": "right",
+                    "showLegend": true,
+                    "values": [
+                        "value"
+                    ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
+                    "editorMode": "code",
+                    "exemplar": false,
+                    "expr": "sum by (name) (\n    (assets_iterations{repository=\"$repository\"} > 1)\n    )\n    /\n    sum by (name) (\n    ((assets_iteration_hours{repository=\"$repository\"} > 1) / 168)\n    )",
+                    "instant": false,
+                    "legendFormat": "__auto",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Asset Iteration Per Week (30d window)",
+            "type": "piechart"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 29
+            },
+            "id": 50,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum by (name) (\n    (assets_iterations{repository=\"$repository\"} > 1)\n    )\n    /\n    sum by (name) (\n    ((assets_iteration_hours{repository=\"$repository\"} > 1) / 168)\n    )",
+                    "legendFormat": "__auto",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Asset Iteration Ratio (30d window)",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        }
+                    },
+                    "mappings": [],
+                    "unit": "h"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 37
+            },
+            "id": 51,
+            "options": {
+                "displayLabels": [
+                    "percent",
+                    "name"
+                ],
+                "legend": {
+                    "displayMode": "table",
+                    "placement": "right",
+                    "showLegend": true,
+                    "values": [
+                        "value"
+                    ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
+                    "editorMode": "code",
+                    "expr": "assets_iteration_hours{repository=\"$repository\"}",
+                    "legendFormat": "{{name}}",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Asset Iteration Hours (30d window)",
+            "type": "piechart"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        }
+                    },
+                    "mappings": []
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 37
+            },
+            "id": 52,
+            "options": {
+                "displayLabels": [
+                    "percent",
+                    "name"
+                ],
+                "legend": {
+                    "displayMode": "table",
+                    "placement": "right",
+                    "showLegend": true,
+                    "values": [
+                        "value"
+                    ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
+                    "editorMode": "code",
+                    "expr": "assets_iterations{repository=\"$repository\"}",
+                    "legendFormat": "{{name}}",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Asset Iterations (30d window)",
+            "type": "piechart"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1067,7 +1468,7 @@
                 "h": 10,
                 "w": 6,
                 "x": 0,
-                "y": 29
+                "y": 45
             },
             "hideTimeOverride": true,
             "id": 43,
@@ -1076,8 +1477,9 @@
                     "value"
                 ],
                 "legend": {
-                    "displayMode": "hidden",
-                    "placement": "bottom"
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": false
                 },
                 "pieType": "pie",
                 "reduceOptions": {
@@ -1088,11 +1490,16 @@
                     "values": false
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "targets": [
                 {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
                     "exemplar": true,
                     "expr": "sum by (author, email) (commit_additions{repository=\"$repository\"})",
                     "interval": "",
@@ -1105,7 +1512,10 @@
             "type": "piechart"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1144,7 +1554,7 @@
                 "h": 10,
                 "w": 6,
                 "x": 6,
-                "y": 29
+                "y": 45
             },
             "hideTimeOverride": true,
             "id": 44,
@@ -1153,8 +1563,9 @@
                     "value"
                 ],
                 "legend": {
-                    "displayMode": "hidden",
-                    "placement": "bottom"
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": false
                 },
                 "pieType": "pie",
                 "reduceOptions": {
@@ -1165,11 +1576,16 @@
                     "values": false
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "targets": [
                 {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
+                    },
                     "exemplar": true,
                     "expr": "sum by (author, email) (commit_deletions{repository=\"$repository\"})",
                     "interval": "",
@@ -1182,7 +1598,7 @@
             "type": "piechart"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {},
             "description": "### MRs/PRs Size\n\nThe number of lines of code that were added, changed or removed.",
             "fieldConfig": {
                 "defaults": {
@@ -1214,11 +1630,13 @@
                 "h": 10,
                 "w": 12,
                 "x": 12,
-                "y": 29
+                "y": 45
             },
             "id": 20,
             "options": {
                 "displayMode": "basic",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
                 "orientation": "vertical",
                 "reduceOptions": {
                     "calcs": [
@@ -1230,11 +1648,12 @@
                 "showUnfilled": true,
                 "text": {}
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} <= 9)",
@@ -1246,7 +1665,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 10 and merge_request_size{repository=\"$repository\"} < 29)",
@@ -1259,7 +1679,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 30 and merge_request_size{repository=\"$repository\"} < 99)  ",
@@ -1272,8 +1693,10 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
+                    "editorMode": "code",
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 100 and merge_request_size{repository=\"$repository\"} < 499)  ",
                     "format": "time_series",
@@ -1285,7 +1708,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 500 and merge_request_size{repository=\"$repository\"} < 999)  ",
@@ -1298,7 +1722,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 1000 )  ",
@@ -1315,7 +1740,10 @@
             "type": "bargauge"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "### MRs/PRs Size\n\nThe number of lines of code that were added, changed or removed.",
             "fieldConfig": {
                 "defaults": {
@@ -1323,6 +1751,8 @@
                         "mode": "palette-classic"
                     },
                     "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
@@ -1375,7 +1805,7 @@
                 "h": 10,
                 "w": 24,
                 "x": 0,
-                "y": 39
+                "y": 55
             },
             "id": 47,
             "options": {
@@ -1386,17 +1816,20 @@
                         "min"
                     ],
                     "displayMode": "table",
-                    "placement": "right"
+                    "placement": "right",
+                    "showLegend": true
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} <= 9)",
@@ -1408,7 +1841,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 10 and merge_request_size{repository=\"$repository\"} < 29)",
@@ -1421,7 +1855,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 30 and merge_request_size{repository=\"$repository\"} < 99)  ",
@@ -1434,7 +1869,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 100 and merge_request_size{repository=\"$repository\"} < 499)  ",
@@ -1447,7 +1883,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 500 and merge_request_size{repository=\"$repository\"} < 999)  ",
@@ -1460,7 +1897,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "count(merge_request_size{repository=\"$repository\"} > 1000 )  ",
@@ -1477,7 +1915,10 @@
             "type": "timeseries"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "### Unreviewed MRs/PRs\n\nThe percentage of pull requests that were merged without review.",
             "fieldConfig": {
                 "defaults": {
@@ -1485,6 +1926,8 @@
                         "mode": "palette-classic"
                     },
                     "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
@@ -1542,7 +1985,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 0,
-                "y": 49
+                "y": 65
             },
             "id": 37,
             "options": {
@@ -1551,18 +1994,21 @@
                         "lastNotNull",
                         "mean"
                     ],
-                    "displayMode": "hidden",
-                    "placement": "right"
+                    "displayMode": "list",
+                    "placement": "right",
+                    "showLegend": false
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": false,
                     "expr": "unreviewed_merge_request{repository=\"$repository\"}",
@@ -1576,7 +2022,10 @@
             "type": "timeseries"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1584,6 +2033,8 @@
                         "mode": "palette-classic"
                     },
                     "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
@@ -1631,7 +2082,7 @@
                 "h": 9,
                 "w": 12,
                 "x": 12,
-                "y": 49
+                "y": 65
             },
             "id": 27,
             "options": {
@@ -1640,17 +2091,20 @@
                         "lastNotNull"
                     ],
                     "displayMode": "list",
-                    "placement": "bottom"
+                    "placement": "bottom",
+                    "showLegend": true
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(avg by (repository) (defect_rate_user{repository=\"$repository\"}))",
@@ -1664,7 +2118,10 @@
             "type": "timeseries"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1693,11 +2150,13 @@
                 "h": 11,
                 "w": 24,
                 "x": 0,
-                "y": 58
+                "y": 74
             },
             "id": 8,
             "options": {
                 "displayMode": "basic",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
                 "orientation": "horizontal",
                 "reduceOptions": {
                     "calcs": [
@@ -1709,11 +2168,12 @@
                 "showUnfilled": true,
                 "text": {}
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(cycle_time{repository=\"$repository\"})",
@@ -1727,7 +2187,10 @@
             "type": "bargauge"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1739,8 +2202,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "semi-dark-green",
@@ -1764,11 +2226,13 @@
                 "h": 8,
                 "w": 24,
                 "x": 0,
-                "y": 69
+                "y": 85
             },
             "id": 10,
             "options": {
                 "displayMode": "basic",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
                 "orientation": "horizontal",
                 "reduceOptions": {
                     "calcs": [
@@ -1780,11 +2244,12 @@
                 "showUnfilled": false,
                 "text": {}
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "time_to_open{repository=\"$repository\",title=\"$mergerequest\"}",
@@ -1795,9 +2260,11 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
+                    "expr": "time_to_review{repository=\"headball2\",title=\"$mergerequest\"}",
                     "hide": false,
                     "interval": "",
                     "legendFormat": "Time to Review",
@@ -1805,7 +2272,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "time_to_approve{repository=\"$repository\",title=\"$mergerequest\"}",
@@ -1816,7 +2284,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "time_to_merge{repository=\"$repository\",title=\"$mergerequest\"}",
@@ -1830,7 +2299,10 @@
             "type": "bargauge"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1844,8 +2316,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             }
                         ]
                     },
@@ -1857,12 +2328,14 @@
                 "h": 10,
                 "w": 24,
                 "x": 0,
-                "y": 77
+                "y": 93
             },
             "hideTimeOverride": true,
             "id": 23,
             "options": {
                 "displayMode": "basic",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
                 "orientation": "horizontal",
                 "reduceOptions": {
                     "calcs": [
@@ -1874,11 +2347,12 @@
                 "showUnfilled": true,
                 "text": {}
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(sum by (username, name) (defect_rate_user{repository=\"$repository\"}))",
@@ -1893,7 +2367,10 @@
             "type": "bargauge"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1901,6 +2378,8 @@
                         "mode": "palette-classic"
                     },
                     "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
@@ -1935,8 +2414,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             }
                         ]
                     },
@@ -1948,7 +2426,7 @@
                 "h": 10,
                 "w": 24,
                 "x": 0,
-                "y": 87
+                "y": 103
             },
             "id": 40,
             "options": {
@@ -1958,17 +2436,20 @@
                         "mean"
                     ],
                     "displayMode": "table",
-                    "placement": "right"
+                    "placement": "right",
+                    "showLegend": true
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "pluginVersion": "8.0.5",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(sum by (username, name) (defect_rate_user{repository=\"$repository\"}))",
@@ -1983,7 +2464,10 @@
             "type": "timeseries"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -1991,6 +2475,8 @@
                         "mode": "palette-classic"
                     },
                     "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
@@ -2023,8 +2509,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             }
                         ]
                     },
@@ -2036,7 +2521,7 @@
                 "h": 9,
                 "w": 24,
                 "x": 0,
-                "y": 97
+                "y": 113
             },
             "id": 12,
             "options": {
@@ -2045,16 +2530,19 @@
                         "lastNotNull"
                     ],
                     "displayMode": "table",
-                    "placement": "right"
+                    "placement": "right",
+                    "showLegend": true
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_open{repository=\"$repository\"}) / count by (repository) (time_to_open{repository=\"$repository\"})",
@@ -2065,7 +2553,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_review{repository=\"$repository\"}) / count by (repository) (time_to_review{repository=\"$repository\"})",
@@ -2075,7 +2564,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_approve{repository=\"$repository\"}) / count by (repository) (time_to_approve{repository=\"$repository\"})",
@@ -2086,7 +2576,8 @@
                 },
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sum by (repository) (time_to_merge{repository=\"$repository\"}) / count by (repository) (time_to_merge{repository=\"$repository\"})",
@@ -2100,7 +2591,10 @@
             "type": "timeseries"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -2108,6 +2602,8 @@
                         "mode": "palette-classic"
                     },
                     "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
@@ -2140,8 +2636,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "red",
@@ -2157,7 +2652,7 @@
                 "h": 10,
                 "w": 24,
                 "x": 0,
-                "y": 106
+                "y": 122
             },
             "id": 26,
             "options": {
@@ -2166,17 +2661,20 @@
                         "lastNotNull"
                     ],
                     "displayMode": "list",
-                    "placement": "bottom"
+                    "placement": "bottom",
+                    "showLegend": true
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "pluginVersion": "8.3.3",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "merge_request_success_rate{repository=\"$repository\"}",
@@ -2189,7 +2687,10 @@
             "type": "timeseries"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -2201,8 +2702,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "#EAB839",
@@ -2222,12 +2722,14 @@
                 "h": 9,
                 "w": 24,
                 "x": 0,
-                "y": 116
+                "y": 132
             },
             "hideTimeOverride": true,
             "id": 4,
             "options": {
                 "displayMode": "basic",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
                 "orientation": "horizontal",
                 "reduceOptions": {
                     "calcs": [
@@ -2239,11 +2741,12 @@
                 "showUnfilled": true,
                 "text": {}
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(long_running_merge_request{repository=\"$repository\"})",
@@ -2253,12 +2756,14 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": null,
             "title": "Long Running MRs/PRs for $repository (last 90 days)",
             "type": "bargauge"
         },
         {
-            "datasource": "VictoriaMetrics",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "AsvPVXG4k"
+            },
             "description": "",
             "fieldConfig": {
                 "defaults": {
@@ -2337,8 +2842,7 @@
                         "mode": "absolute",
                         "steps": [
                             {
-                                "color": "green",
-                                "value": null
+                                "color": "green"
                             },
                             {
                                 "color": "semi-dark-yellow",
@@ -2357,11 +2861,13 @@
                 "h": 12,
                 "w": 24,
                 "x": 0,
-                "y": 125
+                "y": 141
             },
             "id": 6,
             "options": {
                 "displayMode": "basic",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
                 "orientation": "horizontal",
                 "reduceOptions": {
                     "calcs": [
@@ -2373,11 +2879,12 @@
                 "showUnfilled": true,
                 "text": {}
             },
-            "pluginVersion": "8.0.5",
+            "pluginVersion": "9.1.4",
             "targets": [
                 {
                     "datasource": {
-                        "type": "prometheus"
+                        "type": "prometheus",
+                        "uid": "AsvPVXG4k"
                     },
                     "exemplar": true,
                     "expr": "sort_desc(sum(merge_request_size{repository=\"$repository\"}) by (title))",
@@ -2387,24 +2894,29 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": null,
             "title": "MRs/PRs Sizes for $repository",
             "transformations": [],
             "type": "bargauge"
         }
     ],
     "refresh": "",
-    "schemaVersion": 30,
+    "schemaVersion": 37,
     "style": "dark",
     "tags": [],
     "templating": {
         "list": [
             {
-                "allValue": null,
-                "datasource": "VictoriaMetrics",
+                "current": {
+                    "selected": true,
+                    "text": "soccer game assets",
+                    "value": "soccer game assets"
+                },
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "AsvPVXG4k"
+                },
                 "definition": "commit_additions",
                 "description": "",
-                "error": null,
                 "hide": 0,
                 "includeAll": false,
                 "label": "Repository",
@@ -2422,11 +2934,17 @@
                 "type": "query"
             },
             {
-                "allValue": null,
-                "datasource": "VictoriaMetrics",
+                "current": {
+                    "isNone": true,
+                    "selected": false,
+                    "text": "None",
+                    "value": ""
+                },
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "AsvPVXG4k"
+                },
                 "definition": "time_to_open{repository=\"$repository\"}",
-                "description": null,
-                "error": null,
                 "hide": 0,
                 "includeAll": false,
                 "label": "MR/PR",
@@ -2446,11 +2964,13 @@
         ]
     },
     "time": {
-        "from": "now-2d",
+        "from": "now-1h",
         "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "SWE Dashboard - Repository",
-    "version": 95
+    "uid": "a1jr4uM4z",
+    "version": 16,
+    "weekStart": ""
 }
