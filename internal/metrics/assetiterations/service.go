@@ -31,7 +31,7 @@ type change struct {
 }
 
 func NewAssetIterationTimeService(scm SCM, assetExtensions ...string) AssetIterationTimeService {
-	srv := &workingTimeService{
+	srv := &iterationService{
 		scm:        scm,
 		extensions: assetExtensions,
 		changes:    map[string]change{},
@@ -39,13 +39,13 @@ func NewAssetIterationTimeService(scm SCM, assetExtensions ...string) AssetItera
 	return srv
 }
 
-type workingTimeService struct {
+type iterationService struct {
 	scm        SCM
 	extensions []string
 	changes    map[string]change
 }
 
-func (w *workingTimeService) isAsset(filename string) bool {
+func (w *iterationService) isAsset(filename string) bool {
 	for i := 0; i < len(w.extensions); i++ {
 		suffix := w.extensions[i]
 		if strings.HasSuffix(filename, suffix) {
@@ -55,7 +55,7 @@ func (w *workingTimeService) isAsset(filename string) bool {
 	return false
 }
 
-func (w *workingTimeService) Iterations() (iterations []models.ItemCount) {
+func (w *iterationService) Iterations() (iterations []models.ItemCount) {
 	iterations = []models.ItemCount{}
 	for _, c := range w.changes {
 		iterations = append(iterations, models.ItemCount{
@@ -67,7 +67,7 @@ func (w *workingTimeService) Iterations() (iterations []models.ItemCount) {
 	return iterations
 }
 
-func (w *workingTimeService) Weights() (weights []models.ItemCount) {
+func (w *iterationService) Weights() (weights []models.ItemCount) {
 	weights = []models.ItemCount{}
 	for _, c := range w.changes {
 		weights = append(weights, models.ItemCount{
@@ -79,7 +79,7 @@ func (w *workingTimeService) Weights() (weights []models.ItemCount) {
 	return weights
 }
 
-func (w *workingTimeService) IterationHours() (workinghourse []models.ItemCount) {
+func (w *iterationService) IterationHours() (workinghourse []models.ItemCount) {
 	workinghourse = []models.ItemCount{}
 	for _, c := range w.changes {
 		workinghourse = append(workinghourse, models.ItemCount{
@@ -91,7 +91,7 @@ func (w *workingTimeService) IterationHours() (workinghourse []models.ItemCount)
 	return workinghourse
 }
 
-func (w *workingTimeService) CalculateChanges() (err error) {
+func (w *iterationService) CalculateChanges() (err error) {
 	projects, err := w.scm.ListProjects()
 	if err != nil {
 		return err
