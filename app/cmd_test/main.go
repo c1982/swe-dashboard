@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"swe-dashboard/internal/metrics/activecontributors"
-	"swe-dashboard/internal/metrics/assetworkingtime"
+	"swe-dashboard/internal/metrics/assetiterations"
 	"swe-dashboard/internal/metrics/cycletime"
 	"swe-dashboard/internal/metrics/mergerequestparticipants"
 	"swe-dashboard/internal/pusher/victoriametrics"
@@ -26,7 +26,7 @@ const (
 	mergeRequestEngagementParticipantsMetricName = `merge_request_engage_participants{repository="%s",author="%s", participant="%s"} %f`
 
 	assetWorkingTimesWeights    = `assets_weights{repository="%s",name="%s"} %f`
-	assetWorkingTimesHours      = `assets_working_hours{repository="%s",name="%s"} %f`
+	assetWorkingTimesHours      = `assets_iteration_hours{repository="%s",name="%s"} %f`
 	assetWorkingTimesIterations = `assets_iterations{repository="%s",name="%s"} %f`
 )
 
@@ -48,7 +48,7 @@ func main() {
 }
 
 func AssetWorkingTime(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
-	svc := assetworkingtime.NewAssetWorkingTimeService(gitlab, ".jpg", ".jpeg", ".png", ".psd", ".psb")
+	svc := assetiterations.NewAssetIterationTimeService(gitlab, ".jpg", ".jpeg", ".png", ".psd", ".psb", ".ai")
 	err := svc.CalculateChanges()
 	if err != nil {
 		fmt.Println(err)
@@ -64,11 +64,10 @@ func AssetWorkingTime(gitlab *gitlab.SCM, p *victoriametrics.Pusher) {
 		}
 	}
 
-	workinghours := svc.WorkingHours()
+	workinghours := svc.IterationHours()
 	for i := 0; i < len(workinghours); i++ {
 		w := workinghours[i]
 		payload := fmt.Sprintf(assetWorkingTimesHours, w.Name, w.Name1, w.Count)
-		fmt.Println(payload)
 		err := p.Push(payload)
 		if err != nil {
 			fmt.Println(err)

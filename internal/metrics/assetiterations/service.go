@@ -1,4 +1,4 @@
-package assetworkingtime
+package assetiterations
 
 import (
 	"fmt"
@@ -14,11 +14,11 @@ type SCM interface {
 	CommitChanges(projectID int, commitID string) (changes []*models.Change, err error)
 }
 
-type AssetWorkingTimeService interface {
+type AssetIterationTimeService interface {
 	CalculateChanges() (err error)
 	Weights() []models.ItemCount
 	Iterations() []models.ItemCount
-	WorkingHours() []models.ItemCount
+	IterationHours() []models.ItemCount
 }
 
 type change struct {
@@ -30,7 +30,7 @@ type change struct {
 	commitTime      time.Time
 }
 
-func NewAssetWorkingTimeService(scm SCM, assetExtensions ...string) AssetWorkingTimeService {
+func NewAssetIterationTimeService(scm SCM, assetExtensions ...string) AssetIterationTimeService {
 	srv := &workingTimeService{
 		scm:        scm,
 		extensions: assetExtensions,
@@ -79,7 +79,7 @@ func (w *workingTimeService) Weights() (weights []models.ItemCount) {
 	return weights
 }
 
-func (w *workingTimeService) WorkingHours() (workinghourse []models.ItemCount) {
+func (w *workingTimeService) IterationHours() (workinghourse []models.ItemCount) {
 	workinghourse = []models.ItemCount{}
 	for _, c := range w.changes {
 		workinghourse = append(workinghourse, models.ItemCount{

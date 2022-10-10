@@ -3,7 +3,7 @@ package victoriametrics
 import (
 	"fmt"
 	"swe-dashboard/internal/metrics/activecontributors"
-	"swe-dashboard/internal/metrics/assetworkingtime"
+	"swe-dashboard/internal/metrics/assetiterations"
 	"swe-dashboard/internal/metrics/cycletime"
 	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/fridaymergerequests"
@@ -44,9 +44,9 @@ const (
 	mergeRequestEngagementsMetricName            = `merge_request_engagement{repository="%s", author="%s", mergedby="%s"} %f`
 	mergeRequestEngagementParticipantsMetricName = `merge_request_engage_participants{repository="%s",author="%s", participant="%s"} %f`
 
-	assetWorkingTimesWeights    = `assets_weights{repository="%s",name="%s"} %f`
-	assetWorkingTimesHours      = `assets_working_hours{repository="%s",name="%s"} %f`
-	assetWorkingTimesIterations = `assets_iterations{repository="%s",name="%s"} %f`
+	assetIterationWeights    = `assets_weights{repository="%s",name="%s"} %f`
+	assetIterationHours      = `assets_iteration_hours{repository="%s",name="%s"} %f`
+	assetIterationIterations = `assets_iterations{repository="%s",name="%s"} %f`
 )
 
 func (p *Pusher) ImportCycleTimeMetric(service cycletime.CycleTimeService) (err error) {
@@ -385,7 +385,7 @@ func (p *Pusher) ImportActiveContributors(service activecontributors.ActiveContr
 	return nil
 }
 
-func (p *Pusher) ImportAssetWorkingTime(service assetworkingtime.AssetWorkingTimeService) (err error) {
+func (p *Pusher) ImportAssertIterations(service assetiterations.AssetIterationTimeService) (err error) {
 	err = service.CalculateChanges()
 	if err != nil {
 		return err
@@ -394,17 +394,17 @@ func (p *Pusher) ImportAssetWorkingTime(service assetworkingtime.AssetWorkingTim
 	weights := service.Weights()
 	for i := 0; i < len(weights); i++ {
 		w := weights[i]
-		payload := fmt.Sprintf(assetWorkingTimesWeights, w.Name, w.Name1, w.Count)
+		payload := fmt.Sprintf(assetIterationWeights, w.Name, w.Name1, w.Count)
 		err := p.Push(payload)
 		if err != nil {
 			return err
 		}
 	}
 
-	workinghours := service.WorkingHours()
+	workinghours := service.IterationHours()
 	for i := 0; i < len(workinghours); i++ {
 		w := workinghours[i]
-		payload := fmt.Sprintf(assetWorkingTimesHours, w.Name, w.Name1, w.Count)
+		payload := fmt.Sprintf(assetIterationHours, w.Name, w.Name1, w.Count)
 		err := p.Push(payload)
 		if err != nil {
 			return err
@@ -414,7 +414,7 @@ func (p *Pusher) ImportAssetWorkingTime(service assetworkingtime.AssetWorkingTim
 	iterations := service.Iterations()
 	for i := 0; i < len(iterations); i++ {
 		w := iterations[i]
-		payload := fmt.Sprintf(assetWorkingTimesIterations, w.Name, w.Name1, w.Count)
+		payload := fmt.Sprintf(assetIterationIterations, w.Name, w.Name1, w.Count)
 		err := p.Push(payload)
 		if err != nil {
 			return err

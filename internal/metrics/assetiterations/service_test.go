@@ -1,4 +1,4 @@
-package assetworkingtime
+package assetiterations
 
 import (
 	"swe-dashboard/internal/models"
@@ -63,7 +63,7 @@ func (m *MockSCM) Time2(v string) time.Time {
 
 func TestCalculations(t *testing.T) {
 	scm := &MockSCM{}
-	svc := NewAssetWorkingTimeService(scm, ".psd", ".png")
+	svc := NewAssetIterationTimeService(scm, ".psd", ".png")
 	err := svc.CalculateChanges()
 	if err != nil {
 		t.Error(err)
@@ -106,16 +106,16 @@ func TestCalculations(t *testing.T) {
 		}
 	})
 
-	t.Run("WorkingHours", func(r *testing.T) {
-		hours := svc.WorkingHours()
+	t.Run("IterationHours", func(r *testing.T) {
+		hours := svc.IterationHours()
 		if len(hours) != 2 {
 			t.Errorf("unexpected hours. got: %d, want: 2", len(hours))
 		}
-		if hours[0].Count != 2 {
-			t.Errorf("working hours error. got: %f, want: 2", hours[0].Count)
+		if hours[0].Count != 2.0 {
+			t.Errorf("iteration hours error. got: %f, want: 2", hours[0].Count)
 		}
-		if hours[1].Count != 3 {
-			t.Errorf("working hours error. got: %f, want: 3", hours[1].Count)
+		if hours[1].Count != 3.0 {
+			t.Errorf("iteration hours error. got: %f, want: 3", hours[1].Count)
 		}
 	})
 }

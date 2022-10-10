@@ -2,7 +2,7 @@ package main
 
 import (
 	"swe-dashboard/internal/metrics/activecontributors"
-	"swe-dashboard/internal/metrics/assetworkingtime"
+	"swe-dashboard/internal/metrics/assetiterations"
 	"swe-dashboard/internal/metrics/cycletime"
 	"swe-dashboard/internal/metrics/defectrate"
 	"swe-dashboard/internal/metrics/fridaymergerequests"
@@ -68,8 +68,8 @@ func setMetricsFunctions(mux *sync.RWMutex, gitlab *gitlab.SCM, pusher *victoria
 		"activecontributors": func() error {
 			return pusher.ImportActiveContributors(activecontributors.NewActiveContributors(gitlab))
 		},
-		"assetsworkingtimes": func() error {
-			return pusher.ImportAssetWorkingTime(assetworkingtime.NewAssetWorkingTimeService(gitlab))
+		"assetsiterations": func() error {
+			return pusher.ImportAssertIterations(assetiterations.NewAssetIterationTimeService(gitlab, ".jpg", ".jpeg", ".png", ".psd", ".psb", ".ai"))
 		},
 	}
 	mux.Unlock()
