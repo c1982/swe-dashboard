@@ -85,6 +85,9 @@ Clear Cache;
 * MRs/PRs Success Rate
 * Active Contributors
 * Additin/Deletion Lines of Code
+* ART Asset Iterations
+* ART Asset Iteration Ratio
+* ART Asset Iteration Hours
 
 ## Supported SCM
 
@@ -178,6 +181,15 @@ TODO: image
 
 TODO: image
 
+### Asset Iteration Ratio
+
+TODO: image
+### Asset Iterations
+
+TODO: image
+### Asset Iteration Hour
+
+TODO: image
 ### Active Contributors
 
 ![](docs/images/active-contributors.png)
